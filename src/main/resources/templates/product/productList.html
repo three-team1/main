@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초능력</title>
+<link href="/css/main.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+	rel="stylesheet">
+	<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+
+  <style>
+
+    /*  바람의 능력 배너 글자 Css */
+    .wind-text-box h1 {
+      font-size: 3em;
+      background: -webkit-linear-gradient(45deg, #b6fbff, #83a4d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  .wind-text-box span {
+    background: linear-gradient(to right, #b6fbff, #83a4d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .wind-text-box p {
+      color: white;
+  }
+  
+  .wind-text-box button.btn {
+      background-color: #83a4d4;
+      border: none;
+      color: white;
+  }
+  
+  .wind-text-box button.btn-more {
+      background-color: white;
+      border: 2px solid #83a4d4;
+      color: #83a4d4;
+  }
+
+  .wind-text-box button:hover {
+    background: transparent;
+  }
+
+  .new-label {
+    color: #83a4d4; 
+    font-size: 2em;
+    margin-bottom: 10px;
+    animation: fade-in-out 2s infinite;
+  }
+
+  .new-label2 {
+    color: #FFD700; /* 번개 색상 */
+    font-size: 2em;
+    margin-bottom: 10px;
+    animation: fade-in-out 2s infinite;
+  }
+
+  .new-label3 {
+    color : #de8cff;
+    font-size : 2em;
+    margin-bottom: 10px;
+    animation: fade-in-out 2s infinite;
+  }
+
+  
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+  /*  번개의 능력 배너 글자 CSS*/
+
+  .lightning-text-box h1 {
+    font-size: 3em;
+    background: -webkit-linear-gradient(45deg, #FFD700,#FFFFFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.lightning-text-box span {
+  background: linear-gradient(to right,  #FFD700, #FFFFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.lightning-text-box p {
+  color: black;
+}
+
+.lightning-text-box button.btn {
+  background-color: #FFD700;
+  border: none;
+  color: white;
+}
+
+.lightning-text-box button.btn-more {
+  background-color: white;
+  border: 2px solid #FFD700;
+  color: #FFD700;
+}
+
+.lightning-text-box button:hover {
+  background: transparent;
+}
+
+
+/*  염력의 능력 배너 글자 CSS*/
+
+.telekinesis-text-box h1 {
+    font-size: 3em;
+    background: -webkit-linear-gradient(45deg,#de8cff,#9D50BB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.telekinesis-text-box span {
+  background: linear-gradient(to right,  #9D50BB, #de8cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.telekinesis-text-box p {
+    color: white;
+}
+
+.telekinesis-text-box button.btn {
+    background-color: #de8cff;
+    border: none;
+    color: white;
+}
+
+.telekinesis-text-box button.btn-more {
+    background-color: white;
+    border: 2px solid #de8cff;
+    color: #de8cff;
+}
+
+.telekinesis-text-box button:hover {
+    background: transparent;
+}
+
+
+
+  
+  /*  글자 애니메이션 */
+
+  .glitter-effect {
+    position: relative;
+}
+
+.glitter-effect:after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: -webkit-linear-gradient(left, #83a4d4, #b6fbff, #83a4d4);
+    background-repeat: no-repeat;
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glitter 2s infinite linear;
+}
+
+
+.glitter-effect[data-text="번개의 능력"]:after {
+  background: -webkit-linear-gradient(left, #FFFFFF, #FFD700, #FFFFFF);
+  background-repeat: no-repeat;
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glitter 2s infinite linear;
+}
+
+
+.glitter-effect[data-text="염력의 능력"]:after {
+  background: -webkit-linear-gradient(left,  #9D50BB,#de8cff,#9D50BB);
+  background-repeat: no-repeat;
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glitter 2s infinite linear;
+}
+
+
+@keyframes glitter {
+  0% {
+      background-position: -100% 0;
+  }
+  100% {
+      background-position: 100% 0;
+  }
+}
+
+
+  /* 상품 목록 UI Css */
+  .product-list {
+    width: 100%;
+    margin-top: 800px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .product-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: auto;
+    gap : 100px;
+    padding: 100px;
+  }
+
+
+  .product-header-logo {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    bottom: -40%;
+  }
+
+  .product-header-logo img {
+    width: 200px;
+    border-radius: 5%;
+    box-shadow: 0px 0px 30px #ffffff;
+  }
+
+  .product-header-logo h1 {
+    font-size: 3em;
+    color: #d7d7d7;
+    text-shadow: 5px 5px 5px #828181;
+  }
+
+
+
+
+  </style>
+
+</head>
+<body>
+
+  <!--  상단 네비게이션 바 -->
+
+
+  <header>
+		<div class="nav-bar-container">
+
+			<div class="nav-logo">
+			 <a href="/">
+				<img src="/icon/Black n White Luxury  Rent Car Logo.png">
+			 </a>
+	
+				
+			</div>
+
+			<div class="nav-bar-item-box">
+				<div class="nav-bar-item">
+					          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            컬렉션
+        </a>
+				</div>
+
+				<div class="nav-bar-item">
+          <a href="/board/list">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            커뮤니티
+        </a>
+				</div>
+
+				<div class="nav-bar-item">
+          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Q&A
+        </a>
+				</div>
+
+				<div class="nav-bar-item">
+          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            장바구니
+        </a>
+				</div>
+
+			</div>
+			
+
+			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span class="username" sec:authentication="name"></span>님
+				</p>
+			<a href="/mypage">마이페이지</a>
+			</div>
+			
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+			
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+			
+		</div>
+
+	</header>
+
+    
+    <!-- 상품목록 페이지 메인 video Or jpg  화면 ----------------  -->
+
+    <div class="bg-main-video-img">
+
+    <div class="video-img-box">
+			<img class="img-1"
+				src="/images/wing-man.jpg">
+			<div class="text-box wind-text-box">
+        <h2 class="new-label">NEW</h2>
+				<h1 class="fade-in glitter-effect" data-text="바람의 능력">바람의 능력</h1>
+				<p class="fade-in">
+
+					<span>"바람의 능력"</span>은 공기의 움직임을 지배하며 마음이 바람을 이끌어 나갈 때, 당신은 자유의 주인이 됩니다.
+        </p>
+        <p class="fade-in">바람의 자유로움으로 세계를 숨결처럼 가볍게 만들고, 기회를 발견하고, 변화를 일으키세요.</p>
+        <p class="fade-in">바람의 힘을 손에 쥔 당신, 경계를 허물고, 무한한 가능성을 창조하세요.</p>
+
+				<button class="btn fade-in">구매하기</button>
+				<button class="btn-more fade-in">더 알아보기</button>
+			</div>
+		</div>
+
+    <div class="video-img-box">
+			<img class="img-1"
+				src="/images/lightning-man.jpg">
+			<div class="text-box lightning-text-box">
+        <h2 class="new-label2">NEW</h2>
+				<h1 class="fade-in glitter-effect" data-text="번개의 능력">번개의 능력</h1>
+				<p class="fade-in">
+
+					<span>"번개의 능력"</span>은 에너지의 움직임을 지배하며, 강력한 힘과 빠른 속도를 자랑합니다.
+        </p>
+        <p class="fade-in">이것은 강력한 전하를 발산하며, 그 충격은 모든 것을 파괴하거나 새로운 것을 생성할 수 있습니다.</p>
+        <p class="fade-in">번개의 능력을 통해 당신은 더 큰 가능성을 추구하고, 더 큰 도전을 이기며, 더 큰 성취를 이룰 수 있습니다.</p>
+
+				<button class="btn fade-in">구매하기</button>
+				<button class="btn-more fade-in">더 알아보기</button>
+			</div>
+		</div>
+
+    <div class="video-img-box">
+			<img class="img-1"
+				src="/images/telekinesis-man.jpg">
+			<div class="text-box telekinesis-text-box">
+        <h2 class="new-label3">NEW</h2>
+				<h1 class="fade-in glitter-effect" data-text="염력의 능력">염력의 능력</h1>
+				<p class="fade-in">
+
+					<span>"염력의 능력"</span>은 물리적 제약을 초월하는 능력을 지니며, 당신의 마음만으로 물체를 움직이고, 상황을 조정할 수 있습니다.
+        </p>
+        <p class="fade-in">염력의 능력으로 세계를 아무런 제약 없이 조작하고, 장애물을 없애고, 변화를 불러오세요.</p>
+        <p class="fade-in">당신의 의지로 세상을 바꿀 수 있는 염력의 능력을 경험하세요.</p>
+
+				<button class="btn fade-in">구매하기</button>
+				<button class="btn-more fade-in">더 알아보기</button>
+			</div>
+		</div>
+
+
+</div>
+
+
+    <div class="controllers">
+      <div class="slide-next">
+        <img src="/icon/free-icon-next-875617.png">
+      </div>
+      <div class="slide-before">
+        <img src="/icon/next.png">
+      </div>
+      <div class="slide-box">
+        <button class="slide-1"></button>
+        <button class="slide-2"></button>
+        <button class="slide-3"></button>
+      </div>
+  
+      <div class="product-header-logo"> 
+        <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+        <h1>상품 목록</h1>
+        <p style="color: beige;">Shop Items</p>
+        <h2 style="color : grey">The Choice Is Yours </h2>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+    <!-- 상품 리스트 UI 목록 -------------------------->
+    
+    <div class="product-list">
+      <div class="product-category">
+          <button class="category-btn">자연계 초능력</button>
+          <button class="category-btn">속성계 초능력</button>
+          <!-- 필요한 만큼 카테고리 버튼 추가 -->
+      </div>
+  
+      <div class="product-sort">
+          <select id="sort-select">
+              <option value="price">가격순</option>
+              <option value="name">이름순</option>
+              <option value="number">상품번호</option>
+          </select>
+      </div>
+  
+      <div class="product-search">
+          <input type="text" id="search-box" placeholder="상품 검색">
+      </div>
+    
+
+  </div>
+
+  <div class="product-grid">
+    <!-- 여기에 상품이 grid 형식으로 표시 -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+    async function loadImage(productId) {
+    	
+    	
+  	  let response = await fetch('/api/productImages/' + productId);
+  	  
+  	  let data = await response.json();
+  	  console.log(data);
+  	  
+  	  return data[0]; // 이미지 정보는 배열의 첫번째에 위치한다고 가정
+  	}
+      
+      async function loadData() {
+      	 let response = await fetch('/api/products');
+      	 let datas = await response.json();
+        
+        console.log(datas);
+        
+        let classNames = ['mindLink', 'whereDoor', 'telespir', 'symponia', 'tereSycle', 'luminight']; // 상품 배열
+        
+        for (let i = 0; i < datas.length; i++) {
+          let data = datas[i];
+          
+          
+          let image = await loadImage(data.id); // 이미지 정보 가져오기
+          
+          let titleHTML;
+      
+          if (i < classNames.length) {
+              titleHTML = `<h1 class="${classNames[i]}">${data.productTitle}</h1>`;
+              } else {																	// 배열에있는 값을 각각 class 지정
+              titleHTML = `<h1>${data.productTitle}</h1>`;
+             }
+
+          const convertTitleToClassName = (title) => {
+            return title.replace(' ', '').toLowerCase();
+          }
+          
+          const template = `
+                    <div class="hot-item ${convertTitleToClassName(data.productTitle)}">
+                        <img src="${image.url}">
+                        <div class="hot-item-text">
+                            <h1>${titleHTML}</h1>
+                            <p class="hot-item-p">${data.productContent}</p>
+                            <p class="hot-item-price">${data.productPrice.toLocaleString()}원</p>                      
+                        </div>
+                        <button>구매하기</button>
+                    </div>
+                `;
+
+          let mainHotItemBox = document.querySelector('.product-grid');
+          mainHotItemBox.insertAdjacentHTML('beforeend', template);
+  
+          
+
+                    
+          let lastElement = mainHotItemBox.lastElementChild;
+          applyAnimation(lastElement, i);
+        }
+      }
+  
+      function applyAnimation(element, index) {
+        let observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                entry.target.style.animation = `slide-fade-in 0.5s ease-out ${index * 200}ms forwards`;
+              }, index * 100); // 200ms delay between each div
+            } else {
+              entry.target.style.animation = '';
+            }
+          })
+        });
+        observer.observe(element);
+      }
+  
+      loadData();
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+      function observeFadeIn(elements) {
+        elements.forEach((element, index) => {
+          let observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                setTimeout(() => {
+                  entry.target.style.animation = `slide-fade-in 0.5s ease-out ${index * 200}ms forwards`;
+                }, index * 10); // 200ms delay between each element
+              } else {
+                entry.target.style.animation = '';
+              }
+            });
+          }); 
+          observer.observe(element);
+        });
+      }
+      
+      let fadeIns = document.querySelectorAll('.fade-in');
+      
+      
+      observeFadeIn(fadeIns);
+
+
+
+
+
+
+      let currentSlide = 1;
+      function updateSlide() {
+  
+        $('.bg-main-video-img').css('transform', `translateX(-${(currentSlide - 1) * 100}vw)`);
+        $(".slide-box button").removeClass("active");
+        $(`.slide-${currentSlide}`).addClass("active");
+      }
+  
+      $(".slide-box button").on("click", function () {
+        $(".slide-box button").removeClass("active");  // 모든 버튼에서 'active' 클래스 제거
+        $(this).addClass("active");  // 클릭한 버튼에 'active' 클래스 추가
+      });
+  
+      $('.slide-1').on('click', function () {
+        currentSlide = 1;
+        updateSlide();
+      });
+  
+      $('.slide-2').on('click', function () {
+        currentSlide = 2;
+        updateSlide();
+      });
+  
+      $('.slide-3').on('click', function () {
+        currentSlide = 3;
+        updateSlide();
+      });
+  
+      $('.slide-next').on('click', function () {
+        currentSlide = currentSlide === 3 ? 1 : currentSlide + 1;
+        updateSlide();
+      });
+  
+      $('.slide-before').on('click', function () {
+        currentSlide = currentSlide === 1 ? 3 : currentSlide - 1;
+        updateSlide();
+      });
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+[
+  {
+    "image": "images/ai-technology-brain-background-digital-transformation-concept.jpg",
+    "title": "마인드링크",
+    "price": 550000,
+    "text": "능력 : 마인드링크는 \"지식의 능력\" 이며 세상 모든 퍼즐을 풀 수 있는 지식의 전당. 마인드링크로 당신은 모든 것을 이해하고 해결할 수 있게 됩니다."
+  },
+
+
+  {
+    "image": "images/mixed-media-opened-door-montage.jpg",
+    "title": "어디로든 문",
+    "price": 1280000,
+    "text": "능력 : 어디로든 문은 \"공간의 능력\" 이며 이곳 저곳, 언제나 어디든지 당신을 이동시킬 수 있는 통로. 만화 도라에몽을 보았다면 익숙한 능력일 것입니다."
+  },
+
+
+  {
+    "image": "images/metaverse-virtual-love-collage.jpg",
+    "title": "텔레스피르",
+    "price": 680000,
+    "text": "능력 : 텔레스피르는 \"소통의 능력\" 이며 생각만으로 대화하는 통신의 신기술. 텔레스피르를 통해 말이 필요 없는 소통을 경험해 보세요."
+  },
+
+  {
+    "image": "images/volumetric-musical-background-with-treble-clef-notes-generative-ai.jpg",
+    "title": "심포니아",
+    "price": 350000,
+    "text": "능력 : 심포니아는 \"조화의 능력\" 이며 완벽한 조화로운 세상을 만들어내는 힘. 어떠한 음악이든 자유자재로 다룰 수 있게 됩니다. 심포니아와 함께라면 당신 주변은 언제나 조화롭게 변화할 것입니다."
+  },
+
+  {
+    "image": "images/modern-tech-background-networking-connections.jpg",
+    "title": "테레사이클",
+    "price": 450000,
+    "text": "능력 : 테레사이클은 \"자연의 능력\" 이며 환경을 보호하고, 자원을 재활용하는 에코 파워. 테레사이클론으로 당신은 지구를 보호하는 슈퍼히어로가 될 수 있습니다."
+  },
+
+  {
+    "image": "images/cool-futuristic-abstract-background-with-shining-neon-light.jpg",
+    "title": "루미나이트",
+    "price": 850000,
+    "text": "능력 : 루미나이트는 \"빛의 능력\"이며 빛을 조작하여 비상한 힘과 능력을 발휘하는 초능력입니다. 이 특별한 능력은 주변의 빛을 조절하고, 빛의 속도를 조작하며, 빛을 통해 감정과 에너지를 전달할 수 있습니다."
+  }
+  
+]
