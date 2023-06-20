@@ -1,0 +1,65 @@
+[ 
+  {
+  "product_img_id" : 1,
+  "product_id" : 1,
+  "product_img_name" : "지식의능력 메인사진",
+  "product_img_url" : "/images/ai-technology-brain-background-digital-transformation-concept.jpg",
+  "product_img_ori_name" : "ai-technology-brain-background-digital-transformation-concept.jpg"
+},
+
+{
+  "product_img_id" : 2,
+  "product_id" : 2,
+  "product_img_name" : "공간의능력 메인사진",
+  "product_img_url" : "/images/mixed-media-opened-door-montage.jpg",
+  "product_img_ori_name" : "mixed-media-opened-door-montage.jpg"
+},
+
+{
+  "product_img_id" : 3,
+  "product_id" : 3,
+  "product_img_name" : "소통의능력 메인사진",
+  "product_img_url" : "/images/metaverse-virtual-love-collage.jpg",
+  "product_img_ori_name" : "metaverse-virtual-love-collage.jpg"
+},
+
+{
+  "product_img_id" : 4,
+  "product_id" : 4,
+  "product_img_name" : "조화의능력 메인사진",
+  "product_img_url" : "/images/volumetric-musical-background-with-treble-clef-notes-generative-ai.jpg",
+  "product_img_ori_name" : "volumetric-musical-background-with-treble-clef-notes-generative-ai.jpg"
+},
+
+{
+  "product_img_id" : 5,
+  "product_id" : 5,
+  "product_img_name" : "자연의능력 메인사진",
+  "product_img_url" : "/images/modern-tech-background-networking-connections.jpg",
+  "product_img_ori_name" : "modern-tech-background-networking-connections.jpg"
+},
+
+{
+  "product_img_id" : 6,
+  "product_id" : 6,
+  "product_img_name" : "빛의능력 메인사진",
+  "product_img_url" : "/images/cool-futuristic-abstract-background-with-shining-neon-light.jpg",
+  "product_img_ori_name" : "cool-futuristic-abstract-background-with-shining-neon-light.jpg"
+},
+
+{
+  "product_img_id" : 7,
+  "product_id" : 7,
+  "product_img_name" : "물의능력 메인사진",
+  "product_img_url" : "/images/water-man.jpg",
+  "product_img_ori_name" : "water-man.jpg"
+},
+
+{
+  "product_img_id" : 8,
+  "product_id" : 8,
+  "product_img_name" : "시간의능력 메인사진",
+  "product_img_url" : "/images/time-man.jpg",
+  "product_img_ori_name" : "time-man.jpg"
+}
+]

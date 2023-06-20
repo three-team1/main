@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time">
+<head>
+    <title>Board Detail</title>
+    <!-- 필요한 스타일시트, 스크립트 등 -->
+    <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+</head>
+<body>
+    <h1>Board Detail</h1>
+    <div>
+        <h2 th:text="${board.boardTitle}"></h2> <!-- 게시글 제목 -->
+        <p>Author: <span th:text="${board.user.username}"></span></p> <!-- 작성자 이름 -->
+        <p>Created At: <span th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span></p> <!-- 작성 날짜 -->
+        <p>Updated At: <span th:text="${board.updatedAt}"></span></p> <!-- 수정 날짜 (만약 있을 경우) -->
+        <div>
+            <h3>Content</h3>
+            <p th:text="${board.boardContent}"></p> <!-- 게시글 내용 -->
+        </div>
+    </div>
+    
+    <!-- 삭제 및 수정 버튼 등 -->
+    <a th:href="@{'/board/edit/' + ${board.id}}">Edit</a> <!-- 수정 페이지로 이동하는 링크 -->
+    <a th:href="@{'/board/delete/' + ${board.id}}">Delete</a> <!-- 게시글을 삭제하는 링크 -->
+    
+  <th:block th:if="${error}">
+	<script>
+		alert('권한이 없습니다.');
+	</script>
+  </th:block>
+    
+</body>
+</html>
