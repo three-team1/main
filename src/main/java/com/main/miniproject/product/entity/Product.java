@@ -43,5 +43,8 @@ public class Product {
 	@Column
 	@Enumerated(EnumType.STRING)
     private ProductSellStatus productSellStatus;
+	
+	@Column(name = "product_type")
+	private String productType;
     
 }
