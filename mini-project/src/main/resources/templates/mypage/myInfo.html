@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>/mypage/myInfo</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: pink;
+    }
+
     .menu {
       float: left;
     }
@@ -23,59 +29,75 @@
       max-width: 300px;
       margin-top: 10px;
     }
+
+    table {
+      margin: 10px auto;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 5px;
+    }
+
+    th, td {
+      background-color: lightpink;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
 <div class="menu">
   <ul>
-    <li><a href=#>주문조회</a></li>
-    <li><a href=#>내 게시글 관리</a></li>
-    <li><a href=#>내 리뷰 관리</a></li>
+    <li><a href="#">주문조회</a></li>
+    <li><a href="#">내 게시글 관리</a></li>
+    <li><a href="#">내 리뷰 관리</a></li>
     <li><a href="/mypage/myInfo">마이페이지</a></li>
   </ul>
 </div>
-
 <div class="content">
   <h1>마이페이지</h1>
   <form action="/mypage/myInfo" method="get">
-    <label for="username">아이디:</label>
-    <p id="username" name="username" th:text="${user.username }" readonly></p>
-    <br>
-
-    <label for="currentPassword">현재 비밀번호:</label>
-    <input type="password" id="currentPassword" name="currentPassword">
-    <br>
-
-    <label for="newPassword">새 비밀번호:</label>
-    <input type="password" id="newPassword" name="newPassword">
-    <br>
-
-    <label for="confirmPassword">비밀번호 확인:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword">
-    <br>
-
-    <label for="email">이메일:</label>
-    <p id="email" name="email" th:text="${user.email }"></p>
-    <br>
-
-    <label for="tel">연락처:</label>
-    <p id="tel" name="tel" th:text="${user.tel }"></p>
-    <br>
-
-    <label for="my_postcode">우편번호:</label>
-    <p id="my_postcode" name="my_postcode" th:text="${user.my_postcode }"></p>
-    <br>
-
-    <label for="my_address">주소:</label>
-    <p id="my_address" name="my_address" th:text="${user.my_address }"></p>
-    <br>
-
-    <label for="my_detailAddress">상세주소:</label>
-    <p id="my_detailAddress" name="my_detailAddress" th:text="${user.my_detailAddress }"></p>
-    <br>
-
+    <input type="hidden" id="userId" name="userId" th:value="${#authentication.principal.user.id}">
+    <table>
+      <tr>
+        <th>아이디:</th>
+        <td><span th:text="${#authentication.principal.username}"></span></td>
+      </tr>
+      <tr>
+        <th>현재 비밀번호:</th>
+        <td><input type="password" name="currentPassword"></td>
+      </tr>
+      <tr>
+        <th>새 비밀번호:</th>
+        <td><input type="password" name="newPassword"></td>
+      </tr>
+      <tr>
+        <th>비밀번호 확인:</th>
+        <td><input type="password" name="confirmPassword"></td>
+      </tr>
+      <tr>
+        <th>이메일:</th>
+        <td><span th:text="${#authentication.principal.user.email}"></span></td>
+      </tr>
+      <tr>
+        <th>연락처:</th>
+        <td><span th:text="${#authentication.principal.user.tel}"></span></td>
+      </tr>
+      <tr>
+        <th>우편번호:</th>
+        <td><span th:text="${#authentication.principal.user.my_postcode}"></span></td>
+      </tr>
+      <tr>
+        <th>주소:</th>
+        <td><span th:text="${#authentication.principal.user.my_address}"></span></td>
+      </tr>
+      <tr>
+        <th>상세주소:</th>
+        <td><span th:text="${#authentication.principal.user.my_detailAddress}"></span></td>
+      </tr>
+    </table>
     <div class="buttons">
-      <button type="button">수정</button>
+      <a href="/mypage/myUpdate"><button type="button">수정</button></a>
       <button type="submit">저장</button>
     </div>
   </form>

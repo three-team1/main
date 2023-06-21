@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/mypage/myUpdate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: pink;
+        }
+
+        .menu {
+            float: left;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 10px;
+        }
+
+        table {
+            margin: 10px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+        }
+
+        th, td {
+            background-color: lightpink;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="menu">
+    <ul>
+        <li><a href="#">주문조회</a></li>
+        <li><a href="#">내 게시글 관리</a></li>
+        <li><a href="#">내 리뷰 관리</a></li>
+        <li><a href="/mypage/myInfo">마이페이지</a></li>
+    </ul>
+</div>
+<div class="content">
+    <h1>마이페이지</h1>
+    <form action="/mypage/myUpdate" method="post">
+        <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+        <table>
+            <tr>
+                <th>아이디:</th>
+                <td><span id="username" name="username" th:text="${user.username}"></span></td>
+            </tr>
+            <tr>
+                <th>현재 비밀번호:</th>
+                <td><input type="password" name="currentPassword"></td>
+            </tr>
+            <tr>
+                <th>새 비밀번호:</th>
+                <td><input type="password" name="newPassword"></td>
+            </tr>
+            <tr>
+                <th>비밀번호 확인:</th>
+                <td><input type="password" name="confirmPassword"></td>
+            </tr>
+            <tr>
+                <th>이메일:</th>
+                <td><input type="text" name="email" th:value="${user.email}"></td>
+            </tr>
+            <tr>
+                <th>연락처:</th>
+                <td><input type="text" name="tel" th:value="${user.tel}"></td>
+            </tr>
+            <tr>
+                <th>우편번호:</th>
+                <td><input type="text" name="my_postcode" th:value="${user.my_postcode}"></td>
+            </tr>
+            <tr>
+                <th>주소:</th>
+                <td><input type="text" name="my_address" th:value="${user.my_address}"></td>
+            </tr>
+            <tr>
+                <th>상세주소:</th>
+                <td><input type="text" name="my_detailAddress" th:value="${user.my_detailAddress}"></td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <button type="submit">저장</button>
+            <a href="/mypage/myInfo"><button type="button">취소</button></a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
