@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link href="/css/main.css" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+	rel="stylesheet">
+	<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+<style>
+
+
+body {
+
+	color: #D2D1D5;
+}
+
+
+tr:nth-child(even) {
+  background-color: #2b2b2b;
+}
+
+tr:nth-child(odd) {
+  background-color: #2b2b2b;
+}
+
+th {
+  background-color:  beige;
+  color: black;
+}
+
+.noBorder {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+    height: 30px;
+
+}
+
+a {
+	text-decoration-line : none;
+	color : beige;
+}
+
+.container {
+	margin-top: 200px;
+}
+
+.table {
+	width: 1000px;
+	margin: auto;
+	text-align: center;
+	border-collapse: collapse;
+}
+
+.table-responsive {
+	min-height : 600px;
+}
+
+.id {
+	width: 8%;
+	height: 70px;
+}
+
+.title {
+	width: 60%;
+}
+
+.writer {
+	width: 12%;
+}
+
+.date {
+	width: 10%;
+}
+
+.table-header {
+	margin: auto;
+	text-align: center;
+	color: lightblue;
+}
+
+.table-search {
+	text-align: center;
+	margin-bottom: 10px;
+	margin-right: 800px;
+}
+
+.table-search button {
+	height: 25px;
+	font-size: 12px;
+	background-color: black;
+	border: none;
+	color: white;
+	margin-left: -10px;
+	border-top-right-radius: 5px;
+}
+
+.table-search input {
+	margin: 0;
+	padding: 0;
+}
+
+.pagination {
+	margin: auto;
+	margin-top: 20px;
+	width: 200px;
+	text-align:center;
+}
+
+.selected {
+	color: lightblue;
+}
+
+.btn-write {
+  text-align: center;
+}
+
+.btn-write button {
+  width: 100px;
+  background-color: antiquewhite;
+  border: none;
+  border-radius: 3px;
+  cursor : pointer;
+}
+
+
+
+</style>
+</head>
+<body>
+	<header>
+		<div class="nav-bar-container">
+
+			<div class="nav-logo">
+				<a class= "abc" href="/">
+				<img src="/icon/Black n White Luxury  Rent Car Logo.png">
+			    </a>
+
+			</div>
+
+			<div class="nav-bar-item-box">
+				<div class="nav-bar-item">
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+						컬렉션
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="/board/list"> <span></span> <span></span> <span></span>
+						<span></span> 게시판
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+						세일
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+						신상품
+					</a>
+				</div>
+
+			</div>
+
+
+			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span sec:authentication="name"></span>님
+				</p>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login"
+				sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+		</div>
+
+
+
+	</header>
+
+
+
+
+
+	<div class="container">
+
+		<div class="table-header">
+			<h1>게시판 목록</h1>
+		</div>
+
+		<div class="table-search">
+			<form th:action="@{/board/list}" method="get">
+				<input type="text" name="keyword" placeholder="Search">
+				<button type="submit">검색</button>
+			</form>
+		</div>
+
+
+
+	</div>
+
+
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="id">번호</th>
+					<th class="title">제목</th>
+					<th class="writer">작성자</th>
+					<th class="date">작성일</th>
+					<th class="count">조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="board : ${boards}">
+					<td class="noBorder" th:text="${board.id}"></td>
+
+					<td class="noBorder"><a class="board-title"
+						th:href="@{'/board/detail/' + ${board.id}}"
+						th:text="${board.boardTitle}"></a></td>
+
+					<td class="noBorder" th:text="${board.user.username}"></td>
+					<td class="noBorder"
+						th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
+					<td class="noBorder" th:text="${board.boardView}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div class="btn-write">
+    <a href="/board/write">
+    <button type="submit">등록</button>
+   </a>
+  </div>
+
+	<div class="pagination">
+		<th:block th:if="${page.totalPages > 0}" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+			<a th:href="@{/board/list(page=${i})}" th:text="${i + 1}"
+				th:class="${page.number == i ? 'selected' : ''}">1</a>
+		</th:block>
+	</div>
+
+
+</body>
+</html>

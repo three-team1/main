@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+</head>
+<body>
+	
+<form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
+    <label for="boardTitle">Title</label>
+    <input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}">
+    <label for="boardContent">Content</label>
+    <textarea id="boardContent" name="boardContent" th:text="${board.boardContent}"></textarea>
+    <input type="submit" value="Update">
+</form>
+
+  <th:block th:if="${error}">
+	<script>
+		alert('권한이 없습니다.');
+	</script>
+  </th:block>
+
+</body>
+</html>

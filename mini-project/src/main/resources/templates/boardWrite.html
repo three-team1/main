@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<link href="/css/main.css" rel="stylesheet">
+<title>Insert title here</title>
+<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+</head>
+
+  <style>
+    body {
+      color: #D2D1D5;
+    }
+    
+
+
+    .form-write {
+      width: 500px;
+      margin: auto;
+      font-weight: bold;
+      margin-top: 250px;
+    }
+      #title {
+        width: 500px;
+        height: 30px;
+       
+      }
+
+      h1 {
+        color: blanchedalmond;
+      }
+
+      .btn-write {
+        text-align: center;
+        width: 100px;
+        padding: 5px;
+        background-color: antiquewhite;
+        border: none;
+        border-radius: 3px;
+        font-weight: bold;
+        margin-top: 5px;
+        cursor: pointer;
+      }
+
+      .btn-to-list {
+        background-color : whitesmoke;
+      }
+
+      input, textarea {
+        margin-top : 10px;
+        margin-bottom: 10px;
+      }
+
+      label {
+        color: lightcoral;
+      }
+    
+
+
+
+  </style>
+
+<body>
+  <header>
+    <div class="nav-bar-container">
+
+      <div class="nav-logo">
+        <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+      </div>
+
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            컬렉션
+        </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            게시판
+        </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            세일
+        </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            신상품
+        </a>
+        </div>
+
+      </div>
+
+   
+			<div  sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span sec:authentication="name"></span>님
+				</p>
+			</div>
+			
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+			
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+		</div>
+
+    
+
+  </header>
+
+	<div class="form-write">
+	 <h1>게시글 작성하기</h1>
+    <form action="/board/list" method="post">
+        <label for="title">제목</label><br>
+        <input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 작성해주세요" required><br>
+        <label for="boardContent">내용</label><br>
+        <textarea rows="30" cols="100"  id="boardContent" name="boardContent" placeholder="내용을 입력해주세요" required></textarea><br>
+        <input class="btn-write" type="submit" value="작성하기">
+        <a href="/board/list">
+        <button class="btn-write btn-to-list">목록으로</button>
+       </a>
+    </form>
+	</div>
+</body>
+</html>

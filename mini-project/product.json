@@ -1,0 +1,69 @@
+[
+  {
+    "product_id" : 1,
+    "product_title": "마인드링크",
+    "product_price": 550000,
+    "product_content": "능력 : 마인드링크는 \"지식의 능력\" 이며 세상 모든 퍼즐을 풀 수 있는 지식의 전당. 마인드링크로 당신은 모든 것을 이해하고 해결할 수 있게 됩니다.",
+    "product_quantity" : 20
+  },
+
+
+  {
+    "product_id" : 2,
+    "product_title": "어디로든 문",
+    "product_price": 1280000,
+    "product_content": "능력 : 어디로든 문은 \"공간의 능력\" 이며 이곳 저곳, 언제나 어디든지 당신을 이동시킬 수 있는 통로. 만화 도라에몽을 보았다면 익숙한 능력일 것입니다.",
+    "product_quantity" : 20
+  },
+
+
+  {
+    "product_id" : 3,
+    "product_title": "텔레스피르",
+    "product_price": 680000,
+    "product_content": "능력 : 텔레스피르는 \"소통의 능력\" 이며 생각만으로 대화하는 통신의 신기술. 텔레스피르를 통해 말이 필요 없는 소통을 경험해 보세요.",
+    "product_quantity" : 20
+  },
+
+  {
+    "product_id" : 4,
+    "product_title": "심포니아",
+    "product_price": 350000,
+    "product_content": "능력 : 심포니아는 \"조화의 능력\" 이며 완벽한 조화로운 세상을 만들어내는 힘. 어떠한 음악이든 자유자재로 다룰 수 있게 됩니다. 심포니아와 함께라면 당신 주변은 언제나 조화롭게 변화할 것입니다.",
+    "product_quantity" : 20
+  },
+
+  {
+    "product_id" : 5,
+    "product_title": "테레사이클",
+    "product_price": 450000,
+    "product_content": "능력 : 테레사이클은 \"자연의 능력\" 이며 환경을 보호하고, 자원을 재활용하는 에코 파워. 테레사이클론으로 당신은 지구를 보호하는 슈퍼히어로가 될 수 있습니다.",
+    "product_quantity" : 20
+  },
+
+  {
+    "product_id" : 6,
+    "product_title": "루미나이트",
+    "product_price": 850000,
+    "product_content": "능력 : 루미나이트는 \"빛의 능력\"이며 빛을 조작하여 비상한 힘과 능력을 발휘하는 초능력입니다. 이 특별한 능력은 주변의 빛을 조절하고, 빛의 속도를 조작하며, 빛을 통해 감정과 에너지를 전달할 수 있습니다.",
+    "product_quantity" : 20
+  },
+
+  { 
+    "product_id" : 7,
+    "product_title": "워터위스퍼",
+    "product_price": 1200000,
+    "product_content": "능력 : 워터위스퍼는 \"물의 능력\"이며 물의 순환을 지배하며 상상이 현실을 만나는 그 순간, 당신은 창조의 주인이 됩니다. 물의 유연성으로 세계를 변화시키고, 진리를 발견하고, 혁신을 일으키세요.",
+    "product_quantity" : 20
+
+  },
+  { 
+    "product_id" : 8,
+    "product_title": "크로노스",
+    "product_price": 100000000,
+    "product_content": "능력 : 크로노스는 \"시간의 능력\"이며 당신의 선택을 최적화하고, 소중한 순간을 다시 살 수 있는 기회를 제공합니다. 다시 한번, 당신의 시간을 극대화하세요. 또한 과거와 미래를 여행하며 무한한 가능성을 탐험할 수 있습니다!",
+    "product_quantity" : 20
+
+  }
+  
+]
