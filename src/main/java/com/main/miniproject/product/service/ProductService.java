@@ -28,4 +28,9 @@ public class ProductService {
 		
 		return productRepository.findById(productId).get();
 	}
+	
+	public List<Product> searchProducts(String searchKeyword) {
+		
+		return productRepository.findByProductTitleContaining(searchKeyword);
+	}
 }

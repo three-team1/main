@@ -2,6 +2,7 @@ package com.main.miniproject.product.service;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,11 @@ public class RealTimeSearchService {
 	private RealTimeSearchRepository realTimeSearchRepository;
 	
 	public void saveSearchKeyword(String searchKeyword) {
+		
+	    // 검색어가 비어있거나 공백만 있는 경우는 저장하지 않음
+	    if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
+	        return;
+	    }
 
 		RealTimeSearch realTimeSearchKeyword =  realTimeSearchRepository.findBysearchKeyword(searchKeyword);
 			
