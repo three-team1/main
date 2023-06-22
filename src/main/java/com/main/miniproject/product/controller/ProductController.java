@@ -7,62 +7,54 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.main.miniproject.product.entity.RealTimeSearch;
 import com.main.miniproject.product.service.RealTimeSearchService;
 
-import lombok.extern.log4j.Log4j2;
 
-
-@Log4j2
 @Controller
 public class ProductController {
-	
-	
-	 
+
 	
 	@Autowired
 	private RealTimeSearchService realTimeSearchService;
 	
 	
-	@Scheduled(fixedDelay = 1000)
-	public String scheduledKeyword() {
-		
-		List<RealTimeSearch> realTimeSearchList = realTimeSearchService.searchList();
-		log.info(realTimeSearchList);
-		
-		return "redirect:/product/productList";
-	}
+//	@Scheduled(fixedDelay = 15000)
+//	public void scheduledKeyword() {
+//		
+//		realTimeSearchService.getTop10Searches();
+//
+//	}
 	
-	
-	
-	@GetMapping("/product")
-	public String searchList() {
-
-		RealTimeSearch realTimeSearch = new RealTimeSearch();
-		
-		String keyword = "나나나";
-
-		realTimeSearchService.saveSearchKeyword(keyword);		
-		
-//	    List<RealTimeSearch> realTimeSearchList = realTimeSearchService.searchList();
-
-//	    model.addAttribute("searchList", realTimeSearchList);
-	    
-	    return "redirect:/product/productList";
-	    
-	}
 	
 	
 	
 	
 
+	
 	@GetMapping("/product/productList")
-	public String getProductList() {
+	public String searchList(String keyword, Model model) {
 		
+		realTimeSearchService.saveSearchKeyword(keyword);
 		
-		return "/product/productList";
+		List<RealTimeSearch> realTimeTop10 = realTimeSearchService.getTop10Searches();
 
+	    model.addAttribute("top10SearchList", realTimeTop10);
+	    
+	    return "/product/productList";
+	    
 	}
+	
+	
+//	@GetMapping("/product/productList")
+//	public String getProductList() {
+//		
+//		
+//		return "/product/productList";
+//	}
+	
+	
 	
 }
