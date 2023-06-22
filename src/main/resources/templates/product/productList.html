@@ -282,7 +282,40 @@
     margin-bottom: 100px;
     
   }
+  
+  table td:nth-child(1) {
+  	color:lightblue;
+  }
+  
+  table td:nth-child(2) {
+  	color:lightcoral;
+  }
 
+ /* 검색 버튼 CSS*/
+ 
+.search-box, .search-btn {
+    vertical-align: middle;
+  }
+
+  .search-box{
+  padding: 10px;
+  border: 2px solid #b6fbff;
+  border-top-left-radius: 4px;
+  box-shadow: 0 2px 4px rgba(255, 255, 0, 1);
+  background-color: transparent;
+  color: white;
+  }
+
+  .search-btn{
+      padding: 10px;
+      margin-left: -9px;
+      border-bottom-right-radius: 5px;
+      text-align: center;
+      border: 2px solid #83a4d4;
+      color: white;
+      background-color: transparent;
+       
+    }
 
 /* 상품목록 버튼 애니메이션 Css*/
 
@@ -536,16 +569,16 @@
 				src="/images/lightning-man.jpg">
 			<div class="text-box lightning-text-box">
         <h2 class="new-label2">NEW</h2>
-				<h1 class="fade-in glitter-effect" data-text="번개의 능력">번개의 능력</h1>
-				<p class="fade-in">
+				<h1 class="fade-in2 glitter-effect" data-text="번개의 능력">번개의 능력</h1>
+				<p class="fade-in2">
 
 					<span>"번개의 능력"</span>은 에너지의 움직임을 지배하며, 강력한 힘과 빠른 속도를 자랑합니다.
         </p>
-        <p class="fade-in">이것은 강력한 전하를 발산하며, 그 충격은 모든 것을 파괴하거나 새로운 것을 생성할 수 있습니다.</p>
-        <p class="fade-in">번개의 능력을 통해 당신은 더 큰 가능성을 추구하고, 더 큰 도전을 이기며, 더 큰 성취를 이룰 수 있습니다.</p>
+        <p class="fade-in2">이것은 강력한 전하를 발산하며, 그 충격은 모든 것을 파괴하거나 새로운 것을 생성할 수 있습니다.</p>
+        <p class="fade-in2">번개의 능력을 통해 당신은 더 큰 가능성을 추구하고, 더 큰 도전을 이기며, 더 큰 성취를 이룰 수 있습니다.</p>
 
-				<button class="btn fade-in">구매하기</button>
-				<button class="btn-more fade-in">더 알아보기</button>
+				<button class="btn fade-in2">구매하기</button>
+				<button class="btn-more fade-in2">더 알아보기</button>
 			</div>
 		</div>
 
@@ -554,16 +587,16 @@
 				src="/images/telekinesis-man.jpg">
 			<div class="text-box telekinesis-text-box">
         <h2 class="new-label3">NEW</h2>
-				<h1 class="fade-in glitter-effect" data-text="염력의 능력">염력의 능력</h1>
-				<p class="fade-in">
+				<h1 class="fade-in3 glitter-effect" data-text="염력의 능력">염력의 능력</h1>
+				<p class="fade-in3">
 
 					<span>"염력의 능력"</span>은 물리적 제약을 초월하는 능력을 지니며, 당신의 마음만으로 물체를 움직이고, 상황을 조정할 수 있습니다.
         </p>
-        <p class="fade-in">염력의 능력으로 세계를 아무런 제약 없이 조작하고, 장애물을 없애고, 변화를 불러오세요.</p>
-        <p class="fade-in">당신의 의지로 세상을 바꿀 수 있는 염력의 능력을 경험하세요.</p>
+        <p class="fade-in3">염력의 능력으로 세계를 아무런 제약 없이 조작하고, 장애물을 없애고, 변화를 불러오세요.</p>
+        <p class="fade-in3">당신의 의지로 세상을 바꿀 수 있는 염력의 능력을 경험하세요.</p>
 
-				<button class="btn fade-in">구매하기</button>
-				<button class="btn-more fade-in">더 알아보기</button>
+				<button class="btn fade-in3">구매하기</button>
+				<button class="btn-more fade-in3">더 알아보기</button>
 			</div>
 		</div>
 
@@ -594,6 +627,7 @@
         
         
         <div class="top10-search-keyword">
+        <p id="counter" style="color : red"></p>
         <h1>상품 검색어 순위 <span>TOP 10</span></h1>
       	<table>
       		<tr>
@@ -631,16 +665,16 @@
   
       <div class="custom-select">
           <select id="sort-select">
-              <option value="number">상품번호</option>
+              <option value="number">최신순</option>
               <option value="price">가격순</option>
               <option value="name">이름순</option>
           </select>
       </div>
   
-      <div class="search">
-        <input name="searchKeyword" type="search" class="search-box" />
-        <span class="search-button">검색</span>
-      </div>
+		<form onsubmit="submitSearch(event)">
+		  <input name="searchKeyword" type="search" class="search-box" />
+		  <input class="search-btn" type="submit" value="검색" />
+		</form>
       
 
       
@@ -669,11 +703,102 @@
     
     let currentCategory = "전체";				// 카테고리 디폴트 설정 (첫 화면)
     let currentSortBy = "number";				// 정렬 디폴트 설정 (첫 화면)
+    let currentSearchKeyword = "";				// 검색어 초기값
+
     
+    function submitSearch(event) {
+    	event.preventDefault();
+    	currentSearchKeyword = document.querySelector('.search-box').value;  // 검색어 인풋 클래스를불러오고 해당하는 값\
+
+    	
+    	// 실시간 검색어 저장
+        $.ajax({
+            url: '/api/searches',
+            type: 'POST',
+            data: { searchKeyword: currentSearchKeyword },
+            success: function() {
+               console.log(currentSearchKeyword);
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+
+        // 상품 검색
+        $.ajax({
+            url: '/api/products/search',
+            type: 'GET',
+            data: { searchKeyword: currentSearchKeyword },
+            success: function() {
+               
+                loadProducts(); // 이 부분은 기존에 상품 데이터를 화면에 표시하는 함수를 그대로 사용하면 됩니다.
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    	
+    }
+    
+    // 실시간 검색어 리스트 ajax로 요청하기 
+	
+    $(document).ready(function() {
+    	
+    	let counter = 15;
+    	
+    	const intervaild = setInterval(function() {
+    		counter--;
+    		if(counter >= 0) {
+    			$("#counter").text(counter + 's');
+    		} else {
+    			updateSearchList();
+    			counter = 15;
+    		}
+    	}, 900);
+    		
+ 
+  	    // 페이지가 로드되면 즉시 실행되는 함수
+  	    updateSearchList(); // 처음 로딩시 1회 실행
+
+  	    
+  	    // 15초마다 서버에 요청을 보냄.
+  	    setInterval(function() {
+  	        updateSearchList();
+  	    }, 15000); // 15초마다 반복
+  	});
+
+  	function updateSearchList() {
+  	    $.ajax({
+  	        url: '/api/top10searches', // 요청을 보낼 URL
+  	        type: 'GET', // HTTP 메소드
+  	        success: function(data) {
+  	            // Clear existing data
+  	            $('.top10-search-keyword table tr:not(:first-child)').remove();
+
+  	            // Append new data
+  	            for (var i = 0; i < data.length; i++) {
+  	                $('.top10-search-keyword table').append(
+  	                		'<tr>' +
+  	                		'<td>' + data[i].searchKeyword + '</td>' +
+  	                		'<td>' + data[i].searchCnt + '</td>' +
+  	                		'</tr>');
+  	            }
+  	        },
+  	        error: function(error) {
+  	            // 에러 발생 시 처리할 로직
+  	            console.error(error);
+  	        },
+  	    });
+  	} 
+  	
+  	
+  	
     const sortSelect = document.querySelector("#sort-select");     
     
     sortSelect.addEventListener('change', async (event) => {	
     	currentSortBy = event.target.value;					// 정렬 방식 값
+    	
+    	currentSearchKeyword = "";
     	
     	await loadProducts();								// 정렬방식의 상품정보 불러오기를 기다림.
     });
@@ -683,6 +808,8 @@
     categoryButtons.forEach((button) => {									// 각 버튼들을 반복
     	button.addEventListener('click', async () => {					
     		currentCategory = button.getAttribute('data-category');			// currentCategory에 버튼에 있던 data-category 값을 가져옴.
+    		
+    		currentSearchKeyword = "";
     		
     		await loadProducts();							// 카테고리의 상품정보 불러오기를 기다림.
     	});
@@ -695,6 +822,10 @@
     		products = products.filter(product => product.productType == currentCategory);  // 카테고리에 따라 상품 정렬
     	}
     	
+     	if(currentSearchKeyword !== "") {
+    		products = products.filter(product => product.productTitle.includes(currentSearchKeyword));
+    	} 
+    	
     	products.sort((a,b) => {															// 가격,이름,번호 순으로 정렬
     		switch(currentSortBy) {
     		case 'price' :
@@ -702,7 +833,7 @@
     		case 'name' :
     			return a.productTitle.localeCompare(b.productTitle);
     		case 'number' :
-    			return a.id - b.id;
+    			return b.id - a.id;
     		}
     	});
     	
@@ -763,7 +894,7 @@
           }
           
           const template = `
-                    <div class="hot-item ${convertTitleToClassName(data.productTitle)}">
+                    <div class="hot-item ${convertTitleToClassName(data.productTitle)} fade-in${Math.floor(i / 4) + 1}">
                         <img src="${image.url}">
                         <div class="hot-item-text">
                             <h1>${titleHTML}</h1>
@@ -780,12 +911,16 @@
           
 
                     
-          let lastElement = mainHotItemBox.lastElementChild;
-          applyAnimation(lastElement, i);
-        }
+          if (i % 4 === 3 || i === products.length - 1) { // If i is the last of a group of 4 or the last of all products
+              let lastElements = mainHotItemBox.querySelectorAll('.hot-item:nth-child(n+' + Math.max(i - 2, 0) + '):nth-child(-n+' + (i + 1) + ')');
+              lastElements.forEach((lastElement, index) => {
+                  applyAnimation(lastElement, index);
+              });
+          }
       }
+  }
   
-      function applyAnimation(element, index) {
+   function applyAnimation(element, index) {
         let observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -798,70 +933,40 @@
           })
         });
         observer.observe(element);
-      }
+      } 
   
-      loadData();
+   loadData();
 
-		
-      $(document).ready(function() {
-    	    // 페이지가 로드되면 즉시 실행되는 함수
-    	    updateSearchList(); // 처음 로딩시 1회 실행
-
-    	    // 15초마다 서버에 요청을 보냄.
-    	    setInterval(function() {
-    	        updateSearchList();
-    	    }, 15000); // 15초마다 반복
-    	});
-
-    	function updateSearchList() {
-    	    $.ajax({
-    	        url: '/api/top10searches', // 요청을 보낼 URL
-    	        type: 'GET', // HTTP 메소드
-    	        success: function(data) {
-    	            // Clear existing data
-    	            $('.top10-search-keyword table tr:not(:first-child)').remove();
-
-    	            // Append new data
-    	            for (var i = 0; i < data.length; i++) {
-    	                $('.top10-search-keyword table').append('<tr><td>' + data[i].searchKeyword + '</td><td>' + data[i].searchCnt + '</td></tr>');
-    	            }
-    	        },
-    	        error: function(error) {
-    	            // 에러 발생 시 처리할 로직
-    	            console.error(error);
-    	        },
-    	    });
-    	}
-
-
-
-
-
-
-
-
-
+      
       function observeFadeIn(elements) {
-        elements.forEach((element, index) => {
-          let observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                setTimeout(() => {
-                  entry.target.style.animation = `slide-fade-in 0.5s ease-out ${index * 200}ms forwards`;
-                }, index * 10); // 200ms delay between each element
-              } else {
-                entry.target.style.animation = '';
-              }
-            });
-          }); 
-          observer.observe(element);
-        });
-      }
+          elements.forEach((element, index) => {
+            let observer = new IntersectionObserver((entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  setTimeout(() => {
+                    entry.target.style.animation = `slide-fade-in 0.5s ease-out ${index * 200}ms forwards`;
+                  }, index * 10); // 200ms delay between each element
+                } else {
+                  entry.target.style.animation = '';
+                }
+              });
+            }); 
+            observer.observe(element);
+          });
+        }
+
+
       
       let fadeIns = document.querySelectorAll('.fade-in');
+      let fadeIns2 = document.querySelectorAll('.fade-in2');
+      let fadeIns3 = document.querySelectorAll('.fade-in3');
+      let fadeIns4 = document.querySelectorAll('.fade-in4');
       
       
       observeFadeIn(fadeIns);
+      observeFadeIn(fadeIns2);
+      observeFadeIn(fadeIns3);
+      observeFadeIn(fadeIns4);
 
 
 
