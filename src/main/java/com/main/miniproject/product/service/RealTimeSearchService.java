@@ -14,23 +14,16 @@ public class RealTimeSearchService {
 	@Autowired
 	private RealTimeSearchRepository realTimeSearchRepository;
 	
-	private RealTimeSearch realTimeSearch;
-	
 	public void saveSearchKeyword(String searchKeyword) {
 
-		System.out.println(searchKeyword);
 		RealTimeSearch realTimeSearchKeyword =  realTimeSearchRepository.findBysearchKeyword(searchKeyword);
-		
-		
-		
+			
 		if(realTimeSearchKeyword == null) {
 			
 			realTimeSearchKeyword = new RealTimeSearch();
 			
-			Long intr =10L;		
-//			realTimeSearchKeyword.setId(intr);
 			realTimeSearchKeyword.setSearchKeyword(searchKeyword);
-			System.out.println(realTimeSearchKeyword.toString());
+
 			realTimeSearchRepository.save(realTimeSearchKeyword);
 			
 		} else {
@@ -46,6 +39,11 @@ public class RealTimeSearchService {
 	public List<RealTimeSearch> searchList () {
 	
 		return realTimeSearchRepository.findAll();
+	}
+	
+	public List<RealTimeSearch> getTop10Searches() {
+		
+		return realTimeSearchRepository.findTop10ByOrderBySearchCntDesc();
 	}
 	
 	
