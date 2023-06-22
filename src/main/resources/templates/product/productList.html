@@ -241,6 +241,8 @@
     position: absolute;
     text-align: center;
     bottom: -40%;
+    display:flex;
+    left: 42%;
   }
 
   .product-header-logo img {
@@ -253,6 +255,32 @@
     font-size: 3em;
     color: #d7d7d7;
     text-shadow: 5px 5px 5px #828181;
+  }
+  
+  .top10-search-keyword h1{
+  	color:white;
+  	text-align : center;
+    font-size: 16px;
+    margin-left: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .top10-search-keyword{
+    margin-left: 200px;
+    width: 400px;
+  
+  }
+
+  .top10-search-keyword span{
+    color: #83a4d4;
+    
+  }
+
+  .top10-search-keyword table {
+    width: 400px;
+    color: wheat;
+    margin-bottom: 100px;
+    
   }
 
 
@@ -557,10 +585,28 @@
       </div>
   
       <div class="product-header-logo"> 
+      	<div>
         <img src="/icon/Black n White Luxury  Rent Car Logo.png">
         <h1>상품 목록</h1>
         <p style="color: beige;">Shop Items</p>
         <h2 style="color : grey">The Choice Is Yours </h2>
+       </div>
+        
+        
+        <div class="top10-search-keyword">
+        <h1>상품 검색어 순위 <span>TOP 10</span></h1>
+      	<table>
+      		<tr>
+      			<th>상품 검색어</th>
+      			<th>검색 횟수</th>
+      		</tr>
+      		<tr>
+      			<td></td>
+      			<td></td>
+      		</tr>
+      	</table>
+      	</div>
+      	
       </div>
 
     </div>
@@ -593,15 +639,10 @@
   
       <div class="search">
         <input name="searchKeyword" type="search" class="search-box" />
-        <span class="search-button">
-          <span class="search-icon"></span>
-        </span>
+        <span class="search-button">검색</span>
       </div>
       
-      <form action="/product" method="get">
-      	<table></table>
-      	
-      </form>
+
       
     
   </div>
@@ -761,12 +802,36 @@
   
       loadData();
 
+		
+      $(document).ready(function() {
+    	    // 페이지가 로드되면 즉시 실행되는 함수
+    	    updateSearchList(); // 처음 로딩시 1회 실행
 
+    	    // 15초마다 서버에 요청을 보냄.
+    	    setInterval(function() {
+    	        updateSearchList();
+    	    }, 15000); // 15초마다 반복
+    	});
 
-        
+    	function updateSearchList() {
+    	    $.ajax({
+    	        url: '/api/top10searches', // 요청을 보낼 URL
+    	        type: 'GET', // HTTP 메소드
+    	        success: function(data) {
+    	            // Clear existing data
+    	            $('.top10-search-keyword table tr:not(:first-child)').remove();
 
-
-
+    	            // Append new data
+    	            for (var i = 0; i < data.length; i++) {
+    	                $('.top10-search-keyword table').append('<tr><td>' + data[i].searchKeyword + '</td><td>' + data[i].searchCnt + '</td></tr>');
+    	            }
+    	        },
+    	        error: function(error) {
+    	            // 에러 발생 시 처리할 로직
+    	            console.error(error);
+    	        },
+    	    });
+    	}
 
 
 

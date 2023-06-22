@@ -41,10 +41,12 @@ public class RealTimeSearchService {
 		return realTimeSearchRepository.findAll();
 	}
 	
+
 	public List<RealTimeSearch> getTop10Searches() {
 		
 		return realTimeSearchRepository.findTop10ByOrderBySearchCntDesc();
 	}
+
 	
 	
 }
