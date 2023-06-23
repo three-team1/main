@@ -3,9 +3,15 @@ package com.main.miniproject.user.controller;
 import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.service.UserInfoService;
 
+import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -13,10 +19,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/mypage")
 public class MypageController {
-    private final UserInfoService userInfoService;
+    private UserInfoService userInfoService;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    public MypageController(UserInfoService userInfoService,
+                            AuthenticationManager authenticationManager) {
+        this.userInfoService = userInfoService;
+        this.authenticationManager = authenticationManager;
+    }
 
     //마이페이지
     @GetMapping("/me")
@@ -48,6 +61,13 @@ public class MypageController {
         String username = userDetails.getUsername();
 
         userInfoService.updateMyInfo(username, myInfoDTO);
+
+        //내 정보 수정 시 수정된 사용자 정보 로그아웃 없이 반영
+        UserDetails updatedUserDetails = userInfoService.updateUserDetails(username, userDetails);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(updatedUserDetails,
+                myInfoDTO.getPassword(), userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/mypage/myInfo";
     }

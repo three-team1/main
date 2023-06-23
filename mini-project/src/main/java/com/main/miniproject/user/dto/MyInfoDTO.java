@@ -20,6 +20,9 @@ public class MyInfoDTO {
     private String my_address;
     private String my_detailAddress;
 
+    private String currentPassword;
+    private String newPassword;
+
     public static MyInfoDTO of(User user) {
         MyInfoDTO myInfoDTO = new MyInfoDTO();
 

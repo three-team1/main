@@ -1,29 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/mypage/me</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: pink;
-        }
+    <th:block layout:fragment="css">
+        <style>
+            .menu-tb {
+                border-collapse: collapse;
+                margin-top: 250px;
+                margin-left: 50px;
+            }
 
-        .menu {
-            float: left;
-        }
-    </style>
+            .menu-tr, .munu-td {
+                border: 1px solid pink;
+                padding: 30px 20px 30px 20px;
+            }
+
+            .munu-td {
+                text-align: center;
+                font-weight: bold;
+                color: white;
+            }
+        </style>
+    </th:block>
 </head>
 <body>
-<div class="menu">
-    <ul>
-        <li><a href=#>주문조회</a></li>
-        <li><a href=#>내 게시글 관리</a></li>
-        <li><a href=#>내 리뷰 관리</a></li>
-        <li><a href="/mypage/myInfo">마이페이지</a></li>
-    </ul>
+<div layout:fragment="content">
+    <div class="menu">
+        <table class="menu-tb">
+            <tbody>
+            <tr class="menu-tr">
+                <td class="munu-td">주문/배송조회</td>
+            </tr>
+            <tr class="menu-tr">
+                <td class="munu-td">내 글/댓글 조회</td>
+            </tr>
+            <tr class="menu-tr">
+                <td class="munu-td">내 리뷰 관리</td>
+            </tr>
+            <tr class="menu-tr">
+                <td class="munu-td">내 정보 관리</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

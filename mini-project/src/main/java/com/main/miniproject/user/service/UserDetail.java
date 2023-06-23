@@ -3,6 +3,7 @@ package com.main.miniproject.user.service;
 import java.util.Arrays;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +34,11 @@ public class UserDetail implements UserDetails, OAuth2User{
         this.role = user.getRole();
     }
 
+	public UserDetail(UserDetail userDetail) {
+		this.user = userDetail.getUser();
+		this.role = userDetail.role;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		switch (role) {
@@ -48,8 +54,13 @@ public class UserDetail implements UserDetails, OAuth2User{
 	public User getUser() {
 		return this.user;
 	}
+
+	public void setUser(User user) {
+		this.user = user;
+		this.role = user.getRole();
+	}
 	
-	 public Map<String, Object> getAttributes() {
+	public Map<String, Object> getAttributes() {
 	        return attributes;
 	 }
 	 
