@@ -1,26 +1,83 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 <head>
     <th:block layout:fragment="css">
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: pink;
+            .main-container {
+                margin-top: 15%;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 600px;
+                grid-gap: 10px;
+            }
+
+            .main-container > div {
+                border: 1px dotted aqua;
+                border-radius: 5px;
+                padding: 1em;
+            }
+
+            .aside {
+                grid-column: 1;
+                grid-row: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .menu {
-                float: left;
+                position: absolute;
+                color: white;
             }
 
-            .content {
+            .section {
+                grid-column: 2 / 5;
+                grid-row: 1;
+            }
+
+            .menu-title {
+                border: 1px solid pink;
+                padding: 20px 10px;
+                text-align: center;
+                font-weight: bold;
+                color: white;
+            }
+
+            #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+                background: pink;
+            }
+
+            .section {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+            }
+
+            #btnUpdate {
+                display: flex;
+                justify-content: center;
+                max-width: 300px;
+                margin-top: 10px;
+            }
+
+            .myInfo-tb {
+                border-collapse: collapse;
+                min-width: 500px;
+            }
+
+            th, td {
+                border: 1px solid pink;
+                padding: 10px 5px;
+                text-align: left;
+                color: white;
+            }
+
+            .myInfo-th {
+                font-weight: bold;
             }
 
             .buttons {
@@ -31,82 +88,80 @@
                 margin-top: 10px;
             }
 
-            table {
-                margin: 10px auto;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                padding: 5px;
-                background-color: lightpink;
-                text-align: left;
+            a:link {
+                color: white;
+                text-decoration: none;
             }
         </style>
     </th:block>
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-
-        </script>
-    </th:block>
 </head>
 <body>
-<header th:replace="/fragments/header :: header"></header>
 <div layout:fragment="content">
-    <div class="menu">
-        <ul>
-            <li><a href="#">주문조회</a></li>
-            <li><a href="#">내 게시글 관리</a></li>
-            <li><a href="#">내 리뷰 관리</a></li>
-            <li><a href="/mypage/myInfo">마이페이지</a></li>
-        </ul>
-    </div>
-    <div class="content">
-        <h1>마이페이지</h1>
-        <form id="updateForm" action="/mypage/myUpdate" method="post">
-            <input type="hidden" id="userId" name="userId" th:value="${user.id}">
-            <table>
-                <tr>
-                    <th>아이디:</th>
-                    <td><span id="username" th:text="${user.username}"></span></td>
-                </tr>
-                <tr>
-                    <th>현재 비밀번호:</th>
-                    <td><input type="password" id="currentPassword" name="currentPassword"></td>
-                </tr>
-                <tr>
-                    <th>새 비밀번호:</th>
-                    <td><input type="password" id="newPassword" name="newPassword"></td>
-                </tr>
-                <tr>
-                    <th>비밀번호 확인:</th>
-                    <td><input type="password" id="confirmPassword" name="confirmPassword"></td>
-                </tr>
-                <tr>
-                    <th>이메일:</th>
-                    <td><input type="text" id="email" name="email" th:value="${user.email}"></td>
-                </tr>
-                <tr>
-                    <th>연락처:</th>
-                    <td><input type="text" id="tel" name="tel" th:value="${user.tel}"></td>
-                </tr>
-                <tr>
-                    <th>우편번호:</th>
-                    <td><input type="text" id="my_postcode" name="my_postcode" th:value="${user.my_postcode}"></td>
-                </tr>
-                <tr>
-                    <th>주소:</th>
-                    <td><input type="text" id="my_address" name="my_address" th:value="${user.my_address}"></td>
-                </tr>
-                <tr>
-                    <th>상세주소:</th>
-                    <td><input type="text" id="my_detailAddress" name="my_detailAddress" th:value="${user.my_detailAddress}"></td>
-                </tr>
-            </table>
-            <div class="buttons">
-                <button type="submit" id="btnUpSave">저장</button>
-                <a href="/mypage/myInfo"><button type="button">취소</button></a>
+    <div class="main-container">
+        <div class="aside">
+            <div class="menu">
+                <div class="menu-title" id="menu-title1">
+                    <a href="#"><p>내 주문/배송조회</p></a>
+                </div>
+                <div class="menu-title" id="menu-title2">
+                    <a href="#"><p>내 글/댓글 조회</p></a>
+                </div>
+                <div class="menu-title" id="menu-title3">
+                    <a href="#"><p>내 리뷰 관리</p></a>
+                </div>
+                <div class="menu-title" id="menu-title4">
+                    <a href="/mypage/myInfo"><p>내 정보 관리</p></a>
+                </div>
             </div>
-        </form>
+        </div>
+        <div class="section">
+            <h1>마이페이지</h1>
+            <form id="updateForm" action="/mypage/myUpdate" method="post">
+                <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+                <table class="myInfo-tb">
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">아이디</th>
+                        <td class="myInfo-td"><span id="username" th:text="${user.username}"></span></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">현재 비밀번호</th>
+                        <td class="myInfo-td"><input type="password" id="currentPassword" name="currentPassword"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">새 비밀번호</th>
+                        <td class="myInfo-td"><input type="password" id="newPassword" name="newPassword"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">비밀번호 확인</th>
+                        <td class="myInfo-td"><input type="password" id="confirmPassword" name="confirmPassword"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">이메일</th>
+                        <td class="myInfo-td"><input type="text" id="email" name="email" th:value="${user.email}"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">연락처</th>
+                        <td class="myInfo-td"><input type="text" id="tel" name="tel" th:value="${user.tel}"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">우편번호</th>
+                        <td class="myInfo-td"><input type="text" id="my_postcode" name="my_postcode" th:value="${user.my_postcode}"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">주소</th>
+                        <td class="myInfo-td"><input type="text" id="my_address" name="my_address" th:value="${user.my_address}"></td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">상세주소</th>
+                        <td class="myInfo-td"><input type="text" id="my_detailAddress" name="my_detailAddress" th:value="${user.my_detailAddress}"></td>
+                    </tr>
+                </table>
+                <div class="buttons">
+                    <button type="submit" id="btnUpSave">저장</button>
+                    <a href="/mypage/myInfo"><button type="button">취소</button></a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>

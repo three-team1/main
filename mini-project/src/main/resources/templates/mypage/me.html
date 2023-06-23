@@ -6,44 +6,79 @@
 <head>
     <th:block layout:fragment="css">
         <style>
-            .menu-tb {
-                border-collapse: collapse;
-                margin-top: 250px;
-                margin-left: 50px;
+            .main-container {
+                margin-top: 15%;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 600px;
+                grid-gap: 10px;
             }
 
-            .menu-tr, .munu-td {
+            .main-container > div {
+                border: 1px dotted aqua;
+                border-radius: 5px;
+                padding: 1em;
+            }
+
+            .aside {
+                grid-column: 1;
+                grid-row: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .menu {
+                position: absolute;
+                color: white;
+            }
+
+            .section {
+                grid-column: 2 / 5;
+                grid-row: 1;
+            }
+
+            .menu-title {
                 border: 1px solid pink;
-                padding: 30px 20px 30px 20px;
-            }
-
-            .munu-td {
+                padding: 20px 10px;
                 text-align: center;
                 font-weight: bold;
                 color: white;
+            }
+
+            #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+                background: pink;
+            }
+
+            a:link {
+                color: white;
+                text-decoration: none;
             }
         </style>
     </th:block>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="menu">
-        <table class="menu-tb">
-            <tbody>
-            <tr class="menu-tr">
-                <td class="munu-td">주문/배송조회</td>
-            </tr>
-            <tr class="menu-tr">
-                <td class="munu-td">내 글/댓글 조회</td>
-            </tr>
-            <tr class="menu-tr">
-                <td class="munu-td">내 리뷰 관리</td>
-            </tr>
-            <tr class="menu-tr">
-                <td class="munu-td">내 정보 관리</td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="main-container">
+        <div class="aside">
+            <div class="menu">
+                <div class="menu-title" id="menu-title1">
+                    <a href="#"><p>내 주문/배송조회</p></a>
+                </div>
+                <div class="menu-title" id="menu-title2">
+                    <a href="#"><p>내 글/댓글 조회</p></a>
+                </div>
+                <div class="menu-title" id="menu-title3">
+                    <a href="#"><p>내 리뷰 관리</p></a>
+                </div>
+                <div class="menu-title" id="menu-title4">
+                    <a href="/mypage/myInfo"><p>내 정보 관리</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+
+        </div>
     </div>
 </div>
 </body>
