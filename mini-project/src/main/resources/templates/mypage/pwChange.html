@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+  <th:block layout:fragment="css">
+    <style>
+      .main-container {
+        margin-top: 172px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: 620px;
+        grid-gap: 10px;
+      }
+
+      .main-container > div {
+        border: 1px dotted aqua;
+        border-radius: 5px;
+        padding: 1em;
+      }
+
+      .aside {
+        grid-column: 1;
+        grid-row: 1;
+        margin-left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .section {
+        grid-column: 2 / 5;
+        grid-row: 1;
+      }
+
+      .menu {
+        position: absolute;
+        color: white;
+      }
+
+      .menu-title {
+        border: 1px solid pink;
+        padding: 20px 10px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+        background: pink;
+      }
+
+      .section {
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .myInfo-tb {
+        border-collapse: collapse;
+        min-width: 510px;
+        min-height: 360px;
+      }
+
+      th, td {
+        border: 1px solid pink;
+        padding: 10px 10px;
+        text-align: left;
+        font-size: 1rem;
+        color: white;
+      }
+
+      .myInfo-th {
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .myInfo-td {
+        min-width: 360px;
+      }
+
+      .input-pw {
+        width: 350px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      .buttons {
+        text-align: center;
+      }
+
+      #btnSave, #btnCancel {
+        display: inline-block;
+        width: 70px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: pink;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      a:link {
+        color: white;
+        text-decoration: none;
+      }
+
+      h1 {
+        color: white;
+      }
+    </style>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="main-container">
+    <div class="aside">
+      <div class="menu">
+        <div class="menu-title" id="menu-title1" onclick="location.href='#'">
+          <p>내 주문/배송조회</p>
+        </div>
+        <div class="menu-title" id="menu-title2" onclick="location.href='#'">
+          <p>내 글/댓글 조회</p>
+        </div>
+        <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+          <p>내 리뷰 관리</p>
+        </div>
+        <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+          <p>내 정보 관리</p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h1>비밀번호 수정</h1>
+      <form id="pwChangeForm" action="/mypage/pwChange" method="post">
+        <table class="myInfo-tb">
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">현재 비밀번호</th>
+            <td class="myInfo-td">
+              <input type="password" class="input-pw" id="currentPw" placeholder="현재 비밀번호를 입력하세요.">
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">새 비밀번호</th>
+            <td class="myInfo-td">
+              <input type="password" class="input-pw" id="newPw" placeholder="새 비밀번호를 입력하세요.">
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">비밀번호 확인</th>
+            <td class="myInfo-td">
+              <input type="password" class="input-pw" id="chkPw" placeholder="새 비밀번호를 다시 입력하세요.">
+            </td>
+          </tr>
+        </table>
+        <br>
+        <div class="buttons">
+          <button type="submit" id="btnSave" name="btnSave" onclick="alert('내 비밀번호를 변경했습니다.')">확인</button>
+          <button type="button" id="btnCancel" name="btnCancel" onclick="location.href='/mypage/myInfo '">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

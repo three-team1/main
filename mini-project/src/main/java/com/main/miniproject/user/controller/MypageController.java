@@ -3,9 +3,6 @@ package com.main.miniproject.user.controller;
 import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.service.UserInfoService;
 
-import com.nimbusds.jose.proc.SecurityContext;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +44,7 @@ public class MypageController {
     }
 
     //내 정보 수정 페이지
-    @GetMapping("/myUpdate")
+    @GetMapping("/myUpdate-view")
     public String myUpdateView(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         String username = userDetails.getUsername();
         MyInfoDTO myInfoDTO = userInfoService.getMyInfo(username);
@@ -72,4 +69,9 @@ public class MypageController {
         return "redirect:/mypage/myInfo";
     }
 
+    //비밀번호 수정 페이지(test용)
+    @GetMapping("/pwChange")
+    public  String pwChangeView() {
+        return "/mypage/pwChange";
+    }
 }

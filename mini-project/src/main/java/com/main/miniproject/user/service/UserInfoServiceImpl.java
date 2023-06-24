@@ -3,7 +3,7 @@ package com.main.miniproject.user.service;
 import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -47,23 +47,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            //현재 비밀번호 일치 여부 확인
-/*            if (!encoder.matches(myInfoDTO.getPassword(), user.getPassword())) {
-                throw new IllegalArgumentException("비밀번호 불일치");
-            }
-
-            //비밀번호 불일치 시 변경 방지
-            if (myInfoDTO.getNewPassword() != null && !myInfoDTO.getNewPassword().isEmpty()) {
-                    String encPassword = encoder.encode(myInfoDTO.getNewPassword());
-                    user.setPassword(encPassword);
-            }
-
- */
-            //비밀번호 null 변경 방지
-            String encPassword = myInfoDTO.getPassword() != null
-                    ? encoder.encode(myInfoDTO.getPassword()) : user.getPassword();
-
-            user.setPassword(encPassword);
             user.setEmail(myInfoDTO.getEmail());
             user.setTel(myInfoDTO.getTel());
             user.setMy_postcode(myInfoDTO.getMy_postcode());
