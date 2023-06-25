@@ -137,34 +137,35 @@ a {
 		<div class="nav-bar-container">
 
 			<div class="nav-logo">
-				<a class= "abc" href="/">
-				<img src="/icon/Black n White Luxury  Rent Car Logo.png">
-			    </a>
+				<a href="/"> <img
+					src="/icon/Black n White Luxury  Rent Car Logo.png">
+				</a>
+
 
 			</div>
 
 			<div class="nav-bar-item-box">
 				<div class="nav-bar-item">
-					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+					<a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
 						컬렉션
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="/board/list"> <span></span> <span></span> <span></span>
-						<span></span> 게시판
+						<span></span> 커뮤니티
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="#"> <span></span> <span></span> <span></span> <span></span>
-						세일
+						Q&A
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="#"> <span></span> <span></span> <span></span> <span></span>
-						신상품
+						장바구니
 					</a>
 				</div>
 
@@ -173,8 +174,9 @@ a {
 
 			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
 				<p>
-					환영합니다! <span sec:authentication="name"></span>님
+					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
+				<a href="/mypage">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -193,7 +195,10 @@ a {
 				sec:authorize="!isAuthenticated()">
 				<a href="/register"> 회원가입 </a>
 			</div>
+
 		</div>
+
+
 
 
 
