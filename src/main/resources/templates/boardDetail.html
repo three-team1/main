@@ -21,6 +21,72 @@
 <link type="image/png" sizes="32x32" rel="icon"
 	href="/icon/icons8-에너지-32.png">
 </head>
+
+	<style>
+		.board-detail-box {
+			width: 1000px;
+			margin:auto;
+			margin-top: 300px;
+			text-align: left;
+			color: wheat;
+			padding: 20px;
+			border: 1px solid gray;
+			
+		}
+
+		.board-detail-box h1 {
+			text-align: center;
+			margin-left: 150px;
+		}
+
+		.board-detail-box span {
+			text-align: end;
+			font-size: 10px;
+			margin-left: 100px;
+		}
+
+		.board-detail-header {
+			color: lightcoral;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+		
+		.board-detail-header span{
+			color: lightblue;
+			font-weight:bold;
+			font-size : 16px;
+		}
+
+		.board-detail-action-box {
+			margin-top: 100px;
+			text-align: center;
+			color: antiquewhite;
+		}
+
+		.board-detail-content-box{
+			margin-top: 20px;
+			border-top: 1px solid lightgrey;
+			color: aqua;
+		}
+
+		.board-detail-content-box p{
+			color: white;
+		}
+
+		.board-detail-content-box h3{
+			margin-top: 50px;
+		
+		}
+		
+		.board-image img {
+			width: 400px;
+		}
+
+
+
+	</style>
+
 <body>
 
 
@@ -97,27 +163,42 @@
 
 
 
-    <h1>Board Detail</h1>
-    <div>
-        <h2 th:text="${board.boardTitle}"></h2> <!-- 게시글 제목 -->
-        <p>Author: <span th:text="${board.user.username}"></span></p> <!-- 작성자 이름 -->
-        <p>Created At: <span th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span></p> <!-- 작성 날짜 -->
-        <p>Updated At: <span th:text="${board.updatedAt}"></span></p> <!-- 수정 날짜 (만약 있을 경우) -->
-        <div>
-            <h3>Content</h3>
-            <p th:text="${board.boardContent}"></p> <!-- 게시글 내용 -->
+    
+    <div class="board-detail-box">
+		<h1>상세 게시글 <span th:text="'작성일 : ' + ${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span> <!-- 작성 날짜 --></h1>
+		<div class="board-detail-header">
+			<h2 th:text="'제목 : ' + ${board.boardTitle}">제목 :</h2>
+			<p>작성자:<span th:text="${board.user.username}"></span></p>
+		</div>
+         <!-- 작성자 이름 -->
+
+        <!--<p>수정일자: <span th:text="${board.updatedAt}"></span></p> --> <!-- 수정 날짜 (만약 있을 경우) -->
+        <div class="board-detail-content-box">
+            <h3>내용</h3>
+            	<div class="board-image" th:each="image : ${images}">
+        			<img th:src="@{'/board/images/' + ${image.name}}" alt="게시글 이미지" />
+    			</div>
+            <p th:text="${board.boardContent}">
+            
+			</p> <!-- 게시글 내용 -->
         </div>
     </div>
+
+
+
+		<!-- 삭제 및 수정 버튼 등 -->
+		<div class="board-detail-action-box">
+			<a th:href="@{'/board/edit/' + ${board.id}}">수정</a> <!-- 수정 페이지로 이동하는 링크 -->
+			<a th:href="@{'/board/delete/' + ${board.id}}">삭제</a> <!-- 게시글을 삭제하는 링크 -->
+		</div>
     
-    <!-- 삭제 및 수정 버튼 등 -->
-    <a th:href="@{'/board/edit/' + ${board.id}}">Edit</a> <!-- 수정 페이지로 이동하는 링크 -->
-    <a th:href="@{'/board/delete/' + ${board.id}}">Delete</a> <!-- 게시글을 삭제하는 링크 -->
     
-  <th:block th:if="${error}">
+    
+   <th:block th:if="${error}">
 	<script>
 		alert('권한이 없습니다.');
 	</script>
-  </th:block>
+  </th:block> 
     
 </body>
 </html>
