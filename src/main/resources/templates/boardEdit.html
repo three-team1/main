@@ -197,6 +197,7 @@
 		    
 		    	<div class="board-image" th:each="image : ${images}">
         			<img th:src="@{'/board/images/' + ${image.name}}" alt="게시글 이미지" />
+        			<button class="delete-img-btn" th:data-id="${image.id}">삭제</button>
     			</div>
     			
 		    <textarea id="boardContent" rows="30" cols="140" name="boardContent" th:text="${board.boardContent}"></textarea>
@@ -215,4 +216,24 @@
 		  </th:block>
 
 </body>
+<script>
+			$(".delete-img-btn").on("click", function(e) {
+				e.preventDefault();
+				let imageId = $(this).data('id');
+				let imageElement = $(this).closest('.board-image');
+				
+				$.ajax({
+					url:'/image/' + imageId,
+					type:'DELETE',
+					success: function(data) {
+						imageElement.remove();
+					},
+					error : function(error){
+						console.log(error);
+						
+					}
+				})
+			});
+
+</script>
 </html>

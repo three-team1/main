@@ -25,4 +25,8 @@ public class BoardImageService {
 		boardImageRepository.save(boardImage);
 	}
 	
+	public void deleteImage(Long imageId) {
+		
+		boardImageRepository.deleteById(imageId);
+	}
 }

@@ -37,8 +37,19 @@ th {
 
 .noBorder {
     border-bottom: 1px solid rgba(0, 0, 0, 0.7);
-    height: 30px;
+    height: 40px;
+    color: white;
 
+}
+
+.board-title {
+	font-weight:bold;
+	color:lightblue;
+}
+
+.board-writer {
+	color:lightcoral;
+	font-weight:bold;
 }
 
 a {
@@ -245,7 +256,7 @@ a {
 						th:href="@{'/board/detail/' + ${board.id}}"
 						th:text="${board.boardTitle}"></a></td>
 
-					<td class="noBorder" th:text="${board.user.username}"></td>
+					<td class="noBorder board-writer" th:text="${board.user.username}"></td>
 					<td class="noBorder"
 						th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
 					<td class="noBorder" th:text="${board.boardView}"></td>

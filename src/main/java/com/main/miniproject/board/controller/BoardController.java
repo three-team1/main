@@ -23,6 +23,7 @@ import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
 import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
+import com.main.miniproject.board.service.FileService;
 
 @Controller
 public class BoardController {
@@ -33,6 +34,9 @@ public class BoardController {
 	@Autowired
 	private BoardImageService boardImageService;
 	
+	@Autowired
+	private FileService fileService;
+	
 	
 	@GetMapping("/board/write")
 	public String showBoardWriteForm() {
@@ -40,42 +44,21 @@ public class BoardController {
 	}
 	
 	@PostMapping("/board/insert") 
-	public String saveBoard(Board board, MultipartFile[] files) {		
+	public String saveBoard(Board board, MultipartFile[] files, RedirectAttributes redirectAttributes) {		
 		
 		System.out.println(files);
 		
-		boardService.createBoard(board);
+		boardService.createBoard(board);											// 게시글저장
 		
-		if(files != null && files.length > 0) {
-			for(MultipartFile file : files) {
-				if(!file.isEmpty()) {
-				String fileOrigin = file.getOriginalFilename();
-				String fileExt = fileOrigin.substring(fileOrigin.lastIndexOf("."));
-				String fileName = UUID.randomUUID().toString() + fileExt;
-				String filePath = "C:/board/images/" + fileName;
-				
-				try {
-					
-					file.transferTo(new File(filePath));
-					
-				}catch(IOException ie) {
-					ie.getMessage();
-				}
-				
-				BoardImage boardImage = new BoardImage();
-				
-				boardImage.setBoard(board);
-				boardImage.setName(fileName);
-				boardImage.setUrl(filePath);
-				boardImage.setOriginName(fileOrigin);
-				
+		List<BoardImage> boardImages = fileService.saveFiles(board, files);			// 파일로직 호출
+		
+		for(BoardImage boardImage : boardImages) {									// List 데이터를 entity에 주입
 			
-				
-				boardImageService.saveBoardImage(boardImage);
-						
-				}
-			}
-		}	
+			boardImageService.saveBoardImage(boardImage);							// 저장
+		}
+		
+		redirectAttributes.addFlashAttribute("message","글이 작성되었습니다!");
+		
 		return "redirect:/board/list";
 	}
 	
@@ -141,42 +124,21 @@ public class BoardController {
 	public String updateBoard(@PathVariable Long id, Board board, RedirectAttributes redirectAttributes
 			, MultipartFile[] files) {
 		
-	    try {
-	        if (files != null && files.length > 0) {
-	            for (MultipartFile file : files) {
-	                if (!file.isEmpty()) {
-	                    String fileOrigin = file.getOriginalFilename();
-	                    String fileExt = fileOrigin.substring(fileOrigin.lastIndexOf("."));
-	                    String fileName = UUID.randomUUID().toString() + fileExt;
-	                    String filePath = "C:/board/images/" + fileName;
-
-	                    try {
-	                        file.transferTo(new File(filePath));
-	                    } catch (IOException ie) {
-	                        ie.getMessage();
-	                    }
-
-	                    BoardImage boardImage = new BoardImage();
-
-	                    boardImage.setBoard(board);
-	                    boardImage.setName(fileName);
-	                    boardImage.setUrl(filePath);
-	                    boardImage.setOriginName(fileOrigin);
-
+	    			try {
+	       
+	    				List<BoardImage> boardImages = fileService.saveFiles(board, files);				// 파일로직 호출
 	                    
-
-
-	                    boardImageService.saveBoardImage(boardImage);
-
-	                }
-	            }
-	        }
-	        boardService.updateBoard(id, board);
+	    				for(BoardImage boardImage : boardImages) {
+	    					boardImageService.saveBoardImage(boardImage);								//List를 Entity에 데이터주입
+	    					
+	    				}
+	    				
+	    				boardService.updateBoard(id, board);											// 최종 수정본 저장
 	        
-	    } catch (RuntimeException e) {
-	        redirectAttributes.addFlashAttribute("error", e.getMessage());
-	        return "redirect:/board/edit/" + id;
-	    }
+				    } catch (RuntimeException e) {
+				        redirectAttributes.addFlashAttribute("error", e.getMessage());
+				        return "redirect:/board/edit/" + id;
+				    }
 
 	    return "redirect:/board/list";
 
