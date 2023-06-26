@@ -163,6 +163,7 @@
 
 
 
+
     
     <div class="board-detail-box">
 		<h1>상세 게시글 <span th:text="'작성일 : ' + ${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span> <!-- 작성 날짜 --></h1>
@@ -181,6 +182,7 @@
             <p th:text="${board.boardContent}">
             
 			</p> <!-- 게시글 내용 -->
+
         </div>
     </div>
 
