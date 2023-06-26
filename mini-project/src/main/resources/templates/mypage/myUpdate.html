@@ -131,6 +131,41 @@
             }
         </style>
     </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            function updateUser(){
+                var data = {
+                    username: $("#username").val(),
+                    email: $("#email").val(),
+                    tel: $("#tel").val(),
+                    my_postcode: $("#my_postcode").val(),
+                    my_address: $("#my_address").val(),
+                    my_detailAddress: $("#my_detailAddress").val()
+                };
+
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        alert("정보가 성공적으로 수정되었습니다.");
+                        location.href = '/mypage/myInfo';
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            }
+
+            $(document).ready(function(){
+                $('#btnSave').click(function(e){
+                    e.preventDefault();
+                    updateUser();
+                });
+            });
+        </script>
+    </th:block>
 </head>
 <body>
 <div layout:fragment="content">
@@ -195,7 +230,7 @@
                 </table>
                 <br>
                 <div class="buttons">
-                    <button type="submit" id="btnSave" name="btnSave" onclick="alert('내 정보를 수정했습니다.')">확인</button>
+                    <button type="submit" id="btnSave" name="btnSave">확인</button>
                     <button type="button" id="btnCancel" name="btnCancel" onclick="location.href='/mypage/myInfo'">취소</button>
                 </div>
             </form>
