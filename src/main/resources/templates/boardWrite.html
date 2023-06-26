@@ -148,16 +148,21 @@
 
 	<div class="form-write">
 	 <h1>게시글 작성하기</h1>
-    <form action="/board/list" method="post">
+    <form action="/board/insert" method="post" enctype="multipart/form-data">
         <label for="title">제목</label><br>
-        <input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 작성해주세요" required><br>
+        <input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 작성해주세요" required>
+        <span><input type="file" name="files" multiple></span><br>
         <label for="boardContent">내용</label><br>
         <textarea rows="30" cols="100"  id="boardContent" name="boardContent" placeholder="내용을 입력해주세요" required></textarea><br>
         <input class="btn-write" type="submit" value="작성하기">
-        <a href="/board/list">
+    </form>  
+       <a href="/board/list">
         <button class="btn-write btn-to-list">목록으로</button>
        </a>
-    </form>
 	</div>
+	
+	
+
+
 </body>
 </html>

@@ -20,6 +20,91 @@
 <link type="image/png" sizes="32x32" rel="icon"
 	href="/icon/icons8-에너지-32.png">
 </head>
+	<style>
+		.board-detail-box {
+			width: 1000px;
+			margin:auto;
+			margin-top: 300px;
+			text-align: left;
+			color: wheat;
+			padding: 20px;
+			border: 1px solid gray;
+			
+		}
+
+		.board-detail-box h1 {
+			text-align: center;
+			margin-left: 150px;
+		}
+
+		.board-detail-box span {
+			text-align: end;
+			font-size: 10px;
+			margin-left: 100px;
+		}
+
+		.board-detail-header {
+			color: lightcoral;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+		.board-detail-header span{
+			color: lightblue;
+			font-weight:bold;
+			font-size : 16px;
+		}
+
+		.board-detail-action-box {
+			margin-top: 100px;
+			text-align: center;
+			color: antiquewhite;
+		}
+
+		.board-detail-content-box{
+			margin-top: 20px;
+			border-top: 1px solid lightgrey;
+			color: aqua;
+		}
+
+		.board-detail-content-box p{
+			color: white;
+		}
+
+		.board-detail-content-box h3{
+			margin-top: 50px;
+		
+		}
+
+        .board-detail-header input {
+            margin-left: -100px;
+            padding: 5px;
+            border: 1px solid lightcoral;
+            border-radius: 3px;
+            width: 300px;
+        }
+
+        .board-detail-content-box textarea {
+            border: 1px solid aqua;
+            border-radius: 5px;
+        }
+
+        .update-btn {
+            padding: 5px;
+            background-color: aquamarine;
+            border: none;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-top: 10px;
+            
+        }
+
+		.board-image img {
+			width: 400px;
+		}
+
+	</style>
 <body>
 	
 	<header>
@@ -87,27 +172,70 @@
 
 		</div>
 
-
-
-
-
 	</header>
 
 
-	
-<form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
-    <label for="boardTitle">Title</label>
-    <input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}">
-    <label for="boardContent">Content</label>
-    <textarea id="boardContent" name="boardContent" th:text="${board.boardContent}"></textarea>
-    <input type="submit" value="Update">
-</form>
+    
+    
 
-  <th:block th:if="${error}">
-	<script>
-		alert('권한이 없습니다.');
-	</script>
-  </th:block>
+	<div class="board-detail-box">
+		<form th:action="@{/board/update/{id}(id=${board.id})}" method="post" enctype="multipart/form-data">
+			<h1>상세 게시글 <span th:text="'작성일 : ' + ${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span> <!-- 작성 날짜 --></h1>
+			
+			<div class="board-detail-header">
+			<div>
+		    <label for="boardTitle">제목</label>
+		    <span><input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}"></span>
+		     <span><input type="file" name="files" multiple></span><br>
+		    </div>
+            
+		    <p>작성자:<span th:text="${board.user.username}"></span></p>
+		    </div>
+		    
+		<div class="board-detail-content-box">
+            <h3>내용</h3>
+		    <label for="boardContent"></label>
+		    
+		    	<div class="board-image" th:each="image : ${images}">
+        			<img th:src="@{'/board/images/' + ${image.name}}" alt="게시글 이미지" />
+        			<button class="delete-img-btn" th:data-id="${image.id}">삭제</button>
+    			</div>
+    			
+		    <textarea id="boardContent" rows="30" cols="140" name="boardContent" th:text="${board.boardContent}"></textarea>
+		</div>
+		
+		    <input class="update-btn" type="submit" value="수정하기">
+		</form>
+	</div>
+		
+		
+
+		  <th:block th:if="${error}">
+			<script>
+				alert('권한이 없습니다.');
+			</script>
+		  </th:block>
+
 
 </body>
+<script>
+			$(".delete-img-btn").on("click", function(e) {
+				e.preventDefault();
+				let imageId = $(this).data('id');
+				let imageElement = $(this).closest('.board-image');
+				
+				$.ajax({
+					url:'/image/' + imageId,
+					type:'DELETE',
+					success: function(data) {
+						imageElement.remove();
+					},
+					error : function(error){
+						console.log(error);
+						
+					}
+				})
+			});
+
+</script>
 </html>

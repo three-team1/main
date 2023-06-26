@@ -136,13 +136,11 @@
 													}
 
 													// 변경된 입력 필드에 주소 정보를 채움
-													document
-															.getElementById('my_postcode').value = data.zonecode;
-													document
-															.getElementById('my_address').value = addr;
-													document.getElementById(
-															'my_detailAddress')
-															.focus();
+													document.getElementById('my_postcode').value = data.zonecode;
+													
+													document.getElementById('my_address').value = addr;
+													
+													document.getElementById('my_detailAddress').focus();
 												}
 											}).open();
 								}
@@ -167,6 +165,7 @@
 						<p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
 
 					    <div class="d-flex text-center">
+					    
 <!-- 							<a href="#" class="px-2 py-2 mr-md-1 rounded"><span
 								class="ion-logo-facebook mr-2"></span> Facebook</a> <a href="#"
 								class="px-2 py-2 ml-md-1 rounded"><span
