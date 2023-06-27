@@ -5,64 +5,75 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <header th:fragment="header">
-  <div class="nav-bar-container">
 
-    <div class="nav-logo">
-      <a href="/"> <img
-              src="/icon/Black n White Luxury  Rent Car Logo.png">
-      </a>
-    </div>
+    <div class="nav-bar-container">
 
-    <div class="nav-bar-item-box">
-      <div class="nav-bar-item">
-        <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
-          컬렉션
+      <div class="nav-logo">
+        <a href="/"> <img
+                src="/icon/Black n White Luxury  Rent Car Logo.png">
         </a>
+
+
       </div>
 
-      <div class="nav-bar-item">
-        <a href="/board/list"> <span></span> <span></span> <span></span>
-          <span></span> 커뮤니티
-        </a>
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+            컬렉션
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list"> <span></span> <span></span> <span></span>
+            <span></span> 커뮤니티
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            Q&A
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            장바구니
+          </a>
+        </div>
+
       </div>
 
-      <div class="nav-bar-item">
-        <a href="#"> <span></span> <span></span> <span></span> <span></span>
-          Q&A
-        </a>
+
+      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+        <p>
+          환영합니다! <span class="username" sec:authentication="name"></span>님
+        </p>
+        <a href="/mypage/me">마이페이지</a>
       </div>
 
-      <div class="nav-bar-item">
-        <a href="#"> <span></span> <span></span> <span></span> <span></span>
-          장바구니
-        </a>
+      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a href="/admin">관리자페이지</a>
       </div>
+
+      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+        <a href="/login"> 로그인 </a>
+      </div>
+
+      <div class="nav-bar-join nav-bar-login"
+           sec:authorize="!isAuthenticated()">
+        <a href="/register"> 회원가입 </a>
+      </div>
+
     </div>
 
-    <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
-      <p>
-        환영합니다! <span class="username" sec:authentication="name"></span>님
-      </p>
-      <a href="/mypage/me">마이페이지</a>
-    </div>
 
-    <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-      <a href="/admin">관리자페이지</a>
-    </div>
 
-    <div class="nav-bar-login" sec:authorize="isAuthenticated()">
-      <a href="/logout">로그아웃</a>
-    </div>
 
-    <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
-      <a href="/login"> 로그인 </a>
-    </div>
 
-    <div class="nav-bar-join nav-bar-login"
-         sec:authorize="!isAuthenticated()">
-      <a href="/register"> 회원가입 </a>
-    </div>
-  </div>
-</header>
+  </header>
 </body>
 </html>

@@ -128,13 +128,35 @@
             }
         </style>
     </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            $(document).ready(function(){
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data) {
+                        $('#username').val(data.username);
+                        $('#email').val(data.email);
+                        $('#tel').val(data.tel);
+                        $('#my_postcode').val(data.my_postcode);
+                        $('#my_address').val(data.my_address);
+                        $('#my_detailAddress').val(data.my_detailAddress);
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            });
+        </script>
+    </th:block>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="main-container">
         <div class="aside">
             <div class="menu">
-                <div class="menu-title" id="menu-title1" onclick="location.href='#'">
+                <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/myBoard'">
                     <p>내 주문/배송조회</p>
                 </div>
                 <div class="menu-title" id="menu-title2" onclick="location.href='#'">
@@ -197,7 +219,7 @@
                     </tr>
               </table>
               <br>
-                <button type="button" id="btnUpdate" name="btnUpdate" onclick="location.href='/mypage/myUpdate-view'">내 정보 수정</button>
+                <button type="button" id="btnUpdate" name="btnUpdate" onclick="location.href='/mypage/myUpdate'">내 정보 수정</button>
             </form>
         </div>
     </div>

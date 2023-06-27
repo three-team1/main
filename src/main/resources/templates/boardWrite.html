@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
@@ -11,7 +11,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"
 	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
 	crossorigin="anonymous"></script>
-	
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -76,6 +76,7 @@
 
 <body>
   <header>
+
 		<div class="nav-bar-container">
 
 			<div class="nav-logo">
@@ -149,7 +150,7 @@
 	<div class="form-write">
 	 <h1>게시글 작성하기</h1>
     <form action="/board/insert" method="post" enctype="multipart/form-data">
-        <label for="title">제목</label><br>
+        <label for="boardTitle">제목</label><br>
         <input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 작성해주세요" required>
         <span><input type="file" name="files" multiple></span><br>
         <label for="boardContent">내용</label><br>
@@ -160,9 +161,6 @@
         <button class="btn-write btn-to-list">목록으로</button>
        </a>
 	</div>
-	
-	
-
 
 </body>
 </html>

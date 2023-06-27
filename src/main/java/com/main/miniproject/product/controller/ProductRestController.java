@@ -17,6 +17,7 @@ import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.product.service.RealTimeSearchService;
 
+
 @RestController
 public class ProductRestController {
 
@@ -25,10 +26,10 @@ public class ProductRestController {
 	
 	@Autowired
 	private ProductImageService productImageService;
-	
+
 	@Autowired
 	private RealTimeSearchService realTimeSearchService;
-	
+
 	@GetMapping("/api/products")
 	public List<Product> getProducts() {
 	    return productService.getAllProducts();
@@ -40,7 +41,7 @@ public class ProductRestController {
 		
 		return productImageService.getProductImagesByProduct(product);
 	}
-	
+
 	@GetMapping("/api/top10searches")
 	public List<RealTimeSearch> getTop10Searches() {
 	    return realTimeSearchService.getTop10Searches();

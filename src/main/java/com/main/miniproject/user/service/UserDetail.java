@@ -3,7 +3,6 @@ package com.main.miniproject.user.service;
 import java.util.Arrays;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,18 +20,18 @@ public class UserDetail implements UserDetails, OAuth2User{
 	private Map<String, Object> attributes;
 
 
-
 	public UserDetail(User user) {
 		super();
 		this.user = user;
 		this.role = user.getRole();
 	}
+	
+    public UserDetail(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+        this.role = user.getRole();
+    }
 
-	public UserDetail(User user, Map<String, Object> attributes) {
-		this.user = user;
-		this.attributes = attributes;
-		this.role = user.getRole();
-	}
 
 	public UserDetail(UserDetail userDetail) {
 		this.user = userDetail.getUser();
@@ -42,14 +41,14 @@ public class UserDetail implements UserDetails, OAuth2User{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		switch (role) {
-			case ADMIN:
-				return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			case VIP:
-				return Arrays.asList(new SimpleGrantedAuthority("ROLE_VIP"));
-			default:
-				return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-		}
-	}
+        case ADMIN:
+            return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        case VIP:
+            return Arrays.asList(new SimpleGrantedAuthority("ROLE_VIP"));
+        default:
+            return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+}
 
 	public User getUser() {
 		return this.user;
@@ -59,14 +58,14 @@ public class UserDetail implements UserDetails, OAuth2User{
 		this.user = user;
 		this.role = user.getRole();
 	}
-
+	
 	public Map<String, Object> getAttributes() {
-		return attributes;
-	}
-
+	        return attributes;
+	 }
+	 
 	@Override
 	public String getName() {
-
+			
 		return this.getUsername();
 	}
 

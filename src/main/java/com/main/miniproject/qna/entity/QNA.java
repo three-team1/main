@@ -46,10 +46,5 @@ public class QNA {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-	
-	
-	
-	
-	
-	
+
 }
