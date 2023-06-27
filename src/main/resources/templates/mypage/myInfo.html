@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <th:block layout:fragment="css">
+        <style>
+            .main-container {
+                margin-top: 172px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 620px;
+                grid-gap: 10px;
+            }
+
+            .main-container > div {
+                border: 1px dotted aqua;
+                border-radius: 5px;
+                padding: 1em;
+            }
+
+            .aside {
+                grid-column: 1;
+                grid-row: 1;
+                margin-left: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .section {
+                grid-column: 2 / 5;
+                grid-row: 1;
+            }
+
+            .menu {
+                position: absolute;
+                color: white;
+            }
+
+            .menu-title {
+                border: 1px solid pink;
+                padding: 20px 10px;
+                text-align: center;
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: white;
+                cursor: pointer;
+            }
+
+            #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+                background: pink;
+            }
+
+            .section {
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .myInfo-tb {
+                border-collapse: collapse;
+                min-width: 510px;
+                min-height: 360px;
+            }
+
+            th, td {
+                border: 1px solid pink;
+                padding: 10px 10px;
+                text-align: left;
+                font-size: 1rem;
+                color: white;
+            }
+
+            .myInfo-th {
+                min-width: 100px;
+                text-align: center;
+            }
+
+            .myInfo-td {
+                min-width: 360px;
+            }
+
+            .input-noUpdate {
+                width: 350px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: transparent;
+                border: none;
+                outline: none;
+            }
+
+            #currentPassword {
+                width: 130px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: pink;
+                border: none;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            #btnUpdate {
+                width: 130px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: pink;
+                border: none;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            a:link {
+                color: white;
+                text-decoration: none;
+            }
+
+            h1 {
+                color: white;
+            }
+        </style>
+    </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            $(document).ready(function(){
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data) {
+                        $('#username').val(data.username);
+                        $('#email').val(data.email);
+                        $('#tel').val(data.tel);
+                        $('#my_postcode').val(data.my_postcode);
+                        $('#my_address').val(data.my_address);
+                        $('#my_detailAddress').val(data.my_detailAddress);
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-container">
+        <div class="aside">
+            <div class="menu">
+                <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+                    <p>내 주문/배송조회</p>
+                </div>
+                <div class="menu-title" id="menu-title2" onclick="location.href='#'">
+                    <p>내 글/댓글 조회</p>
+                </div>
+                <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+                    <p>내 리뷰 관리</p>
+                </div>
+                <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+                    <p>내 정보 관리</p>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h1>마이페이지</h1>
+            <form id="infoForm" action="/mypage/myInfo" method="get">
+                <input type="hidden" id="userId" name="userId" th:value="${#authentication.principal.user.id}">
+                <table class="myInfo-tb">
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">아이디</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="username" name="username" th:value="${#authentication.principal.username}" readonly>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">비밀번호</th>
+                        <td class="myInfo-td">
+                            <button type="button" id="currentPassword" name="currentPassword" onclick="location.href='/mypage/pwChange'">비밀번호 수정</button>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">이메일</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="email" name="email" th:value="${#authentication.principal.user.email}" readonly>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">연락처</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="tel"name="tel" th:value="${#authentication.principal.user.tel}" readonly>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">우편번호</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="my_postcode" name="my_postcode" th:value="${#authentication.principal.user.my_postcode}" readonly>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">주소</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="my_address" name="my_address" th:value="${#authentication.principal.user.my_address}" readonly>
+                        </td>
+                    </tr>
+                    <tr class="myInfo-tr">
+                        <th class="myInfo-th">상세주소</th>
+                        <td class="myInfo-td">
+                            <input type="text" class="input-noUpdate" id="my_detailAddress" name="my_detailAddress" th:value="${#authentication.principal.user.my_detailAddress}" readonly>
+                        </td>
+                    </tr>
+              </table>
+              <br>
+                <button type="button" id="btnUpdate" name="btnUpdate" onclick="location.href='/mypage/myUpdate'">내 정보 수정</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

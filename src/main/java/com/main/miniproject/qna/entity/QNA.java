@@ -1,20 +1,12 @@
 package com.main.miniproject.qna.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.main.miniproject.user.entity.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -30,12 +22,18 @@ public class QNA {
 	
 	@Column(name = "qna_title")
 	private String qnaTitle;
+
+	@Column(name = "qna_writer")
+	private String qnaWriter;
 	
 	@Column(name = "qna_content")
 	private String qnaContent;
 	
 	@Column(name = "qna_regdate")
 	private LocalDateTime qnaRegdate = LocalDateTime.now();
+
+	@Column(name="qna_Cnt", nullable = false)
+	private int qnaCnt = 0;
 	
 	@Column(name = "qna_response")
 	private String qnaResponse;
@@ -50,4 +48,9 @@ public class QNA {
 	
 	
 	
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
 }

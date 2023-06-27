@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link href="/css/main.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+  <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+  <style>
+    .qna-qna {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 250px;
+      color: white;
+    }
+
+    .qna-table table {
+      background-color: white;
+      table-layout: fixed;
+      margin: 30px auto;
+      width: 600px;
+      border-collapse: collapse;
+      border: 1px solid black;
+      font-size: 12px;
+    }
+
+    th {
+      padding: 10px;
+      border-bottom: 1px solid black;
+    }
+
+    tr #th1 {
+      width: 10%;
+    }
+
+    tr #th2 {
+      width: 40%;
+    }
+
+    tr #th3 {
+      width: 10%;
+    }
+
+    tr #th4 {
+      width: 10%;
+    }
+
+    tr #th5 {
+      width: 10%;
+    }
+
+    tr td {
+      padding: 10px;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    tr #qna-title {
+      text-align: left;
+    }
+
+    tr a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .insert-btn {
+      text-align: center;
+      margin-bottom: 100px;
+    }
+
+    .insert-btn button {
+      background-color: mediumspringgreen;
+      border: 1px solid black;
+      font-size: 12px;
+      padding: 5px;
+    }
+
+    .page {
+      text-align: center;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .page a {
+      text-decoration: none;
+    }
+  </style>
+
+<body>
+  <header>
+    <div class="nav-bar-container">
+
+      <div class="nav-logo">
+        <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+        </a>
+      </div>
+
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+            컬렉션
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list"> <span></span> <span></span> <span></span>
+            <span></span> 커뮤니티
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+            Q&A
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            장바구니
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+        <p>
+          환영합니다! <span class="username" sec:authentication="name"></span>님
+        </p>
+        <a href="/mypage">마이페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a href="/admin">관리자페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+        <a href="/login"> 로그인 </a>
+      </div>
+
+      <div class="nav-bar-join nav-bar-login"
+           sec:authorize="!isAuthenticated()">
+        <a href="/register"> 회원가입 </a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="qna-qna">
+      <p>q n a</p>
+    </div>
+    <div class="qna-table">
+      <table>
+        <tr>
+          <th id="th1">no.</th>
+          <th id="th2">title</th>
+          <th id="th3">writer</th>
+          <th id="th4">data</th>
+          <th id="th5">hits</th>
+        </tr>
+        <tr th:each="qna: ${qnaList}">
+          <td th:text="${qna.id}"></td>
+          <td id="qna-title" ><a th:href="@{|/qna/list/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
+          <td th:text="${qna.user.username}"></td>
+          <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
+          <td th:text="${qna.qnaCnt}"></td>
+        </tr>
+      </table>
+      <div class="page">
+        <!-- th:each => 반복문 -->
+        <!-- #numbers.sequence(startPage, endPage)는 startPage부터 endPage까지의 숫자 시퀀스를 생성한다-->
+        <!-- tartPage부터 endPage까지의 값들을 page 변수에 하나씩 대입하며 반복문을 실행한다 -->
+        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+          <!-- 지금 페이지가 nowPage가 아닐 경우, 지금 페이지의 링크로 보내주고, 지금 페이지 텍스트를 보여줌-->
+          <a th:if="${page != nowPage}" th:href="@{/qnaList(page = ${page -1})}" th:text="${page}"></a>
+          <!-- 지금 페이지가 nowPage일 경우, 다른 페이지로 보낼 필요 없이 nowPage의 텍스트만을 보여주고 강조-->
+          <strong th:if="${page == nowPage}" th:text="${page}" style="color:mediumspringgreen"></strong>
+        </th:block>
+      </div>
+    </div>
+
+    <div class="insert-btn">
+      <a href="/qna/insert"><button>글쓰기</button></a>
+    </div>
+  </section>
+
+
+</body>
+</html>
