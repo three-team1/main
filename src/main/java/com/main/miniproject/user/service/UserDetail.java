@@ -3,7 +3,6 @@ package com.main.miniproject.user.service;
 import java.util.Arrays;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -19,8 +18,7 @@ public class UserDetail implements UserDetails, OAuth2User{
 	private User user;
 	private Role role;
 	private Map<String, Object> attributes;
-	
-	
+
 
 	public UserDetail(User user) {
 		super();
@@ -33,6 +31,7 @@ public class UserDetail implements UserDetails, OAuth2User{
         this.attributes = attributes;
         this.role = user.getRole();
     }
+
 
 	public UserDetail(UserDetail userDetail) {
 		this.user = userDetail.getUser();
@@ -50,7 +49,7 @@ public class UserDetail implements UserDetails, OAuth2User{
             return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }
-	
+
 	public User getUser() {
 		return this.user;
 	}
@@ -69,7 +68,7 @@ public class UserDetail implements UserDetails, OAuth2User{
 			
 		return this.getUsername();
 	}
-	
+
 	@Override
 	public String getPassword() {
 

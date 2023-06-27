@@ -9,9 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "product")
 @Entity
+@Builder
 public class Product {
 	
     @Id
@@ -43,5 +43,9 @@ public class Product {
 	@Column
 	@Enumerated(EnumType.STRING)
     private ProductSellStatus productSellStatus;
+	
+	@Column(name = "product_type")
+	private String productType;
+
     
 }

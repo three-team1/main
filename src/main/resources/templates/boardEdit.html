@@ -1,25 +1,241 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초능력</title>
+<link href="/css/main.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
+	
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+	rel="stylesheet">
+<link type="image/png" sizes="32x32" rel="icon"
+	href="/icon/icons8-에너지-32.png">
 </head>
+	<style>
+		.board-detail-box {
+			width: 1000px;
+			margin:auto;
+			margin-top: 300px;
+			text-align: left;
+			color: wheat;
+			padding: 20px;
+			border: 1px solid gray;
+			
+		}
+
+		.board-detail-box h1 {
+			text-align: center;
+			margin-left: 150px;
+		}
+
+		.board-detail-box span {
+			text-align: end;
+			font-size: 10px;
+			margin-left: 100px;
+		}
+
+		.board-detail-header {
+			color: lightcoral;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+		.board-detail-header span{
+			color: lightblue;
+			font-weight:bold;
+			font-size : 16px;
+		}
+
+		.board-detail-action-box {
+			margin-top: 100px;
+			text-align: center;
+			color: antiquewhite;
+		}
+
+		.board-detail-content-box{
+			margin-top: 20px;
+			border-top: 1px solid lightgrey;
+			color: aqua;
+		}
+
+		.board-detail-content-box p{
+			color: white;
+		}
+
+		.board-detail-content-box h3{
+			margin-top: 50px;
+		
+		}
+
+        .board-detail-header input {
+            margin-left: -100px;
+            padding: 5px;
+            border: 1px solid lightcoral;
+            border-radius: 3px;
+            width: 300px;
+        }
+
+        .board-detail-content-box textarea {
+            border: 1px solid aqua;
+            border-radius: 5px;
+        }
+
+        .update-btn {
+            padding: 5px;
+            background-color: aquamarine;
+            border: none;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-top: 10px;
+            
+        }
+
+		.board-image img {
+			width: 400px;
+		}
+
+	</style>
 <body>
 	
-<form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
-    <label for="boardTitle">Title</label>
-    <input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}">
-    <label for="boardContent">Content</label>
-    <textarea id="boardContent" name="boardContent" th:text="${board.boardContent}"></textarea>
-    <input type="submit" value="Update">
-</form>
+	<header>
+		<div class="nav-bar-container">
 
-  <th:block th:if="${error}">
-	<script>
-		alert('권한이 없습니다.');
-	</script>
-  </th:block>
+			<div class="nav-logo">
+				<a href="/"> <img
+					src="/icon/Black n White Luxury  Rent Car Logo.png">
+				</a>
+
+
+			</div>
+
+			<div class="nav-bar-item-box">
+				<div class="nav-bar-item">
+					<a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+						컬렉션
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="/board/list"> <span></span> <span></span> <span></span>
+						<span></span> 커뮤니티
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+						Q&A
+					</a>
+				</div>
+
+				<div class="nav-bar-item">
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+						장바구니
+					</a>
+				</div>
+
+			</div>
+
+
+			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span class="username" sec:authentication="name"></span>님
+				</p>
+				<a href="/mypage">마이페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login"
+				sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+
+		</div>
+
+	</header>
+
+
+    
+    
+
+	<div class="board-detail-box">
+		<form th:action="@{/board/update/{id}(id=${board.id})}" method="post" enctype="multipart/form-data">
+			<h1>상세 게시글 <span th:text="'작성일 : ' + ${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></span> <!-- 작성 날짜 --></h1>
+			
+			<div class="board-detail-header">
+			<div>
+		    <label for="boardTitle">제목</label>
+		    <span><input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}"></span>
+		     <span><input type="file" name="files" multiple></span><br>
+		    </div>
+            
+		    <p>작성자:<span th:text="${board.user.username}"></span></p>
+		    </div>
+		    
+		<div class="board-detail-content-box">
+            <h3>내용</h3>
+		    <label for="boardContent"></label>
+		    
+		    	<div class="board-image" th:each="image : ${images}">
+        			<img th:src="@{'/board/images/' + ${image.name}}" alt="게시글 이미지" />
+        			<button class="delete-img-btn" th:data-id="${image.id}">삭제</button>
+    			</div>
+    			
+		    <textarea id="boardContent" rows="30" cols="140" name="boardContent" th:text="${board.boardContent}"></textarea>
+		</div>
+		
+		    <input class="update-btn" type="submit" value="수정하기">
+		</form>
+	</div>
+		
+		
+
+		  <th:block th:if="${error}">
+			<script>
+				alert('권한이 없습니다.');
+			</script>
+		  </th:block>
+
 
 </body>
+<script>
+			$(".delete-img-btn").on("click", function(e) {
+				e.preventDefault();
+				let imageId = $(this).data('id');
+				let imageElement = $(this).closest('.board-image');
+				
+				$.ajax({
+					url:'/image/' + imageId,
+					type:'DELETE',
+					success: function(data) {
+						imageElement.remove();
+					},
+					error : function(error){
+						console.log(error);
+						
+					}
+				})
+			});
+
+</script>
 </html>

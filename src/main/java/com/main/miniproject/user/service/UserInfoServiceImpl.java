@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -32,6 +31,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         return MyInfoDTO.of(user);
+
     }
 
     //내 정보 수정
