@@ -193,6 +193,25 @@
 			<a th:href="@{'/board/edit/' + ${board.id}}">수정</a> <!-- 수정 페이지로 이동하는 링크 -->
 			<a th:href="@{'/board/delete/' + ${board.id}}">삭제</a> <!-- 게시글을 삭제하는 링크 -->
 		</div>
+		
+		<div class="comment-section">
+		    <h3>댓글</h3>
+		
+		    <!-- 댓글 작성 폼 -->
+		    <form action="/board/comment" method="post">
+		        <input type="hidden" name="boardId" th:value="${board.id}">
+		        <textarea name="commentContent" placeholder="댓글을 입력하세요."></textarea>
+		        <button type="submit">작성</button>
+		    </form>
+		
+		    <!-- 댓글 목록 -->
+		    <div class="comment-list">
+		        <div th:each="comment : ${comments}">
+		            <div class="comment-author" th:text="${comment.user.username}"></div>
+		            <div class="comment-content" th:text="${comment.commentContent}"></div>
+		        </div>
+		    </div>
+		</div>
     
     
     
