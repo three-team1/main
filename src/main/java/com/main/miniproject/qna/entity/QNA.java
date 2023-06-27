@@ -45,12 +45,5 @@ public class QNA {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	
-	
-	
-<<<<<<< HEAD
-=======
-	
-	
->>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
+
 }
