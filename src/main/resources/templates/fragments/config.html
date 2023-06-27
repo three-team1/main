@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- layout으로 설정되는 모든 html에 포함될 head의 내용을 작성-->
+<head th:fragment="config">
+  <meta charset="UTF-8">
+  <title>게시판</title>
+
+  <!--모든 페이지에서 사용할 공용 css링크-->
+  <!--thymeleaf에서 링크를 걸때는 @{}로 사용-->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+
+  <!--특정페이지에서만 사용할 css링크나 스타일시트-->
+  <!--css 따로 적용할 페이지에서 아래와 같이 작성해야된다.-->
+  <th:block layout:fragment="css">
+    <!--<style>
+
+    </style>
+    <link rel="stylesheet" th:href="">-->
+  </th:block>
+
+  <!--모든 페이지에서 사용할 공용 js링크-->
+  <script th:src="@{/js/jquery.min.js}"></script>
+
+  <!--특정 페이지에서만 동작할 js 링크나 태그 -->
+  <th:block layout:fragment="script">
+    <!--<script>
+    </script>
+
+    <script src=""></script>-->
+  </th:block>
+</head>
+</html>

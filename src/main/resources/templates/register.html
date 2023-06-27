@@ -1,0 +1,196 @@
+<!doctype>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Login 10</title>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link
+	href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+	rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+<link type="image/png" sizes="32x32" rel="icon"
+	href="/icon/icons8-에너지-32.png">
+</head>
+<body class="img js-fullheight"
+	style="background-image: url(images/holy-bible-with-rays-light-coming-out-ai-generative.jpg);">
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Register</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+						<h3 class="mb-4 text-center">Create Account</h3>
+						<form action="/register" method="post" class="signin-form"
+							th:object="${user}">
+
+							<div class="form-group">
+								<input type="text" id="username" name="username"
+									class="form-control" placeholder="Username" required>
+							</div>
+
+							<div class="form-group">
+								<input id="password-field" type="password" name="password"
+									class="form-control" placeholder="Password" required> <span
+									toggle="#password-field"
+									class="fa fa-fw fa-eye field-icon toggle-password"></span>
+							</div>
+
+							<div class="form-group">
+								<input id="password-field" type="email" name="email"
+									class="form-control" placeholder="Email" required> <span
+									toggle="#password-field"
+									class="fa fa-fw  field-icon toggle-password"></span>
+							</div>
+
+							<div class="form-group">
+								<input id="tel" type="tel" name="tel" class="form-control"
+									placeholder="Tel" required> <span
+									toggle="#password-field"
+									class="fa fa-fw  field-icon toggle-password"></span>
+							</div>
+
+							<p class="w-100 text-center" style="font-weight: bold;">&mdash;
+								추가 입력 사항 &mdash;</p>
+							<!-- 우편 번호 폼-->
+							<div class="form-group" style="display: flex;">
+								<input type="text" id="my_postcode" name="my_postcode" class="form-control"
+									style="width: 200px;" placeholder="우편번호"> <input
+									type="button" class="search-post-btn"
+									onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+							</div>
+
+							<div class="form-group" style="color: black;">
+								<input type="text" id="my_address" name="my_address" class="form-control "
+									placeholder="주소">
+							</div>
+
+							<div class="form-group">
+								<input type="text" id="my_extraAddress" class="form-control "
+									style="width: 250px;" placeholder="참고항목">
+							</div>
+
+							<div class="form-group">
+								<input type="text" id="my_detailAddress" name="my_detailAddress" class="form-control "
+									placeholder="상세주소">
+							</div>
+
+
+							<!-- 우편번호 API 주소 받아오기-->
+							<script
+								src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+							<script>
+								function sample6_execDaumPostcode() {
+									new daum.Postcode(
+											{
+												oncomplete : function(data) {
+
+													let addr = '';
+
+													//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+													if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+														addr = data.roadAddress;
+													} else { // 사용자가 지번 주소를 선택했을 경우(J)
+														addr = data.jibunAddress;
+													}
+
+													// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+													if (data.userSelectedType === 'R') {
+														var extraAddr = ''; // 참고항목 변수
+														// 법정동명이 있을 경우 추가한다. (법정리는 제외)
+														// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+														if (data.bname !== ''
+																&& /[동|로|가]$/g
+																		.test(data.bname)) {
+															extraAddr += data.bname;
+														}
+														// 건물명이 있고, 공동주택일 경우 추가한다.
+														if (data.buildingName !== ''
+																&& data.apartment === 'Y') {
+															extraAddr += (extraAddr !== '' ? ', '
+																	+ data.buildingName
+																	: data.buildingName);
+														}
+														// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+														if (extraAddr !== '') {
+															extraAddr = ' ('
+																	+ extraAddr
+																	+ ')';
+														}
+														// 조합된 참고항목을 해당 필드에 넣는다.
+														document
+																.getElementById("my_extraAddress").value = extraAddr;
+
+													} else {
+														document
+																.getElementById("my_extraAddress").value = '';
+													}
+
+													// 변경된 입력 필드에 주소 정보를 채움
+													document
+															.getElementById('my_postcode').value = data.zonecode;
+													document
+															.getElementById('my_address').value = addr;
+													document.getElementById(
+															'my_detailAddress')
+															.focus();
+												}
+											}).open();
+								}
+							</script>
+
+
+							<div class="form-group">
+								<button type="submit"
+									class="form-control btn btn-primary submit px-3">Register</button>
+							</div>
+							<span th:if="${errorMessage}" th:text="${errorMessage}"
+								style="color: red;"></span>
+							<div class="form-group d-md-flex">
+								<div class="w-50"></div>
+
+							</div>
+							<div class="w-50" style="margin: auto; text-align: center;">
+								<a href="/login" style="color: #fff;">Go to Login</a>
+							</div>
+						</form>
+						
+						<p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
+
+					    <div class="d-flex text-center">
+<!-- 							<a href="#" class="px-2 py-2 mr-md-1 rounded"><span
+								class="ion-logo-facebook mr-2"></span> Facebook</a> <a href="#"
+								class="px-2 py-2 ml-md-1 rounded"><span
+								class="ion-logo-twitter mr-2"></span> Twitter</a> 	 -->					
+						
+						<div style="margin:auto;" id="kakao"
+							sec:authorize="!isAuthenticated()">
+							<a href="/oauth2/authorization/kakao"> <img
+								src="/images/kakao_login.png">
+							</a>
+						</div>
+					</div> 
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+
+</body>
+</html>
+
