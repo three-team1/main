@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MyInfoDTO {
-    private Long id;
+    private long id;
     private String username;
     private String password;
     private String email;
