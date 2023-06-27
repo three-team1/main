@@ -1,11 +1,23 @@
 package com.main.miniproject.product.entity;
 
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.main.miniproject.product.dto.ProductFormDto;
 import lombok.AllArgsConstructor;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "product")
 @Entity
+@Builder
 public class Product {
 	
     @Id
@@ -52,5 +65,6 @@ public class Product {
         this.productSellStatus = productFormDto.getProductSellStatus();
 
     }
+
     
 }

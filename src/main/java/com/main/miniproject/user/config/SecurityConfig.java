@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		@Autowired
 	    private CustomOAuth2UserService customOAuth2UserService;
-			
+
 		@Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
@@ -73,7 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	                .defaultSuccessUrl("/", true)
 	                .loginPage("/login")
 	                .permitAll();
-		    
-		    
+
 		}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import com.main.miniproject.product.dto.ProductFormDto;
 import com.main.miniproject.product.dto.ProductImgDto;
 import com.main.miniproject.product.dto.ProductSearchDto;
+import com.main.miniproject.product.entity.ProductDTO;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.repository.ProductImageRepository;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 @Service
-
 @Log4j2
 public class ProductService {
 
@@ -142,10 +142,29 @@ public class ProductService {
 		return productRepository.getAdminProductPage(productSearchDto, pageable);
 	}
 
-	public List<Product> searchProducts(String searchKeyword) {
+	public List<ProductDTO> searchProducts(String searchKeyword) {
 
-		return productRepository.findByProductTitleContaining(searchKeyword);
+		List<Product> productList = productRepository.findByProductTitleContaining(searchKeyword);
 
+		List<ProductDTO> productDTOList = new ArrayList<>();
+
+		for(Product product : productList) {
+
+			ProductDTO productDTO = ProductDTO.builder()
+					.productId(product.getId())
+					.productTitle(product.getProductTitle())
+					.productContent(product.getProductContent())
+					.productPrice(product.getProductPrice())
+					.productQuantity(product.getProductQuantity())
+					.productType(product.getProductType())
+					.build();
+
+			productDTOList.add(productDTO);
+
+		}
+
+
+		return productDTOList;
 	}
 
 }

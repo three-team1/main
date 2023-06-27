@@ -11,6 +11,5 @@ import com.main.miniproject.user.entity.User;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom{
 	Optional<User> findByUsername(String username);
 	
-	
 	Optional<User> findByProviderIdAndProvider(String providerId, String provider);
 }

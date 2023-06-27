@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.main.miniproject.user.dto.UserDtoAdmin;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberAdminController {
 
+    @Autowired
     private final UserService userService;
 
     //회원관리 탭에서 회원목록 가져오기

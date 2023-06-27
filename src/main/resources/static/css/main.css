@@ -132,7 +132,11 @@ div {
   height: 700px;
   object-fit: fill;
   margin: auto;
+<<<<<<< HEAD
   box-shadow:5px 5px 100px rgb(95, 180, 255) 
+=======
+  box-shadow:5px 5px 50px rgb(95, 180, 255) 
+>>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
 }
 
 .controllers {
@@ -644,10 +648,15 @@ div {
   display: flex;
   justify-content: space-between;
 <<<<<<< HEAD
+<<<<<<< HEAD
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 1);
 =======
   box-shadow:5px 0px 40px rgb(73, 210, 255);
 >>>>>>> d47c67711de7c9b7506d45e609eef67712eb8c7f
+=======
+
+  box-shadow:5px 0px 40px rgb(73, 210, 255);
+>>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
   padding: 35px;
 }
 

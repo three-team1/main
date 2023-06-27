@@ -11,9 +11,9 @@ import com.main.miniproject.product.entity.RealTimeSearch;
 @Repository
 public interface RealTimeSearchRepository extends JpaRepository<RealTimeSearch, Long>{
 
-    RealTimeSearch findBysearchKeyword(String searchKeyword);
+			RealTimeSearch findBysearchKeyword(String searchKeyword);
 
 
-    List<RealTimeSearch> findTop10ByOrderBySearchCntDesc();
+			List<RealTimeSearch> findTop10ByOrderBySearchCntDesc();
 
 }

@@ -2,28 +2,36 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<!-- layout으로 설정되는 모든 html에 포함될 head의 내용을 작성-->
+<!-- layout으로 설정되는 모든 html에 포함될 head 내용 작성 -->
 <head th:fragment="config">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"
   <title>게시판</title>
 
-  <!--모든 페이지에서 사용할 공용 css링크-->
-  <!--thymeleaf에서 링크를 걸때는 @{}로 사용-->
+  <!-- 모든 페이지에서 사용할 공용 css 링크 -->
+  <!-- thymeleaf에서 링크를 걸 때에는 @{}를 사용한다. -->
   <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+  <style>
+    font-family: 'Nanum Gothic Coding', monospace;
+  </style>
 
-  <!--특정페이지에서만 사용할 css링크나 스타일시트-->
-  <!--css 따로 적용할 페이지에서 아래와 같이 작성해야된다.-->
+  <!-- 특정 페이지에서만 사용할 css 링크 및 스타일시트 -->
+  <!-- css를 따로 적용할 페이지에 아래와 같이 작성해야 한다. -->
   <th:block layout:fragment="css">
     <!--<style>
-
     </style>
-    <link rel="stylesheet" th:href="">-->
+    <link rel="stylesheet" th:href="">  -->
   </th:block>
 
-  <!--모든 페이지에서 사용할 공용 js링크-->
+  <!-- 모든 페이지에서 동작할 공용 js 링크 -->
   <script th:src="@{/js/jquery.min.js}"></script>
 
-  <!--특정 페이지에서만 동작할 js 링크나 태그 -->
+  <!-- 특정 페이지에서만 사용할 js 링크 및 태그 -->
   <th:block layout:fragment="script">
     <!--<script>
     </script>

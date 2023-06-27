@@ -35,8 +35,6 @@ public class ProductImageService {
         this.fileService = fileService;
     }
 
-
-
     public List<ProductImage> getAllProductImages() {
     	
         return productImageRepository.findAll();
@@ -46,8 +44,6 @@ public class ProductImageService {
     	
     	return productImageRepository.findByProduct(product);
     }
-
-
     public void saveProductImg(ProductImage productImage, MultipartFile productImgFile) throws IOException {
         String oriImgName = productImgFile.getOriginalFilename();
         String imgName = "";
@@ -86,10 +82,5 @@ public class ProductImageService {
 
 
     }
-
-
-
-
-
 
 }
