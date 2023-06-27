@@ -1,14 +1,19 @@
 package com.main.miniproject.product.repository;
 
-
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import com.main.miniproject.product.entity.Product;
 
-@Repository
-public interface ProductRepository extends JpaRepository<Product, Long>{
+import java.util.List;
 
-	List<Product> findByProductTitleContaining (String searchKeyword);
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom{
+
+    List<Product> findByProductTitle(String productTitle);
+
+    List<Product> findByProductTitleOrProductContent(String productTitle, String productContent);
+
+    List<Product> findByProductTitleContaining (String searchKeyword);
 
 }

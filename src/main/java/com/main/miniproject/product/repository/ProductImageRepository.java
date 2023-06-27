@@ -12,5 +12,8 @@ import com.main.miniproject.product.entity.ProductImage;
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long>{
 
 	List<ProductImage> findByProduct(Product product);
-	
+
+	List<ProductImage> findByIdOrderByIdAsc(Long Id);
+
+
 }

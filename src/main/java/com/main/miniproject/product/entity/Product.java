@@ -1,16 +1,11 @@
 package com.main.miniproject.product.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.main.miniproject.product.dto.ProductFormDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "product")
 @Entity
-@Builder
 public class Product {
 	
     @Id
@@ -34,6 +28,7 @@ public class Product {
     @Column(name ="product_price")
     private Double productPrice;
 
+    @Lob
     @Column(name ="product_content")
     private String productContent;
     
@@ -43,9 +38,19 @@ public class Product {
 	@Column
 	@Enumerated(EnumType.STRING)
     private ProductSellStatus productSellStatus;
-	
-	@Column(name = "product_type")
-	private String productType;
 
+    @Column(name = "product_type")
+    private String productType;
+
+
+    public void updateProduct(ProductFormDto productFormDto) {
+        //웹에서 작성된 정보 itemFormDto에 저장됨. 저장된 것 getItemNm으로 꺼내서 this.itemNm에 넣기
+        this.productTitle = productFormDto.getProductTitle();
+        this.productPrice = productFormDto.getProductPrice();
+        this.productQuantity = productFormDto.getProductQuantity();
+        this.productContent = productFormDto.getProductContent();
+        this.productSellStatus = productFormDto.getProductSellStatus();
+
+    }
     
 }

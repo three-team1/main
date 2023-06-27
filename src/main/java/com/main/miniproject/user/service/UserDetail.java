@@ -18,7 +18,8 @@ public class UserDetail implements UserDetails, OAuth2User{
 	private User user;
 	private Role role;
 	private Map<String, Object> attributes;
-
+	
+	
 
 	public UserDetail(User user) {
 		super();
@@ -32,34 +33,21 @@ public class UserDetail implements UserDetails, OAuth2User{
         this.role = user.getRole();
     }
 
-
-	public UserDetail(UserDetail userDetail) {
-		this.user = userDetail.getUser();
-		this.role = userDetail.role;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		switch (role) {
         case ADMIN:
             return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        case VIP:
-            return Arrays.asList(new SimpleGrantedAuthority("ROLE_VIP"));
         default:
             return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }
-
+	
 	public User getUser() {
 		return this.user;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
-		this.role = user.getRole();
-	}
 	
-	public Map<String, Object> getAttributes() {
+	 public Map<String, Object> getAttributes() {
 	        return attributes;
 	 }
 	 
@@ -68,7 +56,7 @@ public class UserDetail implements UserDetails, OAuth2User{
 			
 		return this.getUsername();
 	}
-
+	
 	@Override
 	public String getPassword() {
 

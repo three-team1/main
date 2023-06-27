@@ -37,19 +37,8 @@ th {
 
 .noBorder {
     border-bottom: 1px solid rgba(0, 0, 0, 0.7);
-    height: 40px;
-    color: white;
+    height: 30px;
 
-}
-
-.board-title {
-	font-weight:bold;
-	color:lightblue;
-}
-
-.board-writer {
-	color:lightcoral;
-	font-weight:bold;
 }
 
 a {
@@ -148,34 +137,34 @@ a {
 		<div class="nav-bar-container">
 
 			<div class="nav-logo">
-				<a href="/"> <img
-					src="/icon/Black n White Luxury  Rent Car Logo.png">
-				</a>
+				<a class= "abc" href="/">
+				<img src="/icon/Black n White Luxury  Rent Car Logo.png">
+			    </a>
 
 			</div>
 
 			<div class="nav-bar-item-box">
 				<div class="nav-bar-item">
-					<a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
 						컬렉션
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="/board/list"> <span></span> <span></span> <span></span>
-						<span></span> 커뮤니티
+						<span></span> 게시판
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="#"> <span></span> <span></span> <span></span> <span></span>
-						Q&A
+						세일
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
 					<a href="#"> <span></span> <span></span> <span></span> <span></span>
-						장바구니
+						신상품
 					</a>
 				</div>
 
@@ -184,9 +173,8 @@ a {
 
 			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
 				<p>
-					환영합니다! <span class="username" sec:authentication="name"></span>님
+					환영합니다! <span sec:authentication="name"></span>님
 				</p>
-				<a href="/mypage">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -206,6 +194,7 @@ a {
 				<a href="/register"> 회원가입 </a>
 			</div>
 		</div>
+
 
 
 	</header>
@@ -251,7 +240,7 @@ a {
 						th:href="@{'/board/detail/' + ${board.id}}"
 						th:text="${board.boardTitle}"></a></td>
 
-					<td class="noBorder board-writer" th:text="${board.user.username}"></td>
+					<td class="noBorder" th:text="${board.user.username}"></td>
 					<td class="noBorder"
 						th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
 					<td class="noBorder" th:text="${board.boardView}"></td>
