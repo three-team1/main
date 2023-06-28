@@ -28,7 +28,7 @@ public class BoardFileService {
 					String fileName = UUID.randomUUID().toString() + fileExt;
 					String filePath = "C:/board/images/" + fileName;
 					
-					try {	
+					try {
 						
 							file.transferTo(new File(filePath));
 						

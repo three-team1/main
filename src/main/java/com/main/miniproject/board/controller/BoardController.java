@@ -1,7 +1,9 @@
 package com.main.miniproject.board.controller;
 
+
 import java.util.List;
 
+import com.main.miniproject.board.service.BoardFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
-import com.main.miniproject.board.entity.Comment;
-import com.main.miniproject.board.service.BoardFileService;
 import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
-import com.main.miniproject.board.service.CommentService;
-
 
 @Controller
 public class BoardController {
@@ -35,9 +33,6 @@ public class BoardController {
 	private BoardImageService boardImageService;
 
 	@Autowired
-	private CommentService commentService;
-	
-	@Autowired
 	private BoardFileService boardfileService;
 
 
@@ -45,10 +40,12 @@ public class BoardController {
 	public String showBoardWriteForm() {
 		return "boardWrite";
 	}
-	
-	@PostMapping("/board/insert") 
-	public String saveBoard(Board board, MultipartFile[] files, RedirectAttributes redirectAttributes) {		
-		
+
+	@PostMapping("/board/insert")
+	public String saveBoard(Board board, MultipartFile[] files, RedirectAttributes redirectAttributes) {
+
+		System.out.println(files);
+
 		boardService.createBoard(board);											// 게시글저장
 
 		List<BoardImage> boardImages = boardfileService.saveFiles(board, files);			// 파일로직 호출
@@ -98,16 +95,14 @@ public class BoardController {
 
 	@GetMapping("/board/detail/{id}")
 	public String getBoard(@PathVariable Long id, Model model) {
-	    Board board = boardService.getBoard(id);
-	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
-	    List<Comment> commentList = commentService.commentList(board);
-	    
-	    model.addAttribute("board", board);
-	    model.addAttribute("images",boardImageList);
-	    model.addAttribute("comment",commentList);
-	    
-	    return "boardDetail";
+		Board board = boardService.getBoard(id);
+		List<BoardImage> boardImageList = boardImageService.boardImageList(board);
+
+		model.addAttribute("images",boardImageList);
+		model.addAttribute("board", board);
+		return "boardDetail";
 	}
+
 
 	@GetMapping("/board/edit/{id}")
 	public String editBoard(@PathVariable Long id, Model model) {
