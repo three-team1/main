@@ -104,7 +104,7 @@ public class BoardController {
 	    
 	    model.addAttribute("board", board);
 	    model.addAttribute("images",boardImageList);
-	    model.addAttribute("comment",commentList);
+	    model.addAttribute("comments",commentList);
 	    
 	    return "boardDetail";
 	}

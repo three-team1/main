@@ -10,33 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.Comment;
-import com.main.miniproject.board.service.BoardFileService;
-import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.board.service.CommentService;
 
 @RestController
-public class BoardRestController {
-	
-	@Autowired
-	private BoardService boardService;
+public class CommentRestController {
 
-	@Autowired
-	private BoardImageService boardImageService;
-	
 	@Autowired
 	private CommentService commentService;
 	
 	@Autowired
-	private BoardFileService fileService;
+	private BoardService boardService;
 	
-	
-    @DeleteMapping("/image/{imageId}")
-    public ResponseEntity<?> deleteImage(@PathVariable Long imageId) {
-        boardImageService.deleteImage(imageId);
-        return ResponseEntity.ok().build();
-    }
-    
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
     	commentService.deleteComment(commentId);
@@ -51,11 +36,6 @@ public class BoardRestController {
         commentService.saveComment(comment);
         return ResponseEntity.ok().build();
     }
-    
+   
+	
 }
-
-      
-	
-	
-	
-
