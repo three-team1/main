@@ -20,34 +20,18 @@
       margin: 0;
     }
 
-    .cart-header {
-      margin-left: 200px;
-      margin-right: 200px;
+    .cart-header{
       margin-top: 250px;
-      font-size: 11px;
     }
 
-    .cart-header a {
-      text-decoration: none;
-      color: white;
-    }
-
-    .cart-header li {
-      padding-right: 10px;
-    }
-
-    .cart-header li, p {
-      display: inline-block;
-    }
-
-    .cart-header p {
-      float: right;
+    .cart-header p{
+      margin-left: 740px;
+      font-size: 12px;
       color: white;
     }
 
     hr {
-      margin: auto;
-      margin-top: 30px;
+      margin: 30px auto;
       max-width: 800px;
     }
 
@@ -91,6 +75,17 @@
 
     #th6, #td6 {
       width: 15%;
+    }
+
+    #td6 button {
+      width: 70%;
+
+    }
+    #td6 a{
+      text-decoration: none;
+      color: black;
+      font-size: 12px;
+      padding: 2px;
     }
 
     .order-btn {
@@ -198,12 +193,7 @@
 
   <section>
     <div class="cart-header">
-      <ul class="cart-menu">
-        <li>
-          <a href="#">배송상품 (0)</a>
-        </li>
-        <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-      </ul>
+      <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
     </div>
     <hr>
 
@@ -217,13 +207,29 @@
           <th id="th5">수량</th>
           <th id="th6">선택</th>
         </tr>
-        <tr th:each="cart: ${cartList}">
+        <tr th:each="cart: ${cartlist}">
           <td id="td1"><input type="checkbox" name="check" value="1"></td>
-          <td th:text="이미지"></td>
-          <td th:text="${cart.product.getProductTitle()}"></td>
-          <td th:text="${cart.product.getProductPrice()}"></td>
-          <td></td>
-          <td th:text="삭제"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
+        </tr>
+        <tr>
+          <td id="td1"><input type="checkbox" name="check" value="2"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
+        </tr>
+        <tr>
+          <td id="td1"><input type="checkbox" name="check" value="3"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
         </tr>
       </table>
     </div>

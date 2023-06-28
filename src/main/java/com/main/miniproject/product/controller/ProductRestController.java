@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.main.miniproject.product.dto.ProductDTO;
 import com.main.miniproject.product.entity.Product;
+import com.main.miniproject.product.entity.ProductDTO;
+
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.entity.RealTimeSearch;
 import com.main.miniproject.product.service.ProductImageService;
