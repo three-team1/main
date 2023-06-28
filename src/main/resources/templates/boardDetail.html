@@ -115,7 +115,7 @@
 				</div>
 
 				<div class="nav-bar-item">
-					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+					<a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
 						Q&A
 					</a>
 				</div>
@@ -133,7 +133,7 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-				<a href="/mypage">마이페이지</a>
+				<a href="/mypage/me">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -192,6 +192,25 @@
 		<div class="board-detail-action-box">
 			<a th:href="@{'/board/edit/' + ${board.id}}">수정</a> <!-- 수정 페이지로 이동하는 링크 -->
 			<a th:href="@{'/board/delete/' + ${board.id}}">삭제</a> <!-- 게시글을 삭제하는 링크 -->
+		</div>
+		
+		<div class="comment-section">
+		    <h3>댓글</h3>
+		
+		    <!-- 댓글 작성 폼 -->
+		    <form action="/board/comment" method="post">
+		        <input type="hidden" name="boardId" th:value="${board.id}">
+		        <textarea name="commentContent" placeholder="댓글을 입력하세요."></textarea>
+		        <button type="submit">작성</button>
+		    </form>
+		
+		    <!-- 댓글 목록 -->
+		    <div class="comment-list">
+		        <div th:each="comment : ${comments}">
+		            <div class="comment-author" th:text="${comment.user.username}"></div>
+		            <div class="comment-content" th:text="${comment.commentContent}"></div>
+		        </div>
+		    </div>
 		</div>
     
     
