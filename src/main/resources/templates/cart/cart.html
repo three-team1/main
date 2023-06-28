@@ -217,29 +217,13 @@
           <th id="th5">수량</th>
           <th id="th6">선택</th>
         </tr>
-        <tr>
+        <tr th:each="cart: ${cartList}">
           <td id="td1"><input type="checkbox" name="check" value="1"></td>
-          <td id="td2">이미지</td>
-          <td id="td3">상품 정보</td>
-          <td id="td4">판매가</td>
-          <td id="td5">수량</td>
-          <td id="td6">선택</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" name="check" value="2"></td>
-          <td>이미지</td>
-          <td>상품 정보</td>
-          <td>판매가</td>
-          <td>수량</td>
-          <td>선택</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" name="check" value="3"></td>
-          <td>이미지</td>
-          <td>상품 정보</td>
-          <td>판매가</td>
-          <td>수량</td>
-          <td>선택</td>
+          <td th:text="이미지"></td>
+          <td th:text="${cart.product.getProductTitle()}"></td>
+          <td th:text="${cart.product.getProductPrice()}"></td>
+          <td></td>
+          <td th:text="삭제"></td>
         </tr>
       </table>
     </div>
