@@ -5,39 +5,46 @@ import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
     private UserRepository userRepository;
+
     private PasswordEncoder encoder;
+
+    private UserService userService;
 
     @Autowired
     public UserInfoServiceImpl(UserRepository userRepository,
-                               PasswordEncoder encoder) {
+                               PasswordEncoder encoder,
+                               UserService userService) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.userService = userService;
     }
 
     //내 정보 조회
     @Override
-    public MyInfoDTO getMyInfo(String username) {
+    public User getMyInfo(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        return MyInfoDTO.of(user);
-
+        return user;
     }
 
     //내 정보 수정
     @Override
     @Transactional
-    public void updateMyInfo(MyInfoDTO myInfoDTO) {
+    public void updateMyInfo(MyInfoDTO myInfoDTO, HttpSession session) {
         String username = myInfoDTO.getUsername();
 
         User user = userRepository.findByUsername(username)
@@ -50,31 +57,27 @@ public class UserInfoServiceImpl implements UserInfoService {
         user.setMy_detailAddress(myInfoDTO.getMy_detailAddress());
 
         userRepository.save(user);
+
+        //수정된 정보 security에 업데이트
+        UserDetail userDetail = (UserDetail) userService.loadUserByUsername(user.getUsername());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
     }
 
-    //내 정보 수정 시 로그인 풀림 방지용
+    //비밀번호 확인
     @Override
-    public UserDetails updateUserDetails(UserDetails currentUserDetails) {
-        //UserDetail로 객체화 여부
-        if(!(currentUserDetails instanceof UserDetail)) {
-            throw new IllegalArgumentException("UserDetail 객체가 아닙니다.");
-        }
-
-        String username = currentUserDetails.getUsername();
-
+    public boolean checkPassword(String username, String checkPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        UserDetail newUserDetails = new UserDetail((UserDetail) currentUserDetails);
-        newUserDetails.setUser(user);
+        String realPassword = user.getPassword();
 
-        return newUserDetails;
+        boolean matches = encoder.matches(checkPassword, realPassword);
+
+        return matches;
     }
 
-    @Override
-    public User getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        return user;
-    }
+
 }

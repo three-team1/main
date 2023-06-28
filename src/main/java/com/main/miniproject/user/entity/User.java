@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.main.miniproject.user.dto.MyInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,5 +68,18 @@ public class User{
     
     public String getRoleKey() {
         return this.role.getKey();
+    }
+
+    public MyInfoDTO EntityToDTO() {
+        MyInfoDTO myInfoDTO = MyInfoDTO.builder()
+                .id(this.id)
+                .username(this.username)
+                .email(this.email)
+                .tel(this.tel)
+                .my_postcode(this.my_postcode)
+                .my_address(this.my_address)
+                .my_detailAddress(this.my_detailAddress)
+                .build();
+        return myInfoDTO;
     }
 }

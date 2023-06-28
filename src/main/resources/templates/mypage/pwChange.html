@@ -121,16 +121,25 @@
       }
     </style>
   </th:block>
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      $(function () {
+        $(window).on("load", function () {
+          $("#password").focus();
+        });
+      });
+    </script>
+  </th:block>
 </head>
 <body>
 <div layout:fragment="content">
   <div class="main-container">
     <div class="aside">
       <div class="menu">
-        <div class="menu-title" id="menu-title1" onclick="location.href='#'">
+        <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
           <p>내 주문/배송조회</p>
         </div>
-        <div class="menu-title" id="menu-title2" onclick="location.href='#'">
+        <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
           <p>내 글/댓글 조회</p>
         </div>
         <div class="menu-title" id="menu-title3" onclick="location.href='#'">
@@ -148,26 +157,26 @@
           <tr class="myInfo-tr">
             <th class="myInfo-th">현재 비밀번호</th>
             <td class="myInfo-td">
-              <input type="password" class="input-pw" id="currentPw" placeholder="현재 비밀번호를 입력하세요.">
+              <input type="password" class="input-pw" id="password" name="password" autocomplete="off" placeholder="현재 비밀번호를 입력하세요.">
             </td>
           </tr>
           <tr class="myInfo-tr">
             <th class="myInfo-th">새 비밀번호</th>
             <td class="myInfo-td">
-              <input type="password" class="input-pw" id="newPw" placeholder="새 비밀번호를 입력하세요.">
+              <input type="password" class="input-pw" id="newPassword" name="newPassword" autocomplete="off" placeholder="새 비밀번호를 입력하세요.">
             </td>
           </tr>
           <tr class="myInfo-tr">
             <th class="myInfo-th">비밀번호 확인</th>
             <td class="myInfo-td">
-              <input type="password" class="input-pw" id="chkPw" placeholder="새 비밀번호를 다시 입력하세요.">
+              <input type="password" class="input-pw" id="chkPassword" name="chkPassword" autocomplete="off" placeholder="새 비밀번호를 다시 입력하세요.">
             </td>
           </tr>
         </table>
         <br>
         <div class="buttons">
-          <button type="submit" id="btnSave" name="btnSave" onclick="alert('내 비밀번호를 변경했습니다.')">확인</button>
-          <button type="button" id="btnCancel" name="btnCancel" onclick="location.href='/mypage/myInfo '">취소</button>
+          <button type="submit" id="btnSave" onclick="alert('내 비밀번호를 변경했습니다.')">확인</button>
+          <button type="button" id="btnCancel" onclick="location.href='/mypage/myInfo'">취소</button>
         </div>
       </form>
     </div>
