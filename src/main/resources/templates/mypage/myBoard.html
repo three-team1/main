@@ -59,6 +59,7 @@
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                overflow: auto;
             }
 
             .myInfo-tb {
@@ -126,30 +127,126 @@
             h1 {
                 color: white;
             }
+
+            tr:nth-child(even) {
+                background-color: #2b2b2b;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #2b2b2b;
+            }
+
+            th {
+                background-color:  beige;
+                color: black;
+            }
+
+            .noBorder {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+                height: 40px;
+                color: white;
+
+            }
+
+            .board-title {
+                font-weight:bold;
+                color:lightblue;
+            }
+
+            .board-writer {
+                color:lightcoral;
+                font-weight:bold;
+            }
+
+            a {
+                text-decoration-line : none;
+                color : beige;
+            }
+
+
+            .table {
+                width: 750px;
+                margin: auto;
+                text-align: center;
+                border-collapse: collapse;
+            }
+
+            .table-responsive {
+                min-height : 600px;
+            }
+
+            .id {
+                width: 8%;
+                height: 70px;
+            }
+
+            .title {
+                width: 60%;
+            }
+
+            .writer {
+                width: 12%;
+            }
+
+            .date {
+                width: 10%;
+            }
+
+            .table-header {
+                margin: auto;
+                text-align: center;
+                color: lightblue;
+            }
+
+            .table-search {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .table-search button {
+                height: 25px;
+                font-size: 12px;
+                background-color: black;
+                border: none;
+                color: white;
+                margin-left: -10px;
+                border-top-right-radius: 5px;
+            }
+
+            .table-search input {
+                margin: 0;
+                padding: 0;
+            }
+
+            .pagination {
+                margin: auto;
+                margin-top: 20px;
+                width: 200px;
+                text-align:center;
+            }
+
+            .selected {
+                color: lightblue;
+            }
+
+            .btn-write {
+                text-align: center;
+            }
+
+            .btn-write button {
+                width: 100px;
+                background-color: antiquewhite;
+                border: none;
+                border-radius: 3px;
+                cursor : pointer;
+            }
+
         </style>
     </th:block>
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-            $(document).ready(function(){
-                $.ajax({
-                    url: "/api/mypage/myInfo",
-                    type: "GET",
-                    contentType: "application/json",
-                    success: function(data) {
-                        $('#username').val(data.username);
-                        $('#email').val(data.email);
-                        $('#tel').val(data.tel);
-                        $('#my_postcode').val(data.my_postcode);
-                        $('#my_address').val(data.my_address);
-                        $('#my_detailAddress').val(data.my_detailAddress);
-                    },
-                    error: function(err){
-                        console.log(err);
-                    }
-                });
-            });
-        </script>
-    </th:block>
+
+
+
+
 </head>
 <body>
 <div layout:fragment="content">
@@ -171,7 +268,65 @@
             </div>
         </div>
         <div class="section">
-            <h1>내 글/댓글 조회</h1>
+            <div class="container">
+                <div class="table-header">
+                    <h1>내 글 목록</h1>
+                </div>
+
+                <div class="table-search">
+                    <form th:action="@{/board/list}" method="get">
+                        <input type="text" name="keyword" placeholder="Search">
+                        <button type="submit">검색</button>
+                    </form>
+                </div>
+
+
+
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="id">번호</th>
+                        <th class="title">제목</th>
+                        <th class="writer">작성자</th>
+                        <th class="date">작성일</th>
+                        <th class="count">조회수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="board : ${boards}">
+                        <td class="noBorder" th:text="${board.id}"></td>
+
+                        <td class="noBorder"><a class="board-title"
+                                                th:href="@{'/board/detail/' + ${board.id}}"
+                                                th:text="${board.boardTitle}"></a></td>
+
+                        <td class="noBorder board-writer" th:text="${board.user.username}"></td>
+                        <td class="noBorder"
+                            th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
+                        <td class="noBorder" th:text="${board.boardView}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="btn-write">
+                <a href="/board/write">
+                    <button type="submit">등록</button>
+                </a>
+            </div>
+
+<!--            <div class="pagination">-->
+<!--                <th:block th:if="${page.totalPages > 0}" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">-->
+<!--                    <a th:href="@{/board/list(page=${i})}" th:text="${i + 1}"-->
+<!--                       th:class="${page.number == i ? 'selected' : ''}">1</a>-->
+<!--                </th:block>-->
+<!--            </div>-->
+
+
 
 
         </div>

@@ -1,6 +1,7 @@
 package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
+import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/mypage")
 public class MypageViewController {
     private UserInfoService userInfoService;
+
+    @Autowired
+    private BoardService boardService;
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService) {
@@ -42,28 +46,25 @@ public class MypageViewController {
         model.addAttribute("user", user);
         return "mypage/myUpdate";
     }
+
     @GetMapping("/myBoard")
-    public String myBoardView() {
-
-        return "mypage/myboard";
-    }
-
-    /*@GetMapping("/board/list")
-    public String getBoardList(Model model,
+    public String myBoardView(Model model,
+                              @AuthenticationPrincipal UserDetails userDetails,
                                @RequestParam(required = false) String keyword,
-                               @PageableDefault(size = 15 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                               @PageableDefault(size = 5 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Board> boardPage;
+        User user = userInfoService.getUserByUsername(userDetails.getUsername());
         if(keyword != null) {
             boardPage = boardService.searchBoard(pageable, keyword);
         } else {
-            boardPage = boardService.getAllBoards(pageable);
+            boardPage = boardService.getMypageBoards(user.getUsername(), pageable);
         }
 
         model.addAttribute("boards", boardPage);
         model.addAttribute("page", boardPage);
 
-        return "boardList";
-    }*/
+        return "mypage/myboard";
+    }
 
 }

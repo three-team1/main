@@ -7,10 +7,10 @@
     <th:block layout:fragment="css">
         <style>
             .main-container {
-                margin-top: 15%;
+                margin-top: 172px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: 600px;
+                grid-template-rows: 620px;
                 grid-gap: 10px;
             }
 
@@ -23,14 +23,10 @@
             .aside {
                 grid-column: 1;
                 grid-row: 1;
+                margin-left: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-            }
-
-            .menu {
-                position: absolute;
-                color: white;
             }
 
             .section {
@@ -38,16 +34,93 @@
                 grid-row: 1;
             }
 
+            .menu {
+                position: absolute;
+                color: white;
+            }
+
             .menu-title {
                 border: 1px solid pink;
                 padding: 20px 10px;
                 text-align: center;
+                font-size: 1.1rem;
                 font-weight: bold;
                 color: white;
+                cursor: pointer;
             }
 
             #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
                 background: pink;
+            }
+
+            .section {
+                margin-right: 10px;
+                display: flex;
+                /*flex-direction: column;*/
+                /*align-items: center;*/
+                /*text-align: center;*/
+                background-color: pink;
+                overflow: auto;
+            }
+
+            .myInfo-tb {
+                border-collapse: collapse;
+                min-width: 510px;
+                min-height: 360px;
+            }
+
+            th, td {
+                border: 1px solid pink;
+                padding: 10px 10px;
+                text-align: left;
+                font-size: 1rem;
+                color: white;
+            }
+
+            .myInfo-th {
+                min-width: 100px;
+                text-align: center;
+            }
+
+            .myInfo-td {
+                min-width: 360px;
+            }
+
+            .input-noUpdate {
+                width: 350px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: transparent;
+                border: none;
+                outline: none;
+            }
+
+            .input-updateDetail {
+                width: 350px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: none;
+                outline: none;
+            }
+
+            .buttons {
+                text-align: center;
+            }
+
+            #btnSave, #btnCancel {
+                display: inline-block;
+                width: 70px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: pink;
+                border: none;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
             }
 
             a:link {
@@ -55,12 +128,9 @@
                 text-decoration: none;
             }
 
-            .section {
-                background-color: pink;
-                font-family: Arial, sans-serif;
-                overflow: auto;
+            h1 {
+                color: white;
             }
-
 
             .child {
                 display: flex;
@@ -79,8 +149,42 @@
                 display: block;
             }
 
-
         </style>
+    </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            function updateUser(){
+                var data = {
+                    username: $("#username").val(),
+                    email: $("#email").val(),
+                    tel: $("#tel").val(),
+                    my_postcode: $("#my_postcode").val(),
+                    my_address: $("#my_address").val(),
+                    my_detailAddress: $("#my_detailAddress").val()
+                };
+
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        alert("정보가 성공적으로 수정되었습니다.");
+                        location.href = '/mypage/myInfo';
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            }
+
+            $(document).ready(function(){
+                $('#btnSave').click(function(e){
+                    e.preventDefault();
+                    updateUser();
+                });
+            });
+        </script>
     </th:block>
 </head>
 <body>
@@ -88,17 +192,17 @@
     <div class="main-container">
         <div class="aside">
             <div class="menu">
-                <div class="menu-title" id="menu-title1">
-                    <a href="#"><p>내 주문/배송조회</p></a>
+                <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+                    <p>내 주문/배송조회</p>
                 </div>
-                <div class="menu-title" id="menu-title2">
-                    <a href="#"><p>내 글/댓글 조회</p></a>
+                <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
+                    <p>내 글/댓글 조회</p>
                 </div>
-                <div class="menu-title" id="menu-title3">
-                    <a href="#"><p>내 리뷰 관리</p></a>
+                <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+                    <p>내 리뷰 관리</p>
                 </div>
-                <div class="menu-title" id="menu-title4">
-                    <a href="/mypage/myInfo"><p>내 정보 관리</p></a>
+                <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+                    <p>내 정보 관리</p>
                 </div>
             </div>
         </div>
@@ -116,7 +220,7 @@
                             <li>지불 방식: 무통장 결제</li>
                             <li>주문 상태: 입금 완료(입금자: 홍길동)</li>
                             <li>배송 완료</li>
-                            <button><h1>재구매</h1></button>
+                            <button><h2>재구매</h2></button>
                             <span><a href="#">제품 리뷰 남기기</a></span>
                         </ul>
                     </div>
@@ -130,7 +234,7 @@
                             <li>지불 방식: 신용카드 결제</li>
                             <li>주문 상태: 결제 완료</li>
                             <li>배송 준비중</li>
-                            <button><h1>재구매</h1></button>
+                            <button><h2>재구매</h2></button>
                             <span><a href="#">제품 리뷰 남기기</a></span>
                         </ul>
                     </div>
