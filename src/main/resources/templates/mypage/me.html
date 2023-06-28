@@ -132,6 +132,7 @@
                 color: white;
             }
 
+
             .child {
                 display: flex;
                 list-style: none;
@@ -139,14 +140,29 @@
 
             ul {
                 list-style: none;
+                margin-top: 20px;
             }
 
             li {
                 font-weight: bold;
+                margin: 10px;
             }
 
             a, img {
                 display: block;
+            }
+
+
+            .re-order {
+                margin: 10px;
+                font-size: 20px;
+                width: 200px;
+                height: 40px;
+            }
+
+            .order-info {
+                font-size: 25px;
+                font-weight: bold;
             }
 
         </style>
@@ -211,30 +227,30 @@
                 <h1>최근 주문 내역</h1>
                 <div id="mcmenu1">
                     <div class="child">
-                        <h2>2023.06.22 주문
+                        <div class="order-info">2023.06.22 주문
                             <img src="/images/time-man.jpg" width="200px" height="200px">
-                        </h2>
+                        </div>
                         <ul>
                             <li>시간의 능력(수량: 1)</li>
                             <li>금액: 2,000,000(원)</li>
                             <li>지불 방식: 무통장 결제</li>
                             <li>주문 상태: 입금 완료(입금자: 홍길동)</li>
                             <li>배송 완료</li>
-                            <button><h2>재구매</h2></button>
+                            <button class="re-order">재구매</button>
                             <span><a href="#">제품 리뷰 남기기</a></span>
                         </ul>
                     </div>
                     <div class="child">
-                        <h2>2023.06.23 주문
+                        <div class="order-info">2023.06.23 주문
                             <img src="/images/fire-man.jpg" width="200px" height="200px">
-                        </h2>
+                        </div>
                         <ul>
                             <li>불꽃 인간(수량: 1)</li>
                             <li>금액: 15,000,000(원)</li>
                             <li>지불 방식: 신용카드 결제</li>
                             <li>주문 상태: 결제 완료</li>
                             <li>배송 준비중</li>
-                            <button><h2>재구매</h2></button>
+                            <button class="re-order">재구매</button>
                             <span><a href="#">제품 리뷰 남기기</a></span>
                         </ul>
                     </div>
