@@ -157,10 +157,10 @@ public class ProductController {
 
 
 	//상품 삭제하기
-	@PostMapping("/admin/delItems")
-	public void deleteProduct(Product product){
+	@DeleteMapping("/admin/items")
+	public void deleteProduct(Long id){
 
-		productService.deleteProduct(product);
+		productService.deleteProduct(id);
 
 	}
 

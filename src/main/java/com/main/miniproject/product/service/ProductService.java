@@ -1,6 +1,9 @@
 package com.main.miniproject.product.service;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import com.main.miniproject.product.entity.ProductDTO;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.repository.ProductImageRepository;
 import lombok.extern.log4j.Log4j2;
+import org.codehaus.groovy.tools.shell.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -129,9 +133,29 @@ public class ProductService {
 
 	//상품 삭제하기
 
-	 public void deleteProduct(Product product){
+	 public void deleteProduct(Long id){
 
-		 productRepository.delete(product);
+		Product product = productRepository.findById(id).get();
+
+		List<ProductImage> productImages = productImageRepository.findByProduct(product);
+
+		for(ProductImage productImage : productImages){
+
+			try{
+				Path filePath = Paths.get("C:/miniproject/images" + productImage.getName());
+				Files.deleteIfExists(filePath);
+			}catch (IOException e){
+				e.printStackTrace();
+				//적절한 예외 처리 필요
+			}
+
+			productImageRepository.delete(productImage);
+
+		}
+
+		productRepository.deleteById(id);
+
+
 	 }
 
 
