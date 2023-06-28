@@ -74,8 +74,6 @@ public class QnaService {
 
 
     public void updateCnt(QNA qna) {
-        qna.setQnaCnt(qna.getQnaCnt() + 1);
-        qnaRepository.save(qna);
     }
 
     public User getCurrentUser() {											// 사용자 인증정보 반환
