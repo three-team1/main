@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link href="/css/main.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+  <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .cart-header{
+      margin-top: 250px;
+    }
+
+    .cart-header p{
+      margin-left: 740px;
+      font-size: 12px;
+      color: white;
+    }
+
+    hr {
+      margin: 30px auto;
+      max-width: 800px;
+    }
+
+    .cart-table {
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+      border: 1px solid white;
+      border-collapse: collapse;
+      width: 800px;
+      margin: 20px auto;
+    }
+
+    .cart-table th, td {
+      padding: 20px;
+    }
+
+    .cart table, #tr1 {
+      border-bottom: 1px solid white;
+    }
+
+    #th1, #td1 {
+      width: 5%;
+    }
+
+    #th2, #td2 {
+      width: 15%;
+    }
+
+    #th3, #td3 {
+      width: 40%;
+    }
+
+    #th4, #td4 {
+      width: 15%;
+    }
+
+    #th5, #td5 {
+      width: 10%;
+    }
+
+    #th6, #td6 {
+      width: 15%;
+    }
+
+    #td6 button {
+      width: 70%;
+
+    }
+    #td6 a{
+      text-decoration: none;
+      color: black;
+      font-size: 12px;
+      padding: 2px;
+    }
+
+    .order-btn {
+      margin: 50px auto 200px auto;
+      text-align: center;
+    }
+
+    .order-btn a {
+      text-decoration: none;
+      border: 1px solid white;
+      color: black;
+      padding: 5px 40px 5px 40px;
+      font-size: 12px;
+    }
+
+    .order-btn .all, .selected{
+      background-color: white;
+      color: black;
+    }
+
+    .order-btn .all:hover, .selected:hover {
+      background-color: aqua;
+      color: black;
+    }
+  </style>
+
+  <script>
+    //체크박스
+    $(document).ready(function () { //문서 준비가 완료되면 함수 내의 코드가 실행된다
+      $("#checkAll").click(function() { //#checkAll를 클릭했을 때 실행
+        if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true); //#checkAll이 체크가 되면, check의 체크박스를 모두 체크하게 설
+        else $("input[name=check]").prop("checked", false); //그렇지 않은 경우에는 체크박스의 상태를 선택 해제 상태로 설정
+      });
+
+      $("input[name=check]").click(function() {
+        var total = $("input[name=check]").length; //check이름을 가진 체크박스의 길이(개수)를 가져옴
+        var checked = $("input[name=check]:checked").length; //선택된 check의 체크박스 길이(개수)를 가져옴
+
+        if(total != checked) $("#checkAll").prop("checked", false); //개수가 같지 않으면 올체크를 풀고
+        else $("#checkAll").prop("checked", true); //개수가 같으면 올체크 표시
+      });
+    });
+  </script>
+
+<body>
+  <header>
+    <div class="nav-bar-container">
+
+      <div class="nav-logo">
+        <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+        </a>
+      </div>
+
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+            컬렉션
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list"> <span></span> <span></span> <span></span>
+            <span></span> 커뮤니티
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+            Q&A
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            장바구니
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+        <p>
+          환영합니다! <span class="username" sec:authentication="name"></span>님
+        </p>
+        <a href="/mypage">마이페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a href="/admin">관리자페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+        <a href="/login"> 로그인 </a>
+      </div>
+
+      <div class="nav-bar-join nav-bar-login"
+           sec:authorize="!isAuthenticated()">
+        <a href="/register"> 회원가입 </a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="cart-header">
+      <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
+    </div>
+    <hr>
+
+    <div class="cart-table-container">
+      <table class="cart-table">
+        <tr id="tr1">
+          <th id="th1"><input type="checkbox" id="checkAll"></th>
+          <th id="th2">이미지</th>
+          <th id="th3">상품 정보</th>
+          <th id="th4">판매가</th>
+          <th id="th5">수량</th>
+          <th id="th6">선택</th>
+        </tr>
+        <tr th:each="cart: ${cartlist}">
+          <td id="td1"><input type="checkbox" name="check" value="1"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
+        </tr>
+        <tr>
+          <td id="td1"><input type="checkbox" name="check" value="2"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
+        </tr>
+        <tr>
+          <td id="td1"><input type="checkbox" name="check" value="3"></td>
+          <td id="td2">이미지</td>
+          <td id="td3">상품 정보</td>
+          <td id="td4">판매가</td>
+          <td id="td5">수량</td>
+          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
+        </tr>
+      </table>
+    </div>
+
+    <hr>
+
+    <div class="order-btn">
+      <a href="#" class="all">전체상품주문</a>
+      <a href="#" class="selected">선택상품주문</a>
+    </div>
+  </section>
+
+</body>
+</html>

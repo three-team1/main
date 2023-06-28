@@ -137,4 +137,8 @@ public class BoardService {
         return userDetail.getUser();
 
     }
+
+    public Page<Board> getMypageBoards(String userId, Pageable pageable) {
+        return boardRepository.findByUserUsername(userId, pageable);
+    }
 }
