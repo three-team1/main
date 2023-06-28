@@ -172,7 +172,7 @@
         </tr>
         <tr th:each="qna: ${qnaList}">
           <td th:text="${qna.id}"></td>
-          <td id="qna-title" ><a th:href="@{|/qna/list/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
+          <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
           <td th:text="${qna.user.username}"></td>
           <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
           <td th:text="${qna.qnaCnt}"></td>
