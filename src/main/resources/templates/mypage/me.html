@@ -101,7 +101,7 @@
                 height: 35px;
                 font-size: 1rem;
                 color: white;
-                background: rgba(255,192,203, 0.4);
+                background: rgba(255, 192, 203, 0.4);
                 border: none;
                 outline: none;
             }
@@ -169,7 +169,7 @@
     </th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            function updateUser(){
+            function updateUser() {
                 var data = {
                     username: $("#username").val(),
                     email: $("#email").val(),
@@ -184,18 +184,18 @@
                     type: "PUT",
                     contentType: "application/json",
                     data: JSON.stringify(data),
-                    success: function(result) {
+                    success: function (result) {
                         alert("정보가 성공적으로 수정되었습니다.");
                         location.href = '/mypage/myInfo';
                     },
-                    error: function(err){
+                    error: function (err) {
                         console.log(err);
                     }
                 });
             }
 
-            $(document).ready(function(){
-                $('#btnSave').click(function(e){
+            $(document).ready(function () {
+                $('#btnSave').click(function (e) {
                     e.preventDefault();
                     updateUser();
                 });
@@ -255,8 +255,6 @@
                         </ul>
                     </div>
                 </div>
-
-
 
 
             </div>

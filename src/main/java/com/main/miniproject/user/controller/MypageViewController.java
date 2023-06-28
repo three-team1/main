@@ -51,7 +51,7 @@ public class MypageViewController {
     public String myBoardView(Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
                                @RequestParam(required = false) String keyword,
-                               @PageableDefault(size = 5 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                               @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Board> boardPage;
         User user = userInfoService.getUserByUsername(userDetails.getUsername());
