@@ -13,7 +13,7 @@ import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
 
 @Service
-public class FileService {
+public class BoardFileService {
 
 	public List<BoardImage> saveFiles(Board board, MultipartFile[] files) {
 		

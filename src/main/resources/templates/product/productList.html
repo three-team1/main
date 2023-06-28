@@ -518,7 +518,7 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-			<a href="/mypage">마이페이지</a>
+			<a href="/mypage/me">마이페이지</a>
 			</div>
 			
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -587,6 +587,7 @@
 				src="/images/telekinesis-man.jpg">
 			<div class="text-box telekinesis-text-box">
         <h2 class="new-label3">NEW</h2>
+
 				<h1 class="fade-in3 glitter-effect" data-text="염력의 능력">염력의 능력</h1>
 				<p class="fade-in3">
 
@@ -597,6 +598,7 @@
 
 				<button class="btn fade-in3">구매하기</button>
 				<button class="btn-more fade-in3">더 알아보기</button>
+
 			</div>
 		</div>
 
@@ -617,12 +619,15 @@
         <button class="slide-3"></button>
       </div>
   
-      <div class="product-header-logo"> 
+      <div class="product-header-logo">
+
       	<div>
+
         <img src="/icon/Black n White Luxury  Rent Car Logo.png">
         <h1>상품 목록</h1>
         <p style="color: beige;">Shop Items</p>
         <h2 style="color : grey">The Choice Is Yours </h2>
+
        </div>
         
         
@@ -640,7 +645,6 @@
       		</tr>
       	</table>
       	</div>
-      	
       </div>
 
     </div>
@@ -654,6 +658,7 @@
     <!-- 상품 리스트 UI 목록 -------------------------->
     
     <div class="product-list">
+
       <div class="product-category" style="margin-left : 50px">
       	  <button class="custom-btn btn-12 category-btn" data-category="전체" style="margin-right : 50px"><span>초능력</span><span>전체</span></button>
           <button class="custom-btn btn-12 category-btn" data-category="초월"><span>초능력</span><span class="infinity">초월계</span></button>
@@ -675,10 +680,8 @@
 		  <input name="searchKeyword" type="search" class="search-box" />
 		  <input class="search-btn" type="submit" value="검색" />
 		</form>
-      
 
-      
-    
+
   </div>
 
   <div class="product-grid">
@@ -863,7 +866,6 @@
   	  let response = await fetch('/api/productImages/' + productId);
   	  
   	  let data = await response.json();
-  	 
   	  
   	  return data[0]; // 이미지 정보는 배열의 첫번째에 위치한다고 가정
   	}
@@ -899,6 +901,7 @@
           
           const template = `
                     <div class="hot-item ${convertTitleToClassName(data.productTitle)} fade-in${Math.floor(i / 4) + 1}">
+
                         <img src="${image.url}">
                         <div class="hot-item-text">
                             <h1>${titleHTML}</h1>
@@ -911,10 +914,7 @@
 
           let mainHotItemBox = document.querySelector('.product-grid');
           mainHotItemBox.insertAdjacentHTML('beforeend', template);
-  
-          
 
-                    
           if (i % 4 === 3 || i === products.length - 1) { // If i is the last of a group of 4 or the last of all products
               let lastElements = mainHotItemBox.querySelectorAll('.hot-item:nth-child(n+' + Math.max(i - 2, 0) + '):nth-child(-n+' + (i + 1) + ')');
               lastElements.forEach((lastElement, index) => {

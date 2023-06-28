@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link href="/css/main.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+  <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+  <style>
+    .detail-form {
+      display: flex; /*flex컨테이너로 설정*/
+      flex-direction: column; /*항목들을 세로방향으로 배치한다. 요소들이 위에서 아래로 쌓인다*/
+      justify-content: center; /* 수직 축을 따라 중앙으로 정렬한다. 수직의 가운데에 위치하게 된다.*/
+      align-items: center; /*수평 축을 따라 중앙으로 정렬한다. 수평의 가운데에 위치하게 된다.*/
+      margin-bottom: 20px;
+    }
+
+    #detail-table {
+      margin-top:250px;
+      background-color: white;
+      border: 1px solid black;
+      border-collapse: collapse;
+      width: 600px;
+    }
+
+    #detail-table th {
+      width: 20%;
+    }
+
+    #detail-table td {
+      width: 80%;
+    }
+
+    #detail-table th, td {
+      font-size: 12px;
+      border: none;
+    }
+
+    #detail-table tr, th, td {
+      padding: 10px;
+    }
+
+    #detail-table th, td {
+      border-bottom : 1px solid black;
+      border-right: 1px solid black;
+    }
+
+    #detail-table textarea {
+      border:none;
+      outline: none;
+      resize: none;
+    }
+
+    .detail-btn {
+      text-align: center;
+    }
+
+    .detail-btn button {
+      display: inline-block;
+      margin-bottom: 100px;
+      font-size: 12px;
+      padding: 5px;
+      border: 1px solid black;
+      background-color: mediumspringgreen;
+    }
+  </style>
+
+<body>
+  <header>
+    <div class="nav-bar-container">
+
+      <div class="nav-logo">
+        <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+        </a>
+      </div>
+
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+            컬렉션
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list"> <span></span> <span></span> <span></span>
+            <span></span> 커뮤니티
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+            Q&A
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            장바구니
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+        <p>
+          환영합니다! <span class="username" sec:authentication="name"></span>님
+        </p>
+        <a href="/mypage/me">마이페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a href="/admin">관리자페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+        <a href="/login"> 로그인 </a>
+      </div>
+
+      <div class="nav-bar-join nav-bar-login"
+           sec:authorize="!isAuthenticated()">
+        <a href="/register"> 회원가입 </a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="detail-form">
+      <table id="detail-table">
+        <tr>
+          <th>no.</th>
+          <td th:text="${qnaDetail.id}"></td> <!--모델로 담아온 이름. DTO 멤버변수명 써야함-->
+        </tr>
+        <tr>
+          <th>title</th>
+          <td th:text="${qnaDetail.qnaTitle}"></td>
+        </tr>
+        <tr>
+          <th>hits</th>
+          <td th:text="${qnaDetail.qnaCnt}"></td>
+        </tr>
+        <tr>
+          <th>date</th>
+          <td th:text="*{#temporals.format(qnaDetail.qnaRegdate, 'yy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr id="content-area">
+          <th style="height: 300px">content</th>
+          <td><textarea th:text="${qnaDetail.qnaContent}" cols="50" rows="20" style="width: 100%" readonly></textarea></td>
+        </tr>
+      </table>
+    </div>
+    <div class="detail-btn">
+      <a href="/qna/list"><button>목록</button></a>
+      <a th:href="@{'/qna/list/update/' + ${qnaDetail.id}}"><button>수정</button></a>
+      <a th:href="@{'/qna/list/delete/' + ${qnaDetail.id}}"><button>삭제</button></a>
+    </div>
+  </section>
+</body>
+</html>

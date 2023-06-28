@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
-import com.main.miniproject.board.service.FileService;
+import com.main.miniproject.board.service.BoardFileService;
 
 @RestController
 public class BoardRestController {
@@ -20,7 +20,7 @@ public class BoardRestController {
 	private BoardImageService boardImageService;
 	
 	@Autowired
-	private FileService fileService;
+	private BoardFileService fileService;
 	
 	
     @DeleteMapping("/image/{imageId}")

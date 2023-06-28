@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.main.miniproject.product.dto.ProductDTO;
 import com.main.miniproject.product.entity.Product;
-import com.main.miniproject.product.entity.ProductDTO;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.entity.RealTimeSearch;
 import com.main.miniproject.product.service.ProductImageService;
@@ -22,27 +22,29 @@ public class ProductRestController {
 
 	@Autowired
 	private ProductService productService;
-	
+
 	@Autowired
 	private ProductImageService productImageService;
-	
+
 	@Autowired
 	private RealTimeSearchService realTimeSearchService;
-	
+
 	@GetMapping("/api/products")
 	public List<Product> getProducts() {
+
 	    return productService.getAllProducts();
 	}
 	
 	@GetMapping("/api/productImages/{productId}")
 	public List<ProductImage> getProductImages(@PathVariable Long productId) {
 		Product product = productService.getProductById(productId);
-		
+
 		return productImageService.getProductImagesByProduct(product);
 	}
-	
+
 	@GetMapping("/api/top10searches")
 	public List<RealTimeSearch> getTop10Searches() {
+
 	    return realTimeSearchService.getTop10Searches();
 	}
 	

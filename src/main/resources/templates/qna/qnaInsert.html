@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:java8time="http://www.thymeleaf.org/thymeleaf-extras-java8time"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link href="/css/main.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+  <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+  <style>
+    .insert-form {
+      display: flex; /*flex컨테이너로 설정*/
+      flex-direction: column; /*항목들을 세로방향으로 배치한다. 요소들이 위에서 아래로 쌓인다*/
+      justify-content: center; /* 수직 축을 따라 중앙으로 정렬한다. 수직의 가운데에 위치하게 된다.*/
+      align-items: center; /*수평 축을 따라 중앙으로 정렬한다. 수평의 가운데에 위치하게 된다.*/
+      margin-bottom: 100px;
+    }
+
+    #insert-table {
+      margin-top: 250px;
+      background-color: white;
+      border: 1px solid black;
+      border-collapse: collapse;
+      width: 600px;
+    }
+
+    #insert-table td, input, textarea {
+      font-size: 12px;
+      border: none;
+    }
+
+    #insert-table input, textarea {
+      outline: none;
+    }
+
+    #insert-table tr, td {
+      padding: 10px;
+    }
+
+    #insert-table td {
+      border-bottom : 1px solid black;
+      border-right: 1px solid black;
+    }
+
+    #insert-table textarea {
+      resize: none;
+    }
+
+    #insertForm #insert-btn {
+      margin: 20px auto;
+      display: block;
+      border: 1px solid black;
+      background-color: mediumspringgreen;
+      padding: 5px;
+    }
+  </style>
+
+<body>
+  <header>
+    <div class="nav-bar-container">
+
+      <div class="nav-logo">
+        <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+        </a>
+      </div>
+
+      <div class="nav-bar-item-box">
+        <div class="nav-bar-item">
+          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+            컬렉션
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/board/list"> <span></span> <span></span> <span></span>
+            <span></span> 커뮤니티
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+            Q&A
+          </a>
+        </div>
+
+        <div class="nav-bar-item">
+          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+            장바구니
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+        <p>
+          환영합니다! <span class="username" sec:authentication="name"></span>님
+        </p>
+        <a href="/mypage/me">마이페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a href="/admin">관리자페이지</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+      </div>
+
+      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+        <a href="/login"> 로그인 </a>
+      </div>
+
+      <div class="nav-bar-join nav-bar-login"
+           sec:authorize="!isAuthenticated()">
+        <a href="/register"> 회원가입 </a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="insert-form">
+      <form id="insertForm" action="/qna/postInsert" method="post">
+        <table id="insert-table">
+          <tr>
+            <td style="text-align: center">
+              제목
+            </td>
+            <td style="text-align: left;">
+              <input type="text" name="qnaTitle" style="width: 100%">
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center">
+              내용
+            </td>
+            <td style="text-align: left;">
+              <textarea name="qnaContent" cols="50" rows="20" style="width: 100%"></textarea >
+            </td>
+          </tr>
+        </table>
+        <input id="insert-btn" type="submit" value="작성">
+      </form>
+    </div>
+  </section>
+</body>
+</html>

@@ -643,7 +643,6 @@ div {
   font-size: 11px;
   display: flex;
   justify-content: space-between;
-
   box-shadow:5px 0px 40px rgb(73, 210, 255);
   padding: 35px;
 }
