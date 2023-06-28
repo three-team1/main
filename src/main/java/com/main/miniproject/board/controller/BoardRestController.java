@@ -18,17 +18,9 @@ import com.main.miniproject.board.service.CommentService;
 @RestController
 public class BoardRestController {
 	
-	@Autowired
-	private BoardService boardService;
 
 	@Autowired
 	private BoardImageService boardImageService;
-	
-	@Autowired
-	private CommentService commentService;
-	
-	@Autowired
-	private BoardFileService fileService;
 	
 	
     @DeleteMapping("/image/{imageId}")
@@ -37,20 +29,6 @@ public class BoardRestController {
         return ResponseEntity.ok().build();
     }
     
-    @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-    	commentService.deleteComment(commentId);
-    	return ResponseEntity.ok().build();
-    	
-    }
-    
-    @PostMapping("/board/comment/{boardId}")
-    public ResponseEntity<?> postComment(@PathVariable Long boardId, @RequestBody Comment comment) {
-        Board board = boardService.getBoard(boardId);
-        comment.setBoard(board);
-        commentService.saveComment(comment);
-        return ResponseEntity.ok().build();
-    }
     
 }
 

@@ -49,6 +49,7 @@ public class CommentService {
 	}
 	
 	
+	
 	public User getCurrentUser() {											// 사용자 인증정보 반환
 		
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

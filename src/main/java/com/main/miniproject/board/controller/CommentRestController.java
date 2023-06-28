@@ -16,11 +16,17 @@ import com.main.miniproject.board.service.CommentService;
 @RestController
 public class CommentRestController {
 
-	@Autowired
+	
 	private CommentService commentService;
 	
-	@Autowired
+	
 	private BoardService boardService;
+	
+	@Autowired
+	public CommentRestController(CommentService commentService, BoardService boardService) {
+		this.commentService = commentService;
+		this.boardService = boardService;
+	}
 	
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {

@@ -28,7 +28,9 @@ public class RealTimeSearch {
 	private String searchKeyword;
 	
 	@Column(name = "search_cnt")
-	private int searchCnt = 0;
+	private int searchCnt = 1;
 	
+	@Column(name = "search_update")
+	private boolean searchUpdate;
 
 }

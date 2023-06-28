@@ -2,6 +2,8 @@ package com.main.miniproject.product.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import com.main.miniproject.product.dto.ProductDTO;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.entity.RealTimeSearch;
+import com.main.miniproject.product.repository.RealTimeSearchRepository;
 import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.product.service.RealTimeSearchService;
@@ -28,6 +31,9 @@ public class ProductRestController {
 
 	@Autowired
 	private RealTimeSearchService realTimeSearchService;
+	
+	@Autowired
+	private RealTimeSearchRepository realTimeSearchRepository;
 
 	@GetMapping("/api/products")
 	public List<Product> getProducts() {
@@ -45,7 +51,22 @@ public class ProductRestController {
 	@GetMapping("/api/top10searches")
 	public List<RealTimeSearch> getTop10Searches() {
 
-	    return realTimeSearchService.getTop10Searches();
+		List<RealTimeSearch> top10Searches = realTimeSearchService.getTop10Searches();
+			
+	    return top10Searches;
+	}
+	
+	@PostMapping("/api/updateSearches")
+	public void updateSearches() {
+
+		List<RealTimeSearch> top10Searches = realTimeSearchService.getTop10Searches();
+		
+		for(RealTimeSearch realTimeSearch : top10Searches) {
+			if(realTimeSearch.isSearchUpdate()) {
+				realTimeSearch.setSearchUpdate(false);
+				realTimeSearchRepository.save(realTimeSearch);
+			}
+		}
 	}
 	
 	@PostMapping("/api/searches")
