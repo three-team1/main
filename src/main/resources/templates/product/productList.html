@@ -290,6 +290,10 @@
   table td:nth-child(2) {
   	color:lightcoral;
   }
+  
+  table td:nth-child(3) {
+  	color : red;
+  }
 
  /* 검색 버튼 CSS*/
  
@@ -642,8 +646,10 @@
       		<tr>
       			<th>상품 검색어</th>
       			<th>검색 횟수</th>
+      			<th>갱신 여부</th>
       		</tr>
       		<tr>
+      			<td></td>
       			<td></td>
       			<td></td>
       		</tr>
@@ -777,24 +783,53 @@
   	    }, 15000); // 15초마다 반복
   	});
 
+    let updateSearches = {};
+    
+    function setDeleteTimer(keyword) {
+        setTimeout(function () {
+            delete updateSearches[keyword];
+        }, 14000);
+    }
+    
   	function updateSearchList() {
+  		
   	    $.ajax({
   	        url: '/api/top10searches', // 요청을 보낼 URL
   	        type: 'GET', // HTTP 메소드
   	        success: function(data) {
+  	        	console.log(data);
   	            // Clear existing data
   	            $('.top10-search-keyword table tr:not(:first-child)').remove();
 
   	            // Append new data
   	            for (var i = 0; i < data.length; i++) {
+  	            	var keyword = data[i].searchKeyword;
+  	                var count = data[i].searchCnt;
+  	                var updated = data[i].searchUpdate;
+  	               
+  	                if(updated) {
+  	                	updateSearches[keyword] = true;
+  	    				setDeleteTimer(keyword);
+  	                }
+  	                
   	                $('.top10-search-keyword table').append(
   	                		'<tr>' +
-  	                		'<td>' + data[i].searchKeyword + '</td>' +
-  	                		'<td>' + data[i].searchCnt + '</td>' +
+  	                		'<td>' + keyword + '</td>' +
+  	                		'<td>' + count + '</td>' +
+  	                		'<td>' + (updateSearches[keyword] ? '갱신됨!' : '') + '</td>' +
   	                		'</tr>');
   	            }
+  	            
+  	            
+  	            	
+  	           
+  	            $.ajax({
+  	                url: '/api/updateSearches',
+  	                type: 'POST',
+  	            });
   	        },
-  	        
+  	      
+  	               
   	        error: function(error) {
   	            // 에러 발생 시 처리할 로직
   	            console.error(error);
