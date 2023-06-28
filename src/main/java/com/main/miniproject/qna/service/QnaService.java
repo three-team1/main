@@ -43,6 +43,8 @@ public class QnaService {
         return qnaQNAList;
     }
 
+
+
     public QNA getDetail(Long id) {
         //Optional은 값의 존재 여부를 나타내는 컨테이너 클래스로
         //값이 존재할 경우에는 Optional에 해당값을 감싸고
@@ -71,17 +73,6 @@ public class QnaService {
     }
 
 
-    public Page<QNA> paging(Pageable pageable) {
-
-        int page = pageable.getPageNumber();
-        int size = pageable.getPageSize(); //한 페이지에 보여줄 글 갯수
-
-        Page<QNA> qnaPage =
-                qnaRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
-        
-        return qnaPage;
-    }
-
     public void updateCnt(QNA qna) {
         qna.setQnaCnt(qna.getQnaCnt() + 1);
         qnaRepository.save(qna);
@@ -93,5 +84,9 @@ public class QnaService {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         return userDetail.getUser();
 
+    }
+
+    public Page<QNA> paging(Pageable pageable) {
+        return qnaRepository.findAll(pageable);
     }
 }
