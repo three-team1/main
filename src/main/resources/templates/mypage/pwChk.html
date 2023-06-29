@@ -64,7 +64,7 @@
             .myInfo-tb {
                 border-collapse: collapse;
                 min-width: 510px;
-                min-height: 360px;
+                min-height: 100px;
             }
 
             th, td {
@@ -84,17 +84,7 @@
                 min-width: 360px;
             }
 
-            .input-noUpdate {
-                width: 350px;
-                height: 35px;
-                font-size: 1rem;
-                color: white;
-                background: transparent;
-                border: none;
-                outline: none;
-            }
-
-            .input-updateDetail {
+            .input-pw {
                 width: 350px;
                 height: 35px;
                 font-size: 1rem;
@@ -108,7 +98,7 @@
                 text-align: center;
             }
 
-            #btnSave, #btnCancel {
+            #btnChk, #btnCancel {
                 display: inline-block;
                 width: 70px;
                 height: 35px;
@@ -134,26 +124,29 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             $(function () {
-                $("#btnSave").on("click", () => {
-                    var data = {
-                        username: $("#username").val(),
-                        email: $("#email").val(),
-                        tel: $("#tel").val(),
-                        my_postcode: $("#my_postcode").val(),
-                        my_address: $("#my_address").val(),
-                        my_detailAddress: $("#my_detailAddress").val()
-                    };
+                $(window).on("load", function () {
+                    $("#checkPassword").focus();
+                });
+
+                $("#btnChk").on("click", () => {
+                    const checkPassword = $("#checkPassword").val();
 
                     $.ajax({
-                        url: "/api/mypage/myInfo",
-                        type: "PUT",
-                        contentType: "application/json",
-                        data: JSON.stringify(data),
-                        success: function(result) {
-                            alert("정보가 성공적으로 수정되었습니다.");
-                            window.location.replace("/mypage/myInfo");
+                        url: "/api/mypage/pwCheck",
+                        type: "GET",
+                        data: {"checkPassword": checkPassword},
+                        success: function (res) {
+                            console.log(res);
+                            if(res) {
+                                console.log("비밀번호 일치");
+                                window.location.href="/mypage/myUpdate";
+                            } else {
+                                console.log("비밀번호 불일치");
+                                alert("비밀번호가 일치하지 않습니다.")
+                                window.location.reload();
+                            }
                         },
-                        error: function(err){
+                        error: function (err) {
                             console.log(err);
                         }
                     });
@@ -195,50 +188,19 @@
             </div>
         </div>
         <div class="section">
-            <h1>내 정보 수정</h1>
-            <form id="updateForm" action="/mypage/myUpdate" method="post">
-                <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+            <h1>비밀번호 확인</h1>
+            <form id="pwChkForm" action="/mypage/pwChk" method="post">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
-                        <th class="myInfo-th">아이디</th>
+                        <th class="myInfo-th">현재 비밀번호</th>
                         <td class="myInfo-td">
-                            <input type="text" class="input-noUpdate" id="username" name="username" th:value="${user.username}" readonly>
-                        </td>
-                    </tr>
-                    <tr class="myInfo-tr">
-                        <th class="myInfo-th">이메일</th>
-                        <td class="myInfo-td">
-                            <input type="text" class="input-updateDetail" id="email" name="email" th:value="${user.email}">
-                        </td>
-                    </tr>
-                    <tr class="myInfo-tr">
-                        <th class="myInfo-th">연락처</th>
-                        <td class="myInfo-td">
-                            <input type="text" class="input-updateDetail" id="tel" name="tel" th:value="${user.tel}">
-                        </td>
-                    </tr>
-                    <tr class="myInfo-tr">
-                        <th class="myInfo-th">우편번호</th>
-                        <td class="myInfo-td">
-                            <input type="text" class="input-updateDetail" id="my_postcode" name="my_postcode" th:value="${user.my_postcode}">
-                        </td>
-                    </tr>
-                    <tr class="myInfo-tr">
-                        <th class="myInfo-th">주소</th>
-                        <td class="myInfo-td">
-                            <input type="text" class="input-updateDetail" id="my_address" name="my_address" th:value="${user.my_address}">
-                        </td>
-                    </tr>
-                    <tr class="myInfo-tr">
-                        <th class="myInfo-th">상세주소</th>
-                        <td class="myInfo-td">
-                            <input type="text" class="input-updateDetail" id="my_detailAddress" name="my_detailAddress" th:value="${user.my_detailAddress}">
+                            <input type="password" class="input-pw" id="checkPassword" name="checkPassword" autocomplete="off" placeholder="현재 비밀번호를 입력하세요.">
                         </td>
                     </tr>
                 </table>
                 <br>
                 <div class="buttons">
-                    <button type="button" id="btnSave">확인</button>
+                    <button type="button" id="btnChk">확인</button>
                     <button type="button" id="btnCancel">취소</button>
                 </div>
             </form>
