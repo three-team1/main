@@ -12,4 +12,6 @@ import com.main.miniproject.board.entity.Comment;
 public interface CommentRepository extends JpaRepository<Comment, Long>{
 
 	List<Comment> findByBoard(Board board);
+	
+	
 }
