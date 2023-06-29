@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -86,11 +87,11 @@ public class MypageViewController {
     @GetMapping("/myBoard")
     public String myBoardView(Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
-                               @RequestParam(required = false) String keyword,
-                               @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                              @RequestParam(required = false) String keyword,
+                              @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Board> boardPage;
-        User user = userInfoService.getUserByUsername(userDetails.getUsername());
+        User user = userInfoService.getMyInfo(userDetails.getUsername());
         if(keyword != null) {
             boardPage = boardService.searchBoard(pageable, keyword);
         } else {
