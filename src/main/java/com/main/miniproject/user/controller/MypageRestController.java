@@ -31,15 +31,15 @@ public class MypageRestController {
     //내 정보 수정
     @PutMapping("/myInfo")
     public void updateMyInfo(@AuthenticationPrincipal UserDetails userDetails, @RequestBody MyInfoDTO myInfoDTO, HttpSession session) throws UsernameNotFoundException {
-        User user = userInfoService.getMyInfo(userDetails.getUsername());
+        User curUser = userInfoService.getMyInfo(userDetails.getUsername());
 
-        user.setEmail(myInfoDTO.getEmail());
-        user.setTel(myInfoDTO.getTel());
-        user.setMy_postcode(myInfoDTO.getMy_postcode());
-        user.setMy_address(myInfoDTO.getMy_address());
-        user.setMy_detailAddress(myInfoDTO.getMy_detailAddress());
+        if(!curUser.getUsername().equals(myInfoDTO.getUsername())) {
+            throw new IllegalArgumentException("유저 불일치");
+        }
 
-        userInfoService.updateMyInfo(user.EntityToDTO(), session);
+        User user = myInfoDTO.DTOToEntity();
+
+        userInfoService.updateMyInfo(user, session);
     }
 
     //내 비밀번호 확인
@@ -49,4 +49,5 @@ public class MypageRestController {
 
         return userInfoService.checkPassword(username, checkPassword);
     }
+
 }

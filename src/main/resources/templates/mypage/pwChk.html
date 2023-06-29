@@ -142,10 +142,24 @@
                                 window.location.href="/mypage/myUpdate";
                             } else {
                                 console.log("비밀번호 불일치");
+                                alert("비밀번호가 일치하지 않습니다.")
                                 window.location.reload();
                             }
                         },
                         error: function (err) {
+                            console.log(err);
+                        }
+                    });
+                });
+
+                $("#btnCancel").on("click", () => {
+                    $.ajax({
+                        url: "/mypage/myInfo",
+                        type: "GET",
+                        success: function () {
+                            window.location.href="/mypage/myInfo";
+                        },
+                        error: function () {
                             console.log(err);
                         }
                     });
@@ -187,7 +201,7 @@
                 <br>
                 <div class="buttons">
                     <button type="button" id="btnChk">확인</button>
-                    <button type="button" id="btnCancel" onclick="location.href='/mypage/myInfo'">취소</button>
+                    <button type="button" id="btnCancel">취소</button>
                 </div>
             </form>
         </div>

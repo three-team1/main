@@ -94,7 +94,7 @@
                 outline: none;
             }
 
-            #currentPassword {
+            #btnPwChange {
                 width: 130px;
                 height: 35px;
                 font-size: 1rem;
@@ -131,7 +131,7 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             function divBtn4() {
-                location.href="/mypage/myInfo";
+                window.location.href="/mypage/myInfo";
 
                 $.ajax({
                     url: "/api/mypage/myInfo",
@@ -152,12 +152,25 @@
             }
 
             $(function () {
+                $("#btnPwChange").on("click", () => {
+                    $.ajax({
+                        url: "/mypage/pwChange",
+                        type: "GET",
+                        success: function () {
+                            window.location.href="/mypage/pwChange";
+                        },
+                        error: function () {
+                            console.log(err);
+                        }
+                    });
+                });
+
                $("#btnUpdate").on("click", () => {
                    $.ajax({
                        url: "/mypage/pwChk",
                        type: "GET",
                        success: function () {
-                           window.location.href = "/mypage/pwChk";
+                           window.location.href="/mypage/pwChk";
                        },
                        error: function () {
                            console.log(err);
@@ -201,7 +214,7 @@
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">비밀번호</th>
                         <td class="myInfo-td">
-                            <button type="button" id="currentPassword" name="currentPassword" onclick="location.href='/mypage/pwChange'">비밀번호 수정</button>
+                            <button type="button" id="btnPwChange" name="currentPassword" onclick="location.href='/mypage/pwChange'">비밀번호 수정</button>
                         </td>
                     </tr>
                     <tr class="myInfo-tr">
@@ -236,7 +249,7 @@
                     </tr>
                 </table>
                 <br>
-                <button type="button" id="btnUpdate" name="btnUpdate">내 정보 수정</button>
+                <button type="button" id="btnUpdate">내 정보 수정</button>
             </form>
         </div>
     </div>

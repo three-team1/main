@@ -44,19 +44,19 @@ public class UserInfoServiceImpl implements UserInfoService {
     //내 정보 수정
     @Override
     @Transactional
-    public void updateMyInfo(MyInfoDTO myInfoDTO, HttpSession session) {
-        String username = myInfoDTO.getUsername();
+    public void updateMyInfo(User user, HttpSession session) {
+        String username = user.getUsername();
 
-        User user = userRepository.findByUsername(username)
+        User updateduser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        user.setEmail(myInfoDTO.getEmail());
-        user.setTel(myInfoDTO.getTel());
-        user.setMy_postcode(myInfoDTO.getMy_postcode());
-        user.setMy_address(myInfoDTO.getMy_address());
-        user.setMy_detailAddress(myInfoDTO.getMy_detailAddress());
+        updateduser.setEmail(user.getEmail());
+        updateduser.setTel(user.getTel());
+        updateduser.setMy_postcode(user.getMy_postcode());
+        updateduser.setMy_address(user.getMy_address());
+        updateduser.setMy_detailAddress(user.getMy_detailAddress());
 
-        userRepository.save(user);
+        userRepository.save(updateduser);
 
         //수정된 정보 security에 업데이트
         UserDetail userDetail = (UserDetail) userService.loadUserByUsername(user.getUsername());

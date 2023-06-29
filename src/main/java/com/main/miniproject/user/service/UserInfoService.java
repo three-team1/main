@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 public interface UserInfoService {
     User getMyInfo(String username);
 
-    void updateMyInfo(MyInfoDTO myInfoDTO, HttpSession session);
+    void updateMyInfo(User user, HttpSession session);
 
     boolean checkPassword(String username, String checkPassword);
 }
