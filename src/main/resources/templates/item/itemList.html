@@ -2,7 +2,7 @@
 <html lang="en"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{layouts/layout}">
+	  layout:decorate="~{layouts/layout2}">
 
 <head>
 <th:block layout:fragment="css">
@@ -12,23 +12,6 @@
       font-weight: bold;
     }
 
-	.main-container {
-		margin-top: 172px;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		grid-template-rows: 620px;
-		grid-gap: 10px;
-	}
-
-
-	aside {
-		grid-column: 1;
-		grid-row: 1;
-		margin-left: 10px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 
 
   </style>
@@ -156,10 +139,9 @@
 
 <body>
 <div layout:fragment="content">
-<div class="main-container">
+<div class="main-content">
 	<form th:action="@{'/admin/items/' + ${items.number}}" role="form"
 		method="get" th:object="${items}">
-
 
 		<button id="newproductBtn" type="button" class="btn btn-primary">새 상품 등록</button>
 

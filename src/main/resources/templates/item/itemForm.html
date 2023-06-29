@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
+      layout:decorate="~{layouts/layout2}">
 
 <head>
 
@@ -57,13 +57,54 @@
             color: #bd2130;
         }
 
-         .main-container {
-             margin-top: 172px;
-             display: grid;
-             grid-template-columns: repeat(4, 1fr);
-             grid-template-rows: 620px;
-             grid-gap: 10px;
-         }
+
+        .menuImage{
+            width: 200px; /* 이미지의 가로 크기 */
+            height: 350px; /* 이미지의 세로 크기 */
+            border-radius: 50%; /* 타원형 모양으로 표시 */
+            overflow: hidden; /* 내부 내용이 넘치면 숨김 */
+            position: relative; /* 자식 요소의 위치를 설정하기 위해 필요 */
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 50%);
+        }
+
+        .menuImage img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지를 가득 채우도록 설정 */
+        }
+
+        .nav.flex-column {
+            margin-top: 172px;
+            display: grid;
+            grid-template-columns: fit-content(px);
+            grid-template-rows: auto;
+            grid-gap: 10px;
+            align-items: flex-start;
+            justify-content: flex-start;
+            color: white; /* 글자색 */
+            text-decoration-style: solid;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .nav.flex-column :hover {
+            background-color: #03e9f4; /* 호버 시 배경색 변경 */
+        }
+
+        .nav.flex-column.active {
+            background-color: #03e9f4 /* 활성 탭 배경색 */
+        }
+
+        .nav.flex-column a {
+            display: block;
+            text-align: center;
+            color: inherit; /* 부모 요소로부터 상속 */
+        }
+
+        .test{
+            color: white;
+            text-align: center;
+        }
 
 
     </style>
@@ -72,11 +113,11 @@
 <body>
 
 <div layout:fragment="content">
-    <div class="main-container">
+    <div class="main-content">
     <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
 
         <p class="h2">
-            상품 등록
+            새 상품 등록
         </p>
 
         <input type="hidden" th:field="*{id}">
@@ -85,6 +126,15 @@
             <select th:field="*{productSellStatus}" class="custom-select">
                 <option value="SELL">판매중</option>
                 <option value="SOLD_OUT">품절</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <select th:field="*{productType}" class="custom-select">
+                <option value="초월">초월계</option>
+                <option value="자연">자연계</option>
+                <option value="속성">속성계</option>
+                <option value="초인">초인계</option>
             </select>
         </div>
 

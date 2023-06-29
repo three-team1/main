@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+<aside th:fragment="sidemenu">
+    <div class="sideMenu-bar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="menuImage" th:href="@{https://i.namu.wiki/i/EPh9vePbkxSqmVpHT9SOQGOyFtQBaXRRu0_To28biiz_QtuQniFWztaHeSCq9Yka1oj2L5FMOn1HL9xZi9HndxKfSmXpWiOhG2y5YiVDYMedtCZhpTJEMNpDmb7Jub6wBl_ZVALH2RY4P1iVDYkXVQ.webp}">
+                        <img th:src="@{https://i.namu.wiki/i/EPh9vePbkxSqmVpHT9SOQGOyFtQBaXRRu0_To28biiz_QtuQniFWztaHeSCq9Yka1oj2L5FMOn1HL9xZi9HndxKfSmXpWiOhG2y5YiVDYMedtCZhpTJEMNpDmb7Jub6wBl_ZVALH2RY4P1iVDYkXVQ.webp}" alt="디멘터 이미지">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/admin">Admin Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/items">상품 및 재고관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/members">회원관리</a>
+                </li>
+            </ul>
+
+    </div>
+</aside>
+
+</body>
+</html>
