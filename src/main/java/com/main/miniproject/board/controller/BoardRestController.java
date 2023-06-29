@@ -36,22 +36,6 @@ public class BoardRestController {
         boardImageService.deleteImage(imageId);
         return ResponseEntity.ok().build();
     }
-    
-    @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-    	commentService.deleteComment(commentId);
-    	return ResponseEntity.ok().build();
-    	
-    }
-    
-    @PostMapping("/board/comment/{boardId}")
-    public ResponseEntity<?> postComment(@PathVariable Long boardId, @RequestBody Comment comment) {
-        Board board = boardService.getBoard(boardId);
-        comment.setBoard(board);
-        commentService.saveComment(comment);
-        return ResponseEntity.ok().build();
-    }
-    
 }
 
       
