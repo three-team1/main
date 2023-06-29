@@ -49,6 +49,18 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @PostMapping("/updateCart")
+    public String updateCart(Cart cart) {
+        System.out.println("----------------------- cart :" + cart);
+
+        Cart updateCart = cartService.getCart(cart.getId());
+        updateCart.setCartQuantity(cart.getCartQuantity());
+        System.out.println("----------------------- updateCart :" + updateCart);
+
+        cartService.updateCart(updateCart);
+        return "redirect:/cart";
+    }
+
 
 }
 

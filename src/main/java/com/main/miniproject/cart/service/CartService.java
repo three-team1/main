@@ -15,6 +15,15 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
 
+    public Cart getCart(Long id){
+        Cart cart = new Cart();
+
+        if(cartRepository.findById(id).isPresent()){
+            cart = cartRepository.findById(id).get();
+        }
+        return cart;
+    }
+
     public List<Cart> getList(User user) {
 
         return cartRepository.findAllByUser(user);
@@ -24,5 +33,7 @@ public class CartService {
         cartRepository.deleteById(id);
 
     }
-
+    public void updateCart(Cart cart) {
+        cartRepository.save(cart);
+    }
 }
