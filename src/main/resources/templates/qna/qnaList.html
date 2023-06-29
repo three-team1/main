@@ -14,6 +14,7 @@
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
   <style>
+
     .qna-qna {
       text-align: center;
       font-size: 12px;
@@ -85,16 +86,20 @@
       padding: 5px;
     }
 
-    .page {
-      text-align: center;
-      font-size: 13px;
-      margin-bottom: 20px;
+    .paging {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
     }
 
-    .page a {
+    .paging a {
+      margin: 2px 10px 2px 10px;
       text-decoration: none;
+      color: white;
+      font-size: 13px;
     }
-  </style>
+
+    </style>
 
 <body>
   <header>
@@ -125,7 +130,7 @@
         </div>
 
         <div class="nav-bar-item">
-          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+          <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
             장바구니
           </a>
         </div>
@@ -172,23 +177,25 @@
         </tr>
         <tr th:each="qna: ${qnaList}">
           <td th:text="${qna.id}"></td>
-          <td id="qna-title" ><a th:href="@{|/qna/list/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
+          <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
           <td th:text="${qna.user.username}"></td>
           <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
           <td th:text="${qna.qnaCnt}"></td>
         </tr>
       </table>
-      <div class="page">
-        <!-- th:each => 반복문 -->
-        <!-- #numbers.sequence(startPage, endPage)는 startPage부터 endPage까지의 숫자 시퀀스를 생성한다-->
-        <!-- tartPage부터 endPage까지의 값들을 page 변수에 하나씩 대입하며 반복문을 실행한다 -->
-        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-          <!-- 지금 페이지가 nowPage가 아닐 경우, 지금 페이지의 링크로 보내주고, 지금 페이지 텍스트를 보여줌-->
-          <a th:if="${page != nowPage}" th:href="@{/qnaList(page = ${page -1})}" th:text="${page}"></a>
-          <!-- 지금 페이지가 nowPage일 경우, 다른 페이지로 보낼 필요 없이 nowPage의 텍스트만을 보여주고 강조-->
-          <strong th:if="${page == nowPage}" th:text="${page}" style="color:mediumspringgreen"></strong>
-        </th:block>
-      </div>
+    </div>
+
+    <div class="paging">
+      <th:block>
+        <a th:href="@{/qna/list(page=0)}">처음</a>
+      </th:block>
+      <th:block th:each="pageNumber : ${pageNumbers}"
+                th:class="${pageNumber == currentPage} ? 'active' : ''">
+        <a th:href="@{/qna/list(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+      </th:block>
+      <th:block>
+        <a th:href="@{/qna/list(page=${totalPages - 1})}">마지막</a>
+      </th:block>
     </div>
 
     <div class="insert-btn">

@@ -293,11 +293,15 @@ div {
   font-weight: bold;
   border: none;
   border-radius: 3px;
-  color: #87CEEB;
   background-color: #2f3542;
   transition: all 1s;
   cursor:pointer; 
   
+}
+
+.hot-item button a {
+  text-decoration: none;
+  color: #87CEEB;
 }
 
 

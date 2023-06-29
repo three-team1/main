@@ -1,11 +1,289 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>내가 쓴 글/댓글</title>
+    <th:block layout:fragment="css">
+        <style>
+            .main-container {
+                margin-top: 172px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 620px;
+                grid-gap: 10px;
+            }
+
+            .main-container > div {
+                border: 1px dotted aqua;
+                border-radius: 5px;
+                padding: 1em;
+            }
+
+            .aside {
+                grid-column: 1;
+                grid-row: 1;
+                margin-left: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .section {
+                grid-column: 2 / 5;
+                grid-row: 1;
+            }
+
+            .menu {
+                position: absolute;
+                color: white;
+            }
+
+            .menu-title {
+                border: 1px solid pink;
+                padding: 20px 10px;
+                text-align: center;
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: white;
+                cursor: pointer;
+            }
+
+            #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+                background: pink;
+            }
+
+            .section {
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                overflow: auto;
+            }
+
+
+            th, td {
+                border: 1px solid pink;
+                padding: 10px 10px;
+                /*text-align: left;*/
+                font-size: 1rem;
+                color: white;
+            }
+
+            a:link {
+                color: white;
+                text-decoration: none;
+            }
+
+            h1 {
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #2b2b2b;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #2b2b2b;
+            }
+
+            th {
+                background-color:  beige;
+                color: black;
+            }
+
+            .noBorder {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+                height: 30px;
+                color: white;
+
+            }
+
+            .board-title {
+                font-weight:bold;
+                color:lightblue;
+            }
+
+            .board-writer {
+                color:lightcoral;
+                font-weight:bold;
+            }
+
+            a {
+                text-decoration-line : none;
+                color : beige;
+            }
+
+
+            .table {
+                width: 750px;
+                margin: auto;
+                text-align: center;
+                border-collapse: collapse;
+            }
+
+            .table-responsive {
+                min-height : 400px;
+            }
+
+            .id {
+                width: 8%;
+                height: 40px;
+            }
+
+            .title {
+                width: 50%;
+            }
+
+            .writer {
+                width: 12%;
+            }
+
+            .date {
+                width: 15%;
+            }
+
+            .count {
+                width: 10%;
+            }
+
+            .table-header {
+                margin: auto;
+                text-align: center;
+                color: lightblue;
+            }
+
+            .table-search {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .table-search button {
+                height: 25px;
+                font-size: 12px;
+                background-color: black;
+                border: none;
+                color: white;
+                margin-left: -10px;
+                border-top-right-radius: 5px;
+            }
+
+            .table-search input {
+                margin: 0;
+                padding: 0;
+            }
+
+            .pagination {
+                margin: auto;
+                margin-top: 20px;
+                width: 200px;
+                text-align:center;
+            }
+
+
+            .btn-write {
+                text-align: center;
+            }
+
+            .btn-write button {
+                width: 100px;
+                background-color: antiquewhite;
+                border: none;
+                border-radius: 3px;
+                cursor : pointer;
+            }
+
+        </style>
+    </th:block>
+
+
+
+
 </head>
 <body>
+<div layout:fragment="content">
+    <div class="main-container">
+        <div class="aside">
+            <div class="menu">
+                <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+                    <p>내 주문/배송조회</p>
+                </div>
+                <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
+                    <p>내 글/댓글 조회</p>
+                </div>
+                <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+                    <p>내 리뷰 관리</p>
+                </div>
+                <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+                    <p>내 정보 관리</p>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="container">
+                <div class="table-header">
+                    <h1>내 글 목록</h1>
+                </div>
+
+                <div class="table-search">
+                    <form th:action="@{/board/list}" method="get">
+                        <input type="text" name="keyword" placeholder="Search">
+                        <button type="submit">검색</button>
+                    </form>
+                </div>
 
 
+
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="id">번호</th>
+                        <th class="title">제목</th>
+                        <th class="writer">작성자</th>
+                        <th class="date">작성일</th>
+                        <th class="count">조회수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="board : ${boards}">
+                        <td class="noBorder" th:text="${board.id}"></td>
+
+                        <td class="noBorder"><a class="board-title"
+                                                th:href="@{'/board/detail/' + ${board.id}}"
+                                                th:text="${board.boardTitle}"></a></td>
+
+                        <td class="noBorder board-writer" th:text="${board.user.username}"></td>
+                        <td class="noBorder"
+                            th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
+                        <td class="noBorder" th:text="${board.boardView}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="btn-write">
+                <a href="/board/write">
+                    <button type="submit">등록</button>
+                </a>
+            </div>
+
+            <div class="pagination">
+                <th:block th:if="${page.totalPages > 0}" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                    <a th:href="@{/mypage/myBoard(page=${i})}" th:text="${i + 1}"
+                       th:class="${page.number == i ? 'selected' : ''}">1</a>
+                </th:block>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
 </body>
 </html>

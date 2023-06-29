@@ -3,7 +3,6 @@ package com.main.miniproject.board.controller;
 
 import java.util.List;
 
-import com.main.miniproject.board.service.BoardFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +19,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
+import com.main.miniproject.board.entity.Comment;
+import com.main.miniproject.board.service.BoardFileService;
 import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
+import com.main.miniproject.board.service.CommentService;
 
 @Controller
 public class BoardController {
@@ -34,6 +36,9 @@ public class BoardController {
 
 	@Autowired
 	private BoardFileService boardfileService;
+	
+	@Autowired
+	private CommentService commentService;
 
 
 	@GetMapping("/board/write")
@@ -95,12 +100,15 @@ public class BoardController {
 
 	@GetMapping("/board/detail/{id}")
 	public String getBoard(@PathVariable Long id, Model model) {
-		Board board = boardService.getBoard(id);
-		List<BoardImage> boardImageList = boardImageService.boardImageList(board);
-
-		model.addAttribute("images",boardImageList);
-		model.addAttribute("board", board);
-		return "boardDetail";
+	    Board board = boardService.getBoard(id);
+	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
+	    List<Comment> commentList = commentService.commentList(board);
+	    
+	    model.addAttribute("board", board);
+	    model.addAttribute("images",boardImageList);
+	    model.addAttribute("comments",commentList);
+	    
+	    return "boardDetail";
 	}
 
 

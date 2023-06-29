@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.main.miniproject.qna.entity.QNA;
 import com.main.miniproject.user.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +37,9 @@ public class Comment {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@Column( name = "board_type")
+	private String boardType;
 	
 	
 	
