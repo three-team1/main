@@ -1,4 +1,4 @@
-package com.main.miniproject.board.service;
+package com.main.miniproject.comment.service;
 
 import java.util.List;
 
@@ -7,9 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.main.miniproject.board.entity.Board;
-import com.main.miniproject.board.entity.Comment;
-import com.main.miniproject.board.repository.CommentRepository;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserDetail;
@@ -21,19 +20,18 @@ public class CommentService {
 	private CommentRepository commentRepository;
 	
 	
-	public List<Comment> commentList(Board board) {
+	public List<Comment> commentList(Long boardId, String boardType) {
 		
-		return commentRepository.findByBoard(board);
+		return commentRepository.findByBoardIdAndBoardType(boardId, boardType);
+				
 	}
 	
-	public void saveComment(Comment comment) {
-		
-		User user = getCurrentUser();
-		
-		comment.setUser(user);
-		
-		commentRepository.save(comment);
-		
+	public void saveComment(Comment comment, Long boardId, String boardType) {
+	    User user = getCurrentUser();
+	    comment.setUser(user);
+	    comment.setBoardId(boardId);
+	    comment.setBoardType(boardType);
+	    commentRepository.save(comment);
 	}
 	
 	public void deleteComment(Long commentId) {

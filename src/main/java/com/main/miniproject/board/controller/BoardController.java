@@ -19,11 +19,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
-import com.main.miniproject.board.entity.Comment;
 import com.main.miniproject.board.service.BoardFileService;
 import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
-import com.main.miniproject.board.service.CommentService;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.service.CommentService;
 
 @Controller
 public class BoardController {
@@ -102,7 +102,7 @@ public class BoardController {
 	public String getBoard(@PathVariable Long id, Model model) {
 	    Board board = boardService.getBoard(id);
 	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
-	    List<Comment> commentList = commentService.commentList(board);
+	    List<Comment> commentList = commentService.commentList(id, "community");
 	    
 	    model.addAttribute("board", board);
 	    model.addAttribute("images",boardImageList);
