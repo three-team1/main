@@ -2,14 +2,13 @@ package com.main.miniproject.user.service;
 
 import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.servlet.http.HttpSession;
 
 public interface UserInfoService {
-    public MyInfoDTO getMyInfo(String username);
+    User getMyInfo(String username);
 
-    void updateMyInfo(MyInfoDTO myInfoDTO);
+    void updateMyInfo(User user, HttpSession session);
 
-    UserDetails updateUserDetails(UserDetails currentUserDetails);
-
-    User getUserByUsername(String username);
+    boolean checkPassword(String username, String checkPassword);
 }

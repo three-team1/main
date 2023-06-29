@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class MyInfoDTO {
     private long id;
     private String username;
+    @NotBlank
     private String password;
     private String email;
     private String tel;
@@ -20,7 +23,11 @@ public class MyInfoDTO {
     private String my_address;
     private String my_detailAddress;
 
+    private String checkPassword;
+
+    @NotBlank
     private String newPassword;
+    @NotBlank
     private String confirmPassword;
 
     public static MyInfoDTO of(User user) {
@@ -36,5 +43,20 @@ public class MyInfoDTO {
         myInfoDTO.my_detailAddress = user.getMy_detailAddress();
 
         return myInfoDTO;
+    }
+
+    public User DTOToEntity() {
+        User user = User.builder()
+                .id(this.id)
+                .username(this.username)
+                .password(this.password)
+                .email(this.email)
+                .tel(this.tel)
+                .my_postcode(this.my_postcode)
+                .my_address(this.my_address)
+                .my_detailAddress(this.my_detailAddress)
+                .build();
+
+        return user;
     }
 }
