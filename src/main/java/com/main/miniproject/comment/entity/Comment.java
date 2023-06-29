@@ -1,4 +1,4 @@
-package com.main.miniproject.board.entity;
+package com.main.miniproject.comment.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,15 +31,14 @@ public class Comment {
 	private String commentContent;
 	
 	@ManyToOne
-	@JoinColumn(name = "board_id")
-	private Board board;
-	
-	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@Column( name = "board_type")
 	private String boardType;
+	
+	@Column(name = "board_id")
+	private Long boardId;
 	
 	
 	

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.BoardImage;
-import com.main.miniproject.board.entity.Comment;
 import com.main.miniproject.board.repository.BoardImageRepository;
 import com.main.miniproject.board.repository.BoardRepository;
-import com.main.miniproject.board.repository.CommentRepository;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserDetail;
@@ -98,7 +98,7 @@ public class BoardService {
             boardImageRepository.delete(boardImage);
         }
         
-        List<Comment> commentList = commentRepository.findByBoard(board);
+        List<Comment> commentList = commentRepository.findByBoardIdAndBoardType(id, "community");
         
         for(Comment comment : commentList) {
         	

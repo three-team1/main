@@ -1,4 +1,4 @@
-package com.main.miniproject.board.controller;
+package com.main.miniproject.comment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.main.miniproject.board.entity.Board;
-import com.main.miniproject.board.entity.Comment;
-import com.main.miniproject.board.service.BoardService;
-import com.main.miniproject.board.service.CommentService;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.service.CommentService;
 
 @RestController
 public class CommentRestController {
@@ -19,13 +17,9 @@ public class CommentRestController {
 	
 	private CommentService commentService;
 	
-	
-	private BoardService boardService;
-	
 	@Autowired
-	public CommentRestController(CommentService commentService, BoardService boardService) {
+	public CommentRestController(CommentService commentService) {
 		this.commentService = commentService;
-		this.boardService = boardService;
 	}
 	
     @DeleteMapping("/comment/{commentId}")
@@ -37,9 +31,9 @@ public class CommentRestController {
     
     @PostMapping("/board/comment/{boardId}")
     public ResponseEntity<?> postComment(@PathVariable Long boardId, @RequestBody Comment comment) {
-        Board board = boardService.getBoard(boardId);
-        comment.setBoard(board);
-        commentService.saveComment(comment);
+    
+        String boardType = "community";
+        commentService.saveComment(comment,boardId,boardType);
         return ResponseEntity.ok().build();
     }
    
