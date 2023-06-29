@@ -65,10 +65,20 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
+    //게시물 조회 증가
+    @GetMapping("/updateBoardCnt/{id}")
+    public String updateBoardCnt(@PathVariable Long id){
+        QNA qna = qnaService.getDetail(id);
+        qnaService.updateCnt(qna);
+
+        return "redirect:/qna/list/" + id;
+    }
+
+
     @GetMapping("/qna/list/{id}")
     public String qnaDetail(@PathVariable Long id, Model model, HttpServletRequest request, HttpServletResponse response) {
         QNA qna = qnaService.getDetail(id);
-        qnaService.updateCnt(qna);
+//        qnaService.updateCnt(qna);
         model.addAttribute("qnaDetail", qna);
         return "/qna/qnaDetail";
     }

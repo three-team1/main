@@ -59,6 +59,8 @@ public class QnaService {
         }
     }
 
+
+
     public QNA update(QNA qna) {
         qnaRepository.save(qna);
         //레파지토리에 담았다가
@@ -74,6 +76,8 @@ public class QnaService {
 
 
     public void updateCnt(QNA qna) {
+        qna.setQnaCnt(qna.getQnaCnt() + 1);
+        qnaRepository.save(qna);
     }
 
     public User getCurrentUser() {											// 사용자 인증정보 반환

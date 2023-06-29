@@ -9,6 +9,7 @@
   <link href="/css/main.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
@@ -46,7 +47,7 @@
     }
 
     .cart-table th, td {
-      padding: 20px;
+      padding: 16px 5px;
     }
 
     .cart table, #tr1 {
@@ -62,7 +63,7 @@
     }
 
     #th3, #td3 {
-      width: 40%;
+      width: 25%;
     }
 
     #th4, #td4 {
@@ -70,23 +71,29 @@
     }
 
     #th5, #td5 {
-      width: 10%;
+      width: 15%;
     }
 
     #th6, #td6 {
       width: 15%;
     }
 
-    #td6 button {
-      width: 70%;
+    #th7 #td7 {
+      width: 10%;
+    }
 
-    }
-    #td6 a{
+    td > a {
       text-decoration: none;
-      color: black;
-      font-size: 12px;
-      padding: 2px;
+      color : red;
     }
+
+    #ct_qty {
+      width: 20px;
+    }
+
+    .plus, .minus, #ct_qty {
+      display: inline;
+      text-align: center;
 
     .order-btn {
       margin: 50px auto 200px auto;
@@ -127,120 +134,131 @@
         if(total != checked) $("#checkAll").prop("checked", false); //개수가 같지 않으면 올체크를 풀고
         else $("#checkAll").prop("checked", true); //개수가 같으면 올체크 표시
       });
+
+      var money = $('.money').text();
+      var money2 = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      $('.money').text(money2);
+
+
+
     });
+
   </script>
 
 <body>
-  <header>
-    <div class="nav-bar-container">
+<header>
+  <div class="nav-bar-container">
 
-      <div class="nav-logo">
-        <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+    <div class="nav-logo">
+      <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+      </a>
+    </div>
+
+    <div class="nav-bar-item-box">
+      <div class="nav-bar-item">
+        <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+          컬렉션
         </a>
       </div>
 
-      <div class="nav-bar-item-box">
-        <div class="nav-bar-item">
-          <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
-            컬렉션
-          </a>
-        </div>
-
-        <div class="nav-bar-item">
-          <a href="/board/list"> <span></span> <span></span> <span></span>
-            <span></span> 커뮤니티
-          </a>
-        </div>
-
-        <div class="nav-bar-item">
-          <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
-            Q&A
-          </a>
-        </div>
-
-        <div class="nav-bar-item">
-          <a href="#"> <span></span> <span></span> <span></span> <span></span>
-            장바구니
-          </a>
-        </div>
+      <div class="nav-bar-item">
+        <a href="/board/list"> <span></span> <span></span> <span></span>
+          <span></span> 커뮤니티
+        </a>
       </div>
 
-      <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
-        <p>
-          환영합니다! <span class="username" sec:authentication="name"></span>님
-        </p>
-        <a href="/mypage">마이페이지</a>
+      <div class="nav-bar-item">
+        <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+          Q&A
+        </a>
       </div>
 
-      <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <a href="/admin">관리자페이지</a>
-      </div>
-
-      <div class="nav-bar-login" sec:authorize="isAuthenticated()">
-        <a href="/logout">로그아웃</a>
-      </div>
-
-      <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
-        <a href="/login"> 로그인 </a>
-      </div>
-
-      <div class="nav-bar-join nav-bar-login"
-           sec:authorize="!isAuthenticated()">
-        <a href="/register"> 회원가입 </a>
+      <div class="nav-bar-item">
+        <a href="#"> <span></span> <span></span> <span></span> <span></span>
+          장바구니
+        </a>
       </div>
     </div>
-  </header>
 
-  <section>
-    <div class="cart-header">
+    <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+      <p>
+        환영합니다! <span class="username" sec:authentication="name"></span>님
+      </p>
+      <a href="/mypage">마이페이지</a>
+    </div>
+
+    <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+      <a href="/admin">관리자페이지</a>
+    </div>
+
+    <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+      <a href="/logout">로그아웃</a>
+    </div>
+
+    <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+      <a href="/login"> 로그인 </a>
+    </div>
+
+    <div class="nav-bar-join nav-bar-login"
+         sec:authorize="!isAuthenticated()">
+      <a href="/register"> 회원가입 </a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="cart-header">
+    <ul class="cart-menu">
+      <li>
+        <a href="#"></a>
+      </li>
       <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-    </div>
-    <hr>
+    </ul>
+  </div>
+  <hr>
 
-    <div class="cart-table-container">
-      <table class="cart-table">
-        <tr id="tr1">
-          <th id="th1"><input type="checkbox" id="checkAll"></th>
-          <th id="th2">이미지</th>
-          <th id="th3">상품 정보</th>
-          <th id="th4">판매가</th>
-          <th id="th5">수량</th>
-          <th id="th6">선택</th>
-        </tr>
-        <tr th:each="cart: ${cartlist}">
-          <td id="td1"><input type="checkbox" name="check" value="1"></td>
-          <td id="td2">이미지</td>
-          <td id="td3">상품 정보</td>
-          <td id="td4">판매가</td>
-          <td id="td5">수량</td>
-          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
-        </tr>
-        <tr>
-          <td id="td1"><input type="checkbox" name="check" value="2"></td>
-          <td id="td2">이미지</td>
-          <td id="td3">상품 정보</td>
-          <td id="td4">판매가</td>
-          <td id="td5">수량</td>
-          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
-        </tr>
-        <tr>
-          <td id="td1"><input type="checkbox" name="check" value="3"></td>
-          <td id="td2">이미지</td>
-          <td id="td3">상품 정보</td>
-          <td id="td4">판매가</td>
-          <td id="td5">수량</td>
-          <td id="td6"><button><a href="/cart/product-delete">삭제</a></button></td>
-        </tr>
-      </table>
-    </div>
+  <div class="cart-table-container">
+    <table class="cart-table">
+      <tr id="tr1">
+        <th id="th1"><input type="checkbox" id="checkAll"></th>
+        <th id="th2">이미지</th>
+        <th id="th3">상품 정보</th>
+        <th id="th4">판매가</th>
+        <th id="th5">수량</th>
+        <th id="th6">구매가</th>
+        <th id="th7">선택</th>
+      </tr>
+      <tr th:each="cart: ${cartList}">
+        <td id="td1"><input type="checkbox" name="check" value="1"></td>
+        <td th:text="이미지"></td>
+        <td th:text="${cart.product.getProductTitle()}"></td>
+        <td  th:text="${cart.product.getProductPrice()}"></td>
+        <td>
+          <div class="qty">
+            <div class="minus">
+              <a href="javascript:change_qty2('m')"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
+            </div>
+            <input type="text" name="ct_qty" id="ct_qty" value="1" readonly="readonly">
+            <div class="plus">
+              <a href="javascript:change_qty2('p')"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
+            </div>
+          </div>
+        </td>
+        <td th:text="${cart.product.getProductPrice()}"></td>
+        <td>
+          <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
+        </td>
+      </tr>
+    </table>
+  </div>
 
-    <hr>
+  <hr>
 
-    <div class="order-btn">
-      <a href="#" class="all">전체상품주문</a>
-      <a href="#" class="selected">선택상품주문</a>
-    </div>
-  </section>
+  <div class="order-btn">
+    <a href="#" class="all">전체상품주문</a>
+    <a href="#" class="selected">선택상품주문</a>
+  </div>
+</section>
 
 </body>
 </html>
