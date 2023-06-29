@@ -68,7 +68,7 @@
             }
 
             th, td {
-                border: 1px solid pink;
+                border: none;
                 padding: 10px 10px;
                 text-align: left;
                 font-size: 1rem;
@@ -87,6 +87,7 @@
             .input-pw {
                 width: 350px;
                 height: 35px;
+                padding-left: 10px;
                 font-size: 1rem;
                 color: white;
                 background: rgba(255,192,203, 0.4);
@@ -189,7 +190,7 @@
         </div>
         <div class="section">
             <h1>비밀번호 확인</h1>
-            <form id="pwChkForm" action="/mypage/pwChk" method="post">
+            <form id="pwChkForm" action="/mypage/pwChk" method="get">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">현재 비밀번호</th>

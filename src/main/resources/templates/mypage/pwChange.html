@@ -63,13 +63,14 @@
 
             .myInfo-tb {
                 border-collapse: collapse;
-                min-width: 510px;
+                min-width: 550px;
                 min-height: 360px;
             }
 
             th, td {
-                border: 1px solid pink;
+                border: none;
                 padding: 10px 10px;
+                min-height: 80px;
                 text-align: left;
                 font-size: 1rem;
                 color: white;
@@ -77,21 +78,28 @@
 
             .myInfo-th {
                 min-width: 100px;
+                padding-bottom: 62px;
                 text-align: center;
             }
 
             .myInfo-td {
-                min-width: 360px;
+                min-width: 440px;
             }
 
             .input-pw {
                 width: 350px;
                 height: 35px;
+                padding-left: 10px;
                 font-size: 1rem;
                 color: white;
                 background: rgba(255,192,203, 0.4);
                 border: none;
                 outline: none;
+            }
+
+            .pwChk-p {
+                height: 30px;
+                font-size: 0.8rem;
             }
 
             .buttons {
@@ -128,16 +136,85 @@
                 $("#password").focus();
             });
 
+            //현재 비밀번호 일치 검사
+            $('#password').on("blur", function() {
+                $.ajax({
+                    url: "/api/mypage/pwCheck?checkPassword=" + $('#password').val(),
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    success: function(res) {
+                        if (res) {
+                            $("#pwCheckResult").text("비밀번호가 일치합니다.").css("color", "white");
+                        } else {
+                            $("#pwCheckResult").text("비밀번호가 맞지 않습니다.").css("color", "red");
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+            //새 비밀번호 유효성 검사
+            $('#newPassword').on("input", function() {
+                var pw = $('#newPassword').val();
+                var pwRegex = /^[\w\W]+$/;
+                //var pwRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*\W).{8,16}$/;
+
+                if (!pwRegex.test(pw)) {
+                    $("#pwValid").text("비밀번호는 8~16자 영문자, 숫자, 특수문자를 사용하세요.").css("color", "red");
+                } else {
+                    $("#pwValid").text("사용 가능한 비밀번호입니다.").css("color", "white");
+                }
+            });
+
+            //새 비밀번호, 비밀번호 확인 일치 검사
+            $('#confirmPassword').on("input", function() {
+                if ($("#newPassword").val() !== $("#confirmPassword").val()) {
+                    $("#pwCheckConfirm").text("비밀번호가 맞지 않습니다.").css("color", "red");
+                } else {
+                    $("#pwCheckConfirm").text("비밀번호가 일치합니다.").css("color", "white");
+                }
+            });
+
+            $("#btnSave").on("click", () => {
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "POST",
+                    data: JSON.stringify({
+                        password: $('#password').val(),
+                        newPassword: $('#newPassword').val(),
+                        confirmPassword: $('#confirmPassword').val()
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        if (res) {
+                            console.log("비밀번호 변경 성공");
+                            alert("비밀번호가 성공적으로 변경되었습니다.");
+                            window.location.href="/mypage/myInfo";
+                        } else {
+                            console.log("비밀번호 변경 실패");
+                            alert("비밀번호가 틀렸습니다.");
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+
+
             $("#btnCancel").on("click", () => {
                 $.ajax({
                     url: "/mypage/myInfo",
                     type: "GET",
-                   success: function () {
-                       window.location.href="/mypage/myInfo";
-                   },
-                   error: function () {
+                    success: function () {
+                        window.location.href="/mypage/myInfo";
+                    },
+                    error: function () {
                         console.log(err);
-                   }
+                    }
                 });
             });
         });
@@ -165,30 +242,33 @@
         </div>
         <div class="section">
             <h1>비밀번호 수정</h1>
-            <form id="pwChangeForm" action="/mypage/pwChange" method="post">
+            <form id="pwChangeForm" action="/api/mypage/myInfo" method="post">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">현재 비밀번호</th>
                         <td class="myInfo-td">
                             <input type="password" class="input-pw" id="password" name="password" autocomplete="off" placeholder="현재 비밀번호를 입력하세요.">
+                            <p class="pwChk-p" id="pwCheckResult"></p>
                         </td>
                     </tr>
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">새 비밀번호</th>
                         <td class="myInfo-td">
                             <input type="password" class="input-pw" id="newPassword" name="newPassword" autocomplete="off" placeholder="새 비밀번호를 입력하세요.">
+                            <p class="pwChk-p" id="pwValid"></p>
                         </td>
                     </tr>
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">비밀번호 확인</th>
                         <td class="myInfo-td">
                             <input type="password" class="input-pw" id="confirmPassword" name="confirmPassword" autocomplete="off" placeholder="새 비밀번호를 다시 입력하세요.">
+                            <p class="pwChk-p" id="pwCheckConfirm"></p>
                         </td>
                     </tr>
                 </table>
                 <br>
                 <div class="buttons">
-                    <button type="submit" id="btnSave" onclick="alert('내 비밀번호를 변경했습니다.')">확인</button>
+                    <button type="button" id="btnSave">확인</button>
                     <button type="button" id="btnCancel">취소</button>
                 </div>
             </form>

@@ -4,13 +4,18 @@ import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/mypage")
@@ -50,4 +55,13 @@ public class MypageRestController {
         return userInfoService.checkPassword(username, checkPassword);
     }
 
+    //비밀번호 변경
+    @PostMapping("/myInfo")
+    @Transactional
+    public boolean changePassword(@AuthenticationPrincipal UserDetails userDetails,
+                                                  @Valid @RequestBody MyInfoDTO myInfoDTO) {
+        String username = userDetails.getUsername();
+
+        return userInfoService.changePassword(username, myInfoDTO.getPassword(), myInfoDTO.getNewPassword(), myInfoDTO.getConfirmPassword());
+    }
 }

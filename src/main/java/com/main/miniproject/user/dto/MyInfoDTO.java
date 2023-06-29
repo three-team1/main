@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -29,21 +30,6 @@ public class MyInfoDTO {
     private String newPassword;
     @NotBlank
     private String confirmPassword;
-
-    public static MyInfoDTO of(User user) {
-        MyInfoDTO myInfoDTO = new MyInfoDTO();
-
-        myInfoDTO.id = user.getId();
-        myInfoDTO.username = user.getUsername();
-        myInfoDTO.password = user.getPassword();
-        myInfoDTO.email = user.getEmail();
-        myInfoDTO.tel = user.getTel();
-        myInfoDTO.my_postcode = user.getMy_postcode();
-        myInfoDTO.my_address = user.getMy_address();
-        myInfoDTO.my_detailAddress = user.getMy_detailAddress();
-
-        return myInfoDTO;
-    }
 
     public User DTOToEntity() {
         User user = User.builder()

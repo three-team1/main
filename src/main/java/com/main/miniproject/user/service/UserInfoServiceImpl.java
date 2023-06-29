@@ -12,11 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 @Service
+@Transactional(readOnly=true)
 public class UserInfoServiceImpl implements UserInfoService {
     private UserRepository userRepository;
 
@@ -56,8 +57,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         updateduser.setMy_address(user.getMy_address());
         updateduser.setMy_detailAddress(user.getMy_detailAddress());
 
-        userRepository.save(updateduser);
-
         //수정된 정보 security에 업데이트
         UserDetail userDetail = (UserDetail) userService.loadUserByUsername(user.getUsername());
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
@@ -77,6 +76,26 @@ public class UserInfoServiceImpl implements UserInfoService {
         boolean matches = encoder.matches(checkPassword, realPassword);
 
         return matches;
+    }
+
+    //비밀번호 변경
+    @Override
+    @Transactional
+    public boolean changePassword(String username, String password, String newPassword, String confirmPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        String realPassword = user.getPassword();
+
+        if (encoder.matches(password, realPassword)) {
+            if (newPassword.equals(confirmPassword)) {
+                user.updatePassword(encoder.encode(confirmPassword));
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
