@@ -61,7 +61,6 @@
 		.board-detail-action-box {
 			margin-top: 100px;
 			text-align: center;
-			color: antiquewhite;
 		}
 
 		.board-detail-content-box{
@@ -79,8 +78,82 @@
 		
 		}
 		
-		.board-image img {
+		.board-image img {	
 			width: 400px;
+		}
+
+		.action-update-btn, .action-delete-btn{
+			border: 1px solid gray;
+			padding: 15px;
+			border-radius: 3px;
+			text-decoration:none;
+		}
+
+		.action-update-btn {
+			color: aqua;
+		}	
+		
+		.action-delete-btn {
+			color: blue;
+		}
+
+
+		.comment-section {
+			width: 1000px;
+			margin: auto;
+			color: lightblue;
+		}
+
+		.comment-form {
+			display: flex;
+		}
+
+		.comment-section input {
+			width: 600px;
+			height: 50px;
+			border: 2px solid lightgreen;
+			border-radius : 3px;
+		}
+
+		.comment-section button {
+			width: 80px;
+			border-radius: 3px;
+			border: 2px solid lightblue;
+			background-color: black;
+			color: white;
+			transition: all 0.2s;
+			cursor: pointer;
+		}
+
+		.comment-section button:hover {
+			background-color: white;
+			color: black;
+		}
+		
+		.comment-list-box {
+			color:white;
+			margin-top : 30px;
+			
+		}
+		
+		.comment-list {
+			border-top : 1px solid gray;
+			border-bottom : 1px solid gray;
+			margin-top : 40px;
+			padding: 10px;
+		}
+
+		.comment-author {
+			margin-bottom: 25px;
+			color: burlywood;
+			font-weight: bold;
+		}
+		
+		.delete-comment-btn {
+			margin-top : 30px;
+			width:50px !important;
+			color:red;
+			border : 2px solid lightcoral !important;
 		}
 
 
@@ -115,7 +188,7 @@
 				</div>
 
 				<div class="nav-bar-item">
-					<a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+					<a href="#"> <span></span> <span></span> <span></span> <span></span>
 						Q&A
 					</a>
 				</div>
@@ -133,7 +206,7 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-				<a href="/mypage/me">마이페이지</a>
+				<a href="/mypage">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -190,36 +263,89 @@
 
 		<!-- 삭제 및 수정 버튼 등 -->
 		<div class="board-detail-action-box">
-			<a th:href="@{'/board/edit/' + ${board.id}}">수정</a> <!-- 수정 페이지로 이동하는 링크 -->
-			<a th:href="@{'/board/delete/' + ${board.id}}">삭제</a> <!-- 게시글을 삭제하는 링크 -->
+			<a class="action-update-btn" th:href="@{'/board/edit/' + ${board.id}}">수정</a> <!-- 수정 페이지로 이동하는 링크 -->
+			<a class="action-delete-btn" th:href="@{'/board/delete/' + ${board.id}}">삭제</a> <!-- 게시글을 삭제하는 링크 -->
 		</div>
 		
 		<div class="comment-section">
 		    <h3>댓글</h3>
-		
+	
 		    <!-- 댓글 작성 폼 -->
-		    <form action="/board/comment" method="post">
-		        <input type="hidden" name="boardId" th:value="${board.id}">
-		        <textarea name="commentContent" placeholder="댓글을 입력하세요."></textarea>
+		    <form id="commentForm" th:action="'/board/comment/' + ${board.id}" method="post" class="comment-form">
+		    	<input type="hidden" id="boardId" th:value="${board.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
+		        <input name="commentContent" placeholder="댓글을 입력하세요.">
 		        <button type="submit">작성</button>
 		    </form>
 		
 		    <!-- 댓글 목록 -->
-		    <div class="comment-list">
-		        <div th:each="comment : ${comments}">
+		    <div class="comment-list-box">
+		        <div class="comment-list" th:each="comment : ${comments}">
 		            <div class="comment-author" th:text="${comment.user.username}"></div>
 		            <div class="comment-content" th:text="${comment.commentContent}"></div>
+		            <button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>
 		        </div>
 		    </div>
 		</div>
+		
+		<br>
+    
+    <script>
+    	
+    	$("#commentForm").submit(function(e) {
+    		e.preventDefault();
+    		
+    		let commentContent = $(this).find('input[name="commentContent"]').val();
+    		let boardId = $("#boardId").val();
+    		
+    		$.ajax( {
+    			url: "/board/comment/" + boardId,
+    			type:"POST",
+    			data: JSON.stringify({ commentContent: commentContent }),
+    			contentType: "application/json",
+    			success : function() {
+    				alert("댓글 작성이 완료되었습니다.");
+    				location.reload();
+    			},
+    			error : function(err) {
+    				console.log(err);
+    			}
+    		})
+    	})
+
     
     
+    	$(".delete-comment-btn").on("click", function() {
+    		const commentId = $(this).data("id");
+    		
+    		let confirmDelete = confirm("삭제하시겠습니까?");
+    		if(!confirmDelete) {
+    			return;
+    		}
+    		
+    		let commentSelect = $(this).closest(".comment-list");
+    		
+    		$.ajax({
+    			url: "/comment/" + commentId,
+    			type : "DELETE",
+    			success : function() { 
+    				commentSelect.remove();
+    			
+    			},
+    			error : function(err) {
+    				console.log(err);
+    			}
+    		});
+    		
+    	});
+    	
+    </script>
     
-   <th:block th:if="${error}">
+    
+   <!-- <th:block th:if="${error}">
 	<script>
 		alert('권한이 없습니다.');
 	</script>
-  </th:block>
+  </th:block> -->
     
 </body>
 </html>

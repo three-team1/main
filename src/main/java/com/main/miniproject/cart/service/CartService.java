@@ -7,12 +7,12 @@ import com.main.miniproject.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
-
     private final CartRepository cartRepository;
 
     public List<Cart> getList(User user) {

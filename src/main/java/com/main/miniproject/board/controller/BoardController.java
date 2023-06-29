@@ -1,5 +1,6 @@
 package com.main.miniproject.board.controller;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.board.service.CommentService;
 
-
 @Controller
 public class BoardController {
 
@@ -35,20 +35,22 @@ public class BoardController {
 	private BoardImageService boardImageService;
 
 	@Autowired
-	private CommentService commentService;
+	private BoardFileService boardfileService;
 	
 	@Autowired
-	private BoardFileService boardfileService;
+	private CommentService commentService;
 
 
 	@GetMapping("/board/write")
 	public String showBoardWriteForm() {
 		return "boardWrite";
 	}
-	
-	@PostMapping("/board/insert") 
-	public String saveBoard(Board board, MultipartFile[] files, RedirectAttributes redirectAttributes) {		
-		
+
+	@PostMapping("/board/insert")
+	public String saveBoard(Board board, MultipartFile[] files, RedirectAttributes redirectAttributes) {
+
+		System.out.println(files);
+
 		boardService.createBoard(board);											// 게시글저장
 
 		List<BoardImage> boardImages = boardfileService.saveFiles(board, files);			// 파일로직 호출
@@ -104,10 +106,11 @@ public class BoardController {
 	    
 	    model.addAttribute("board", board);
 	    model.addAttribute("images",boardImageList);
-	    model.addAttribute("comment",commentList);
+	    model.addAttribute("comments",commentList);
 	    
 	    return "boardDetail";
 	}
+
 
 	@GetMapping("/board/edit/{id}")
 	public String editBoard(@PathVariable Long id, Model model) {

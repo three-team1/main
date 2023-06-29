@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.entity.Comment;
 import com.main.miniproject.board.repository.CommentRepository;
+import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserDetail;
 
@@ -34,6 +35,19 @@ public class CommentService {
 		commentRepository.save(comment);
 		
 	}
+	
+	public void deleteComment(Long commentId) {
+		
+		User user = getCurrentUser();
+		
+		Comment comment = commentRepository.findById(commentId).get();
+		
+        if (!comment.getUser().getUsername().equals(user.getUsername()) && user.getRole() != Role.ADMIN) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+		commentRepository.deleteById(commentId);
+	}
+	
 	
 	
 	public User getCurrentUser() {											// 사용자 인증정보 반환
