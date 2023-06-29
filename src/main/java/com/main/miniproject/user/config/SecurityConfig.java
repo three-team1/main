@@ -13,23 +13,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.main.miniproject.user.service.CustomOAuth2UserService;
-import com.main.miniproject.user.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-
-		@Autowired
-		private UserService userService;
-		
-		@Autowired
-	    private PasswordEncoder passwordEncoder;
 		
 		@Autowired
 	    private CustomOAuth2UserService customOAuth2UserService;
@@ -58,13 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	                })
 	            .and()	
 	            .logout()  // 로그아웃 설정
-	                .logoutSuccessUrl("/");  // 로그아웃 성공 시 리다이렉트할 페이지 URL
-
-	        Kakao(http);
-	                  
+	                .logoutSuccessUrl("/"); // 로그아웃 성공 시 리다이렉트할 페이지 URL
+	        		
+            oauth(http);
 	    }
 			
-		private void Kakao(HttpSecurity http) throws Exception {
+		private void oauth(HttpSecurity http) throws Exception {
 		     http
 	            .oauth2Login()
 	                .userInfoEndpoint()

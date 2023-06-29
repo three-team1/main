@@ -17,6 +17,21 @@
 <link rel="stylesheet" href="css/style.css">
 <link type="image/png" sizes="32x32" rel="icon"
 	href="/icon/icons8-에너지-32.png">
+	
+	<style>
+			
+		#kakao img{
+			width:150px;
+		}
+		
+		#google img {
+			width:150px;
+			height:43px;
+			border-radius : 10px;
+		}
+	
+	</style>
+	
 </head>
 <body class="img js-fullheight"
 	style="background-image: url(images/holy-bible-with-rays-light-coming-out-ai-generative.jpg);">
@@ -178,6 +193,13 @@
 								src="/images/kakao_login.png">
 							</a>
 						</div>
+						
+							<div style="margin: auto;" id="google"
+								sec:authorize="!isAuthenticated()">
+								<a href="/oauth2/authorization/google"> 
+								<img src="/images/btn_google_signin_dark_pressed_web.png">
+								</a>
+							</div>
 					</div> 
 
 					</div>
