@@ -290,6 +290,10 @@
   table td:nth-child(2) {
   	color:lightcoral;
   }
+  
+  table td:nth-child(3) {
+  	color : red;
+  }
 
  /* 검색 버튼 CSS*/
  
@@ -451,10 +455,14 @@
   box-shadow: 0 2px 8px rgb(255, 250, 231);
 }
 
+
+
+
   </style>
 
 </head>
 <body>
+
 
   <!--  상단 네비게이션 바 -->
 
@@ -502,7 +510,7 @@
 				</div>
 
 				<div class="nav-bar-item">
-          <a href="#">
+          <a href="/cart">
             <span></span>
             <span></span>
             <span></span>
@@ -518,11 +526,11 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-			<a href="/mypage/me">마이페이지</a>
+			<a href="/mypage">마이페이지</a>
 			</div>
 			
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin">관리자페이지</a>
+				<a href="/admin/members">관리자페이지</a>
 			</div>
 			
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
@@ -559,7 +567,7 @@
         <p class="fade-in">바람의 자유로움으로 세계를 숨결처럼 가볍게 만들고, 기회를 발견하고, 변화를 일으키세요.</p>
         <p class="fade-in">바람의 힘을 손에 쥔 당신, 경계를 허물고, 무한한 가능성을 창조하세요.</p>
 
-				<button class="btn fade-in">구매하기</button>
+				<button class="btn fade-in">장바구니</button>
 				<button class="btn-more fade-in">더 알아보기</button>
 			</div>
 		</div>
@@ -638,8 +646,10 @@
       		<tr>
       			<th>상품 검색어</th>
       			<th>검색 횟수</th>
+      			<th>갱신 여부</th>
       		</tr>
       		<tr>
+      			<td></td>
       			<td></td>
       			<td></td>
       		</tr>
@@ -773,24 +783,53 @@
   	    }, 15000); // 15초마다 반복
   	});
 
+    let updateSearches = {};
+    
+    function setDeleteTimer(keyword) {
+        setTimeout(function () {
+            delete updateSearches[keyword];
+        }, 14000);
+    }
+    
   	function updateSearchList() {
+  		
   	    $.ajax({
   	        url: '/api/top10searches', // 요청을 보낼 URL
   	        type: 'GET', // HTTP 메소드
   	        success: function(data) {
+  	        	console.log(data);
   	            // Clear existing data
   	            $('.top10-search-keyword table tr:not(:first-child)').remove();
 
   	            // Append new data
   	            for (var i = 0; i < data.length; i++) {
+  	            	var keyword = data[i].searchKeyword;
+  	                var count = data[i].searchCnt;
+  	                var updated = data[i].searchUpdate;
+  	               
+  	                if(updated) {
+  	                	updateSearches[keyword] = true;
+  	    				setDeleteTimer(keyword);
+  	                }
+  	                
   	                $('.top10-search-keyword table').append(
   	                		'<tr>' +
-  	                		'<td>' + data[i].searchKeyword + '</td>' +
-  	                		'<td>' + data[i].searchCnt + '</td>' +
+  	                		'<td>' + keyword + '</td>' +
+  	                		'<td>' + count + '</td>' +
+  	                		'<td>' + (updateSearches[keyword] ? '갱신됨!' : '') + '</td>' +
   	                		'</tr>');
   	            }
+  	            
+  	            
+  	            	
+  	           
+  	            $.ajax({
+  	                url: '/api/updateSearches',
+  	                type: 'POST',
+  	            });
   	        },
-  	        
+  	      
+  	               
   	        error: function(error) {
   	            // 에러 발생 시 처리할 로직
   	            console.error(error);
@@ -908,7 +947,7 @@
                             <p class="hot-item-p">${data.productContent}</p>
                             <p class="hot-item-price">${data.productPrice.toLocaleString()}원</p>                      
                         </div>
-                        <button>구매하기</button>
+                        <button><a href="#">장바구니</a></button>
                     </div>
                 `;
 

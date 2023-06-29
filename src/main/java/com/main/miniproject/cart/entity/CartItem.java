@@ -40,4 +40,3 @@ public class CartItem {
     private Integer cartQuantity;
 }
 	
-
