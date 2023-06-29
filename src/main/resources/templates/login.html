@@ -26,7 +26,20 @@
 		#google img {
 			width:150px;
 			height:43px;
-			border-radius : 10px;
+			border-radius : 15px;
+		}
+		
+		#naver {
+			width:300px;
+			display: flex; 
+			justify-content: center;
+			
+		}
+		
+		#naver img{
+			width:320px;
+			height:55px;		
+			margin-top:20px;
 		}
 	
 	</style>
@@ -98,6 +111,14 @@
 							</div>
 							
 						</div>
+						
+							<div style="margin: auto;" id="naver"
+								sec:authorize="!isAuthenticated()">
+								<a href="/oauth2/authorization/naver">
+								<img src="/images/naver-login-btn.png">
+								</a>
+							</div>
+						
 					</div>
 				</div>
 			</div>

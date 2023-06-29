@@ -19,13 +19,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
     @Autowired
     private UserRepository userRepository;
     
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        System.out.println(oAuth2User.getAttributes());
+        System.out.println("로그인 정보 " + oAuth2User.getAttributes());
 
+    
+        
         // OAuth2User를 기반으로 필요한 정보를 추출하고, User 엔티티를 생성하거나 찾습니다.
         String provider = userRequest.getClientRegistration().getRegistrationId(); // provider 정보
         String providerId = oAuth2User.getName(); // provider에서의 사용자 ID
@@ -43,7 +44,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
                         Map<String, Object> properties = (Map<String, Object>) oAuth2User.getAttribute("properties");
 
                         //JSON 으로 변환된 properties를 다시 String으로 변환
-                        String nickname = (String) properties.get("nickname");
+                        String nickname = (String) properties.get("nickname");    
+                        String profileImage = (String) properties.get("profile_image");          
+                        newUser.setProfileImage(profileImage);
                         newUser.setUsername(nickname);
                         
                     } else if (provider.equals("google")) {
@@ -51,8 +54,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
                     	
                     	String email = (String) oAuth2User.getAttributes().get("email");
                         String nickname = (String) oAuth2User.getAttributes().get("name");
+                        String profileImage = (String) oAuth2User.getAttributes().get("picture");
                         newUser.setUsername(nickname);
                         newUser.setEmail(email);
+                        newUser.setProfileImage(profileImage);
+                    } else if (provider.equals("naver")) {
+                    	
+                    	 Map<String, Object> response = (Map<String, Object>) oAuth2User.getAttributes().get("response");
+                    	 String email = (String) response.get("email");
+                    	 String nickname = (String) response.get("name");
+                    	 String phoneNumber = (String) response.get("mobile"); 
+                    	 
+                    	 newUser.setUsername(nickname);
+                    	 newUser.setEmail(email);
+                    	 newUser.setTel(phoneNumber);
+                    	 
+                    	
                     }
 
                     System.out.println("Saved user: " + newUser);
