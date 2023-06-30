@@ -21,6 +21,7 @@
 	href="/icon/icons8-에너지-32.png">
 	
 	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=janotqw4un"></script>
+
 </head>
 
 <body>
@@ -68,7 +69,8 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-				<a href="/mypage/me">마이페이지</a>
+				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
+				<a style="color:pink" href="/mypage/me">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -227,9 +229,11 @@
                           <p class="hot-item-p">${data.productContent}</p>
                           <p class="hot-item-price">${data.productPrice.toLocaleString()}원</p>                      
                       </div>
-                      <button><a href="#">장바구니</a></button>
+                      <button class="cart-in">장바구니</button>
                   </div>
               `;
+
+
 
         let mainHotItemBox = document.querySelector('.main-hot-item-box');
         mainHotItemBox.insertAdjacentHTML('beforeend', template);

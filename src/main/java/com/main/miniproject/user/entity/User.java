@@ -8,8 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.main.miniproject.user.dto.MyInfoDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +26,14 @@ import lombok.Setter;
 @Setter
 @Builder
 @Data
-@Table(name = "user")
+@Table(
+	    name="user",
+	    uniqueConstraints={
+	        @UniqueConstraint(
+	            columnNames={"user_name", "provider"}  // local회원은 uq를 유지하면서 oauth회원은 중복되게.
+	        )
+	    }
+	)
 @Entity
 public class User{
 	
@@ -34,7 +43,7 @@ public class User{
 	 @Column(name="user_id")
 	private Long id;
 	
-	@Column(name="user_name", unique = true, length = 50)
+	@Column(name="user_name", length = 50)
 	private String username;
 	
 	@Column(name="user_pw", length = 200)
@@ -42,7 +51,10 @@ public class User{
 	
 	@Column(name="user_email")
 	private String email;
-
+	
+    @Column(name="profile_image")
+    private String profileImage;
+    
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -64,6 +76,7 @@ public class User{
     
     @Column(name="user_address3")
     private String my_detailAddress;
+    
 
     
     public String getRoleKey() {
