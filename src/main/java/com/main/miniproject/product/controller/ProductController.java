@@ -10,6 +10,8 @@ import com.main.miniproject.product.repository.ProductRepository;
 import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.product.service.RealTimeSearchService;
+import com.main.miniproject.user.service.UserDetail;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -165,9 +168,11 @@ public class ProductController {
 	}
 
 	@GetMapping("/product/productList")
-	public String searchList() {
+	public String searchList(@AuthenticationPrincipal UserDetail userDetail,Model model) {
 
 		realTimeSearchService.getTop10Searches();
+		
+		model.addAttribute("userDetail",userDetail);
 
 		return "/product/productList";
 
