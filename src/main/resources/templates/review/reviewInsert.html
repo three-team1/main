@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <th:block layout:fragment="css">
+        <style>
+            .main-container {
+                margin-top: 172px;
+                min-height: 600px;
+                min-width: 400px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .review-block {
+                padding: 15px;
+                height: 550px;
+                width: 450px;
+                background: rgba(255, 255, 255, 0.3);
+                border: 1px dotted aqua;
+                border-radius: 5px;
+            }
+
+            .star {
+                cursor: pointer;
+                color: gray;
+                font-size: 1.5rem;
+                margin-right: 3px;
+            }
+
+            label {
+                color: white;
+                margin-bottom: 5px;
+            }
+
+            input {
+                outline: none;
+            }
+
+            textarea {
+                height: 8.25rem;
+                width: 100%;
+                resize: none;
+                border: none;
+                outline: none;
+            }
+
+            #attachZone {
+                height: 6.5rem;
+                width: 100%;
+            }
+
+            .buttons {
+                text-align: right;
+            }
+
+            #btnSave, #btnCancel {
+                display: inline-block;
+                width: 70px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: 1px solid pink;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            h1 {
+                color: white;
+            }
+        </style>
+    </th:block>
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Page is loaded');  // 페이지 로드 확인
+                document.querySelectorAll('#star-rating .star').forEach(star => {
+                    console.log('Adding event listener to a star');  // 별에 이벤트 리스너 추가 확인
+                    star.addEventListener('click', event => {
+                        console.log('A star was clicked');  // 별 클릭 확인
+                        document.querySelectorAll('#star-rating .star').forEach(s => {
+                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? 'gold' : 'gray';
+                        });
+                        document.getElementById('rating').value = event.target.dataset.value;
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-container">
+        <div class="review-block">
+            <h1>주문 상품명</h1>
+            <form method="POST" action="/submitReview" enctype="multipart/form-data">
+                <label for="star-rating">별점</label><br>
+                <div id="star-rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                    <input type="hidden" id="rating" name="rating">
+                </div>
+                <label for="review_content">리뷰</label><br>
+                    <textarea id="review_content" name="reviewContent" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
+                    <div id="image-preview">
+                        <label for="attachZone">후기 사진 등록</label><br>
+                        <div id="attachZone">
+                        </div>
+                        <input type="file" id="btnAttach" name="uploadFiles" multiple>
+                        <input type="file" id="changedFiles" name="changedFiles" style="display:none;" multiple>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" id="btnSave">등록</button>
+                        <button type="button" id="btnCancel">취소</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

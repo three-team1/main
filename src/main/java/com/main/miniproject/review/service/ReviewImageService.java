@@ -1,0 +1,4 @@
+package com.main.miniproject.review.service;
+
+public interface ReviewImageService {
+}

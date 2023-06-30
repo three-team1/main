@@ -50,7 +50,7 @@
             }
 
             #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
-                background: pink;
+                background: rgba(255,192,203, 0.4);
             }
 
             .section {
@@ -59,8 +59,8 @@
                 /*flex-direction: column;*/
                 /*align-items: center;*/
                 /*text-align: center;*/
-                background-color: pink;
                 overflow: auto;
+                color: white;
             }
 
             a:link {
@@ -92,12 +92,30 @@
                 display: block;
             }
 
-
             .re-order {
                 margin: 10px;
                 font-size: 20px;
                 width: 200px;
                 height: 40px;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: 1px solid pink;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            .btnReview {
+                margin: 10px;
+                width: 120px;
+                height: 35px;
+                font-size: 0.9rem;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: 1px solid pink;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
             }
 
             .order-info {
@@ -129,6 +147,12 @@
                     }
                 });
             }
+
+            $(function () {
+               $(".btnReview").on("click", () => {
+                   window.location.href="/review/insert-view";
+               });
+            });
         </script>
     </th:block>
 </head>
@@ -165,8 +189,10 @@
                             <li>지불 방식: 무통장 결제</li>
                             <li>주문 상태: 입금 완료(입금자: 홍길동)</li>
                             <li>배송 완료</li>
-                            <button class="re-order">재구매</button>
-                            <span><a href="#">제품 리뷰 남기기</a></span>
+                            <div class="buttons">
+                                <button class="re-order">재구매</button>
+                                <button type="button" class="btnReview">리뷰 등록</button>
+                            </div>
                         </ul>
                     </div>
                     <div class="child">
@@ -179,8 +205,10 @@
                             <li>지불 방식: 신용카드 결제</li>
                             <li>주문 상태: 결제 완료</li>
                             <li>배송 준비중</li>
-                            <button class="re-order">재구매</button>
-                            <span><a href="#">제품 리뷰 남기기</a></span>
+                            <div class="buttons">
+                                <button class="re-order">재구매</button>
+                                <button type="button" class="btnReview">리뷰 등록</button>
+                            </div>
                         </ul>
                     </div>
                 </div>

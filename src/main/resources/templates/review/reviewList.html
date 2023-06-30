@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <th:block layout:fragment="css">
+        <style>
+            .review-card {
+                border: 1px solid #ddd;
+                margin-bottom: 20px;
+                padding: 20px;
+                position: relative;
+            }
+            .review-card .reviewer-name {
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .review-card .review-content {
+                margin-bottom: 10px;
+            }
+            .review-card .review-date {
+                color: #777;
+                font-size: 14px;
+            }
+            .review-card img.preview {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                width: 150px;
+                height: 150px;
+            }
+            .review-card img.full {
+                width: 60%;
+                display: none;
+            }
+            .review-card .edit, .review-card .delete {
+                display: none;
+            }
+            .review-card:hover .edit, .review-card:hover .delete {
+                display: block;
+            }
+            .star-rating {
+                color: gold;
+                margin-left: 5px;
+            }
+        </style>
+    </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            function toggleImage(element) {
+                const image = element.querySelector('img');
+                image.style.display = image.style.display === 'none' ? 'block' : 'none';
+            }
+        </script>
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="main-container">
+        <h1>Product Review Page</h1>
+        <div class="review-card">
+            <div class="reviewer-name" id="user_id">Reviewer 1<span class="star-rating">★★★★☆</span></div>
+            <div class="review-content" id="review_content" onclick="toggleImage(this)">This product is amazing!
+                <img class="full" id="review_img_url" src="path_to_image_1" alt="review_image" onclick="event.stopPropagation()">
+            </div>
+            <div class="review-date" id="review_regdate">
+                June 30, 2023
+            </div>
+            <a class="edit" href="#" id="review_id">Edit</a>
+            <a class="delete" href="#">Delete</a>
+            <a href="path_to_image_1" target="_blank"><img class="preview" src="path_to_image_1" alt="review_image"></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
