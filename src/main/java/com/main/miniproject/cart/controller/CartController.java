@@ -60,6 +60,11 @@ public class CartController {
 
     }
 
+    @PostMapping("/plusQuantityCart")
+    public void plusQuantityCart(){
+
+    }
+
     @GetMapping("/deleteCart/{id}")
     public String delCart(@PathVariable Long id) {
 
