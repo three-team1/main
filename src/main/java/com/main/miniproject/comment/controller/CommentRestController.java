@@ -2,11 +2,7 @@ package com.main.miniproject.comment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.service.CommentService;
@@ -37,6 +33,7 @@ public class CommentRestController {
         return ResponseEntity.ok().build();
     }
 
+
     @PostMapping("/qna/comment/{qnaId}")
     public ResponseEntity<?> qnaComment(@PathVariable Long qnaId, @RequestBody Comment comment) {
 
@@ -44,6 +41,9 @@ public class CommentRestController {
         commentService.saveComment(comment,qnaId,boardType);
         return ResponseEntity.ok().build();
     }
-   
-	
+
+
+
+
+
 }

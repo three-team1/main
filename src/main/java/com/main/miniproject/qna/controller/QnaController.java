@@ -26,9 +26,9 @@ import java.util.stream.IntStream;
 @Controller
 @RequiredArgsConstructor
 public class QnaController {
+
    @Autowired
     private final QnaService qnaService;
-
 
     @Autowired
     private CommentService commentService;
@@ -84,8 +84,9 @@ public class QnaController {
 
 
     @GetMapping("/qna/list/{id}")
-    public String qnaDetail(@PathVariable Long id, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String qnaDetail(@PathVariable Long id, Model model) {
         QNA qna = qnaService.getDetail(id);
+
         List<Comment> commentList = commentService.commentList(id, "qna");
 
         model.addAttribute("qnaDetail", qna);

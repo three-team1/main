@@ -15,7 +15,8 @@
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
-    $(function () {
+    $(function() {
+
       $("#qna-commentForm").submit(function(e) {
         e.preventDefault();
 
@@ -59,6 +60,7 @@
           error : function(err) {
             console.log(err);
           }
+
         })
 
       })
@@ -67,6 +69,8 @@
 
 
   </script>
+
+
 
   <style>
     .detail-form {
@@ -132,7 +136,8 @@
       color: lightblue;
     }
 
-    .qna-comment-form {
+
+    #qna-commentForm {
       display: flex;
     }
 
@@ -186,7 +191,6 @@
 
   </style>
 
-
     <body>
   <header>
     <div class="nav-bar-container">
@@ -216,7 +220,7 @@
         </div>
 
         <div class="nav-bar-item">
-          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+          <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
             장바구니
           </a>
         </div>
@@ -283,7 +287,8 @@
       <h3>댓글</h3>
 
       <!-- 댓글 작성 폼 -->
-      <form id="qna-commentForm" th:action="'/qna/comment/' + ${qnaDetail.id}" method="post" class="qna-comment-form">
+
+      <form id="qna-commentForm" th:action="'/qna/list/' + ${qnaDetail.id}" method="post" class="comment-form">
         <input type="hidden" id="qnaId" th:value="${qnaDetail.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
         <input name="qna-commentContent" placeholder="댓글을 입력하세요.">
         <button type="submit">작성</button>
@@ -299,10 +304,9 @@
       </div>
     </div>
 
-
-
-
+    <br>
 
   </section>
+
 </body>
 </html>
