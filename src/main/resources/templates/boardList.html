@@ -186,6 +186,7 @@ a {
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
+				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
 				<a href="/mypage/me">마이페이지</a>
 			</div>
 

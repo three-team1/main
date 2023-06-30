@@ -35,6 +35,7 @@ public class UserService implements UserDetailsService{
     public User createUser(User user) {
 
         user.setRole(Role.USER);
+        user.setProvider("local");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
 
