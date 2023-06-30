@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	            .authorizeRequests()
 	                .antMatchers("/login", "/register","/","/api/products","/api/productImages/**").permitAll()
 	                .antMatchers("/board/list").permitAll()
-	                .antMatchers("/css/**", "/videos/**","/images/**", "/icon/**", "/json/**","/scss/**","/js/**").permitAll()
+					.antMatchers("/css/**", "/videos/**","/images/**", "/icon/**", "/json/**","/scss/**","/js/**").permitAll()
 	                .antMatchers("/admin/**").hasRole("ADMIN")			// 로그인, 회원가입 페이지는 누구나 접근 가능
 	                .anyRequest().authenticated()                      // 그 외 페이지는 인증된 사용자만 접근 가능
 	            .and()
