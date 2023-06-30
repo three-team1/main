@@ -302,17 +302,11 @@ div {
   border: none;
   border-radius: 3px;
   background-color: #2f3542;
+  color: #87CEEB;
   transition: all 1s;
   cursor:pointer; 
   
 }
-
-.hot-item button a {
-  text-decoration: none;
-  color: #87CEEB;
-}
-
-
 
 .hot-item button:hover {
   background: transparent;

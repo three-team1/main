@@ -1,6 +1,7 @@
 package com.main.miniproject.qna.service;
 
 import com.main.miniproject.qna.entity.QNA;
+
 import com.main.miniproject.qna.repository.QnaRepository;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserDetail;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QnaService {
     private final QnaRepository qnaRepository;
+
 
     public void qna(QNA qna) {
 
@@ -91,4 +93,6 @@ public class QnaService {
     public Page<QNA> paging(Pageable pageable) {
         return qnaRepository.findAll(pageable);
     }
+
+
 }

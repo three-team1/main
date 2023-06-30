@@ -949,6 +949,7 @@
                             <p class="hot-item-price">${data.productPrice.toLocaleString()}원</p>                      
                         </div>
                         <button onclick="addToCart('${data.id}')">장바구니</button>
+
                     </div>
                 `;
 
@@ -974,7 +975,6 @@
 					console.log(response);
 				},
 				error: function (xhr, textStatus, errorThrown) {
-					// Handle errors
 					console.log(xhr, textStatus, errorThrown);
 				}
 			});
