@@ -36,6 +36,14 @@ public class CommentRestController {
         commentService.saveComment(comment,boardId,boardType);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/qna/comment/{qnaId}")
+    public ResponseEntity<?> qnaComment(@PathVariable Long qnaId, @RequestBody Comment comment) {
+
+        String boardType = "qna";
+        commentService.saveComment(comment,qnaId,boardType);
+        return ResponseEntity.ok().build();
+    }
    
 	
 }
