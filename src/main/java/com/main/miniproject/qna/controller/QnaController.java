@@ -1,8 +1,11 @@
 package com.main.miniproject.qna.controller;
 
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.qna.entity.QNA;
 import com.main.miniproject.qna.service.QnaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +26,12 @@ import java.util.stream.IntStream;
 @Controller
 @RequiredArgsConstructor
 public class QnaController {
+   @Autowired
     private final QnaService qnaService;
+
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/qna/list")
     public String qnaList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -78,8 +86,11 @@ public class QnaController {
     @GetMapping("/qna/list/{id}")
     public String qnaDetail(@PathVariable Long id, Model model, HttpServletRequest request, HttpServletResponse response) {
         QNA qna = qnaService.getDetail(id);
-//        qnaService.updateCnt(qna);
+        List<Comment> commentList = commentService.commentList(id, "qna");
+
         model.addAttribute("qnaDetail", qna);
+        model.addAttribute("comments",commentList);
+
         return "/qna/qnaDetail";
     }
 
