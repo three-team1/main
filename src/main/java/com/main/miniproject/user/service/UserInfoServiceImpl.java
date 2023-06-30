@@ -1,6 +1,5 @@
 package com.main.miniproject.user.service;
 
-import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
 
@@ -48,14 +47,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void updateMyInfo(User user, HttpSession session) {
         String username = user.getUsername();
 
-        User updateduser = userRepository.findByUsername(username)
+        User updatedUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        updateduser.setEmail(user.getEmail());
-        updateduser.setTel(user.getTel());
-        updateduser.setMy_postcode(user.getMy_postcode());
-        updateduser.setMy_address(user.getMy_address());
-        updateduser.setMy_detailAddress(user.getMy_detailAddress());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setTel(user.getTel());
+        updatedUser.setMy_postcode(user.getMy_postcode());
+        updatedUser.setMy_address(user.getMy_address());
+        updatedUser.setMy_detailAddress(user.getMy_detailAddress());
+
+        userRepository.save(updatedUser);
 
         //수정된 정보 security에 업데이트
         UserDetail userDetail = (UserDetail) userService.loadUserByUsername(user.getUsername());
@@ -90,6 +91,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (encoder.matches(password, realPassword)) {
             if (newPassword.equals(confirmPassword)) {
                 user.updatePassword(encoder.encode(confirmPassword));
+                userRepository.save(user);
 
                 return true;
             }
