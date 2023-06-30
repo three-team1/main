@@ -141,6 +141,14 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").concat(" 원");
       }
 
+      //숫자를 제외한 변수들을 제거하는 정규식
+      function parsePriceString(priceString) {
+        // Remove all non-numeric characters except for digits
+        const numericString = priceString.replace(/[^\d]/g, '');
+        return parseInt(numericString, 10);
+      }
+
+
       $(".totalCost").each(function () {
         const totalPrice = parseInt($(this).siblings("td#itemCost").text(), 10)
                           * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
@@ -173,6 +181,12 @@
         }
 
         quantityInput.val(quantity);
+
+        // Update the .totalCost value
+        const itemCostText = $(this).parents("tr").find("td#itemCost").text();
+        const itemCost = parsePriceString(itemCostText);
+        const totalPrice = numberWithCommas(itemCost * quantity);
+        $(this).parents("tr").find("td.totalCost").text(totalPrice);
 
         // Send AJAX request
         $.ajax({
