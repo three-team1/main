@@ -2,6 +2,8 @@ package com.main.miniproject.cart.controller;
 
 import com.main.miniproject.cart.entity.Cart;
 import com.main.miniproject.cart.service.CartService;
+import com.main.miniproject.product.entity.Product;
+import com.main.miniproject.product.repository.ProductRepository;
 import com.main.miniproject.qna.service.QnaService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
@@ -29,6 +31,8 @@ public class CartController {
 
     private final UserRepository userRepository;
 
+    private final ProductRepository productRepository;
+
     @GetMapping("/cart")
     public String cart(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -38,6 +42,22 @@ public class CartController {
             model.addAttribute("cartList", cartList);
 
         return "/cart/cart";
+    }
+
+    @PostMapping("/insertCart/{id}")
+    public void insertCart(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+
+        User user = userRepository.findByUsername(userDetails.getUsername()).get();
+        Product product = productRepository.findById(id).get();
+
+        Cart cart = Cart.builder()
+                .product(product)
+                .user(user)
+                .cartQuantity(1)
+                .build();
+
+        cartService.insertCart(cart);
+
     }
 
     @GetMapping("/deleteCart/{id}")

@@ -36,4 +36,12 @@ public class CartService {
     public void updateCart(Cart cart) {
         cartRepository.save(cart);
     }
+
+    public void insertCart(Cart cart) {
+
+
+
+        cartRepository.save(cart);
+
+    }
 }
