@@ -971,9 +971,14 @@
 				url: "/insertCart/" + itemId,
 				type: "post",
 				success: function (response) {
-					// Process response from server (e.g., update UI, show a message, etc.) 
-					alert("해당상품을 장바구니에 담았습니다!");                                       // 장바구니를누르면 alert창으로 알림메세지 출력되면 좋을것같습니다
-					console.log(response);                    
+					// Process response from server (e.g., update UI, show a message, etc.)
+					if(response === "existed"){
+						console.log(response);
+						alert("해당 상품이 이미 장바구니에 존재합니다.");
+					} else {
+						console.log(response)
+						alert("해당상품을 장바구니에 담았습니다!");                                       // 장바구니를누르면 alert창으로 알림메세지 출력되면 좋을것같습니다
+					}
 				},
 				error: function (xhr, textStatus, errorThrown) {
 					console.log(xhr, textStatus, errorThrown); 
