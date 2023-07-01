@@ -2,7 +2,10 @@ package com.main.miniproject.comment.service;
 
 import java.util.List;
 
+import com.main.miniproject.board.entity.Board;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -55,5 +58,10 @@ public class CommentService {
 	return userDetail.getUser();
 	
 	}
-	
+
+	//mypage내 댓글조회 구현
+	public List<Comment> getMypagecomments(String userId) {
+		return commentRepository.findByUserUsername(userId);
+	}
+
 }

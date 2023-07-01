@@ -1,7 +1,10 @@
 package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
+import com.main.miniproject.board.entity.BoardImage;
 import com.main.miniproject.board.service.BoardService;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
+import static com.main.miniproject.board.entity.QBoard.board;
+
 @Controller
 @RequestMapping("/mypage")
 public class MypageViewController {
@@ -26,6 +33,9 @@ public class MypageViewController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService) {
@@ -91,6 +101,9 @@ public class MypageViewController {
                               @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Board> boardPage;
+        List<Comment> commentList = commentService.getMypagecomments(userDetails.getUsername());
+
+
         User user = userInfoService.getMyInfo(userDetails.getUsername());
         if(keyword != null) {
             boardPage = boardService.searchBoard(pageable, keyword);
@@ -100,8 +113,13 @@ public class MypageViewController {
 
         model.addAttribute("boards", boardPage);
         model.addAttribute("page", boardPage);
+        model.addAttribute("comments",commentList);
 
-        return "mypage/myboard";
+
+
+
+
+        return "mypage/myBoard";
     }
 
 }
