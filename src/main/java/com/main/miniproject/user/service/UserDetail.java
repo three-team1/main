@@ -80,7 +80,6 @@ public class UserDetail implements UserDetails, OAuth2User{
 
 		return user.getUsername();
 	}
-	
 
 	@Override
 	public boolean isAccountNonExpired() {

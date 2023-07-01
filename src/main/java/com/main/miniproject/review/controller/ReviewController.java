@@ -1,5 +1,6 @@
 package com.main.miniproject.review.controller;
 
+import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,12 @@ public class ReviewController {
     public ModelAndView insertReviewView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("review/reviewInsert.html");
+        //임시 리뷰 제목
+        String productTitle = "Sample Product Title";
+        mv.addObject("productTitle", productTitle);
+
+        mv.addObject("review", new ReviewDTO());
+        mv.setViewName("review/reviewInsert");
 
         return mv;
     }

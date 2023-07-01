@@ -37,7 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public User getMyInfo(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
         return user;
     }
 
@@ -48,7 +48,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         String username = user.getUsername();
 
         User updatedUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
         updatedUser.setEmail(user.getEmail());
         updatedUser.setTel(user.getTel());
@@ -70,7 +70,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public boolean checkPassword(String username, String checkPassword) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
         String realPassword = user.getPassword();
 
@@ -84,7 +84,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional
     public boolean changePassword(String username, String password, String newPassword, String confirmPassword) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
         String realPassword = user.getPassword();
 

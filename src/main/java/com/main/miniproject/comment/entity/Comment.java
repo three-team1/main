@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Comment {
 
 	
@@ -40,8 +39,6 @@ public class Comment {
 	
 	@Column(name = "board_id")
 	private Long boardId;
-
-
 	
 	
 	

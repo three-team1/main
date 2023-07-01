@@ -14,7 +14,7 @@
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     * {
       padding: 0;
@@ -26,7 +26,7 @@
     }
 
     .cart-header p{
-      margin-left: 900px;
+      margin-left: 740px;
       font-size: 12px;
       color: white;
     }
@@ -87,14 +87,13 @@
       color : red;
     }
 
-    #itemCnt {
-      width: 24px;
+    #ct_qty {
+      width: 20px;
     }
 
-    .plus, .minus, #itemCnt {
+    .plus, .minus, #ct_qty {
       display: inline;
       text-align: center;
-    }
 
     .order-btn {
       margin: 50px auto 200px auto;
@@ -136,76 +135,11 @@
         else $("#checkAll").prop("checked", true); //개수가 같으면 올체크 표시
       });
 
-      //천 단위 콤마 찍기
-      function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").concat(" 원");
-      }
-
-      //숫자를 제외한 변수들을 제거하는 정규식
-      function parsePriceString(priceString) {
-        // Remove all non-numeric characters except for digits
-        const numericString = priceString.replace(/[^\d]/g, '');
-        return parseInt(numericString, 10);
-      }
+      var money = $('.money').text();
+      var money2 = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      $('.money').text(money2);
 
 
-      $(".totalCost").each(function () {
-        const totalPrice = parseInt($(this).siblings("td#itemCost").text(), 10)
-                          * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
-
-        console.log(parseInt($(this).siblings("td#itemCost").text(), 10));
-        console.log(parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10));
-        console.log(totalPrice);
-
-        $(this).text(numberWithCommas(totalPrice));
-      });
-
-      $(".money").each(function() {
-        const price = parseInt($(this).text(), 10);
-        $(this).text(numberWithCommas(price));
-      });
-
-
-      //클릭하면 증감되는 자바스크립트
-      $("a.plusCnt, a.minusCnt").on("click", function (e) {
-        e.preventDefault();
-
-        let quantityInput = $(this).parents("form").find("input[name='cartQuantity']");
-        let idInput = $(this).parents("form").find("input[name='id']");
-        let quantity = parseInt(quantityInput.val(), 10);
-
-        if ($(this).hasClass("plusCnt")) {
-          quantity += 1;
-        } else if ($(this).hasClass("minusCnt") && quantity > 1) {
-          quantity -= 1;
-        }
-
-        quantityInput.val(quantity);
-
-        // Update the .totalCost value
-        const itemCostText = $(this).parents("tr").find("td#itemCost").text();
-        const itemCost = parsePriceString(itemCostText);
-        const totalPrice = numberWithCommas(itemCost * quantity);
-        $(this).parents("tr").find("td.totalCost").text(totalPrice);
-
-        // Send AJAX request
-        $.ajax({
-          url: "/updateCart",
-          type: "post",
-          data: {
-            id: idInput.val(),
-            cartQuantity: quantityInput.val()
-          },
-          success: function (response) {
-            // Process response from server (e.g., update UI)
-            console.log(response);
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            // Handle errors
-            console.log(xhr, textStatus, errorThrown);
-          }
-        });
-      });
 
     });
 
@@ -279,7 +213,6 @@
         <a href="#"></a>
       </li>
       <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-
     </ul>
   </div>
   <hr>
@@ -299,24 +232,19 @@
         <td id="td1"><input type="checkbox" name="check" value="1"></td>
         <td th:text="이미지"></td>
         <td th:text="${cart.product.getProductTitle()}"></td>
-        <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
-        </td>
+        <td  th:text="${cart.product.getProductPrice()}"></td>
         <td>
           <div class="qty">
-            <form action="/updateCart" method="post" style="display: inline">
-              <div class="minus">
-                <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
-              </div>
-              <input style="display: none" type="text" name="id" th:value="${cart.id}">
-              <input type="text" name="cartQuantity" id="itemCnt" th:value="${cart.cartQuantity}" readonly="readonly">
-              <div class="plus">
-                <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
-              </div>
-            </form>
+            <div class="minus">
+              <a href="javascript:change_qty2('m')"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
+            </div>
+            <input type="text" name="ct_qty" id="ct_qty" value="1" readonly="readonly">
+            <div class="plus">
+              <a href="javascript:change_qty2('p')"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
+            </div>
           </div>
         </td>
-        <td class="totalCost" >
-        </td>
+        <td th:text="${cart.product.getProductPrice()}"></td>
         <td>
           <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
         </td>

@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,6 @@ import com.main.miniproject.board.service.BoardImageService;
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.service.CommentService;
-import com.main.miniproject.user.service.UserDetail;
 
 @Controller
 public class BoardController {
@@ -44,10 +42,7 @@ public class BoardController {
 
 
 	@GetMapping("/board/write")
-	public String showBoardWriteForm(@AuthenticationPrincipal UserDetail userDetail,Model model) {
-		
-		model.addAttribute("userDetail",userDetail);
-		
+	public String showBoardWriteForm() {
 		return "boardWrite";
 	}
 
@@ -73,8 +68,7 @@ public class BoardController {
 	@GetMapping("/board/list")
 	public String getBoardList(Model model,
 							   @RequestParam(required = false) String keyword,
-							   @PageableDefault(size = 15 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-							   ,@AuthenticationPrincipal UserDetail userDetail) {
+							   @PageableDefault(size = 15 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
 		Page<Board> boardPage;
 		if(keyword != null) {
@@ -83,7 +77,6 @@ public class BoardController {
 			boardPage = boardService.getAllBoards(pageable);
 		}
 
-		model.addAttribute("userDetail",userDetail);
 		model.addAttribute("boards", boardPage);
 		model.addAttribute("page", boardPage);
 
@@ -106,12 +99,11 @@ public class BoardController {
 	}
 
 	@GetMapping("/board/detail/{id}")
-	public String getBoard(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetail userDetail) {
+	public String getBoard(@PathVariable Long id, Model model) {
 	    Board board = boardService.getBoard(id);
 	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
 	    List<Comment> commentList = commentService.commentList(id, "community");
 	    
-	    model.addAttribute("userDetail",userDetail);
 	    model.addAttribute("board", board);
 	    model.addAttribute("images",boardImageList);
 	    model.addAttribute("comments",commentList);
@@ -121,13 +113,12 @@ public class BoardController {
 
 
 	@GetMapping("/board/edit/{id}")
-	public String editBoard(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetail userDetail) {
+	public String editBoard(@PathVariable Long id, Model model) {
 
 
 		Board board = boardService.getBoard(id);
 		List<BoardImage> boardImageList = boardImageService.boardImageList(board);
 
-		model.addAttribute("userDetail",userDetail);
 		model.addAttribute("images",boardImageList);
 		model.addAttribute("board",board);
 

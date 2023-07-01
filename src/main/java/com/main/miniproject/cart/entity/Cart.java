@@ -6,7 +6,6 @@ import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.user.entity.User;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

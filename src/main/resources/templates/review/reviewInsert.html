@@ -8,49 +8,75 @@
         <style>
             .main-container {
                 margin-top: 172px;
-                min-height: 600px;
+                min-height: 640px;
                 min-width: 400px;
                 display: flex;
+                flex-direction: column;
                 justify-content: center;
                 align-items: center;
             }
 
             .review-block {
-                padding: 15px;
-                height: 550px;
+                margin-bottom: 15px;
+                padding: 5px 15px;
+                height: 530px;
                 width: 450px;
                 background: rgba(255, 255, 255, 0.3);
                 border: 1px dotted aqua;
                 border-radius: 5px;
             }
 
+            .review-block-title {
+                margin-bottom: 10px;
+                background: transparent;
+                border: none;
+                outline: none;
+                font-size: 1.2rem;
+                color: white;
+            }
+
+            #ratingZone {
+                height: 90px;
+            }
+
             .star {
                 cursor: pointer;
                 color: gray;
-                font-size: 1.5rem;
+                font-size: 2.5rem;
                 margin-right: 3px;
-            }
-
-            label {
-                color: white;
-                margin-bottom: 5px;
             }
 
             input {
                 outline: none;
             }
 
+            #textZone {
+                height: 190px;
+            }
+
+            .counting {
+                text-align: right;
+            }
+
+            .textCount, .textTotal {
+                font-size: 0.7rem;
+                color: white;
+            }
+
             textarea {
-                height: 8.25rem;
-                width: 100%;
+                height: 115px;
+                width: 418px;
                 resize: none;
                 border: none;
                 outline: none;
+                margin-bottom: 2px;
+                background: rgba(255, 255, 255, 0.8);
             }
 
             #attachZone {
-                height: 6.5rem;
-                width: 100%;
+                height: 100px;
+                width: 418px;
+                background: rgba(255, 255, 255, 0.8);
             }
 
             .buttons {
@@ -72,21 +98,76 @@
 
             h1 {
                 color: white;
+                margin: 10px 0;
             }
         </style>
     </th:block>
     <th:block layout:fragment="script">
-        <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('Page is loaded');  // 페이지 로드 확인
-                document.querySelectorAll('#star-rating .star').forEach(star => {
-                    console.log('Adding event listener to a star');  // 별에 이벤트 리스너 추가 확인
-                    star.addEventListener('click', event => {
-                        console.log('A star was clicked');  // 별 클릭 확인
-                        document.querySelectorAll('#star-rating .star').forEach(s => {
-                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? 'gold' : 'gray';
+        <script th:inline="javascript">
+            $(function () {
+                $("textarea").on("keyup", function() {
+                    console.log("keyup");
+                    let content = $(this).val();
+                    //글자수 세기
+                    if (content.length === 0 || content === "") {
+                        $(".textCount").text("0");
+                    } else {
+                        $(".textCount").text(content.length);
+                    }
+
+                    //글자수 제한
+                    if (content.length > 200) {
+                        $(this).val($(this).val().substring(0, 200));
+                        alert("글자수는 200자까지 입력 가능합니다.");
+                    }
+                });
+
+                $("#btnSave").on("click", function() {
+                    let reviewRating = document.getElementById('reviewRating').value;
+                    let reviewContent = document.getElementById('reviewContent').value;
+                    let files = $("#btnAttach")[0].files;
+                    let validExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+                    let formData = new FormData();
+                    for(let i = 0; i < files.length; i++){
+                        let ext = files[i].name.split('.').pop().toLowerCase();
+                        if (!validExtensions.includes(ext)) {
+                            alert("jpg, jpeg, png, gif, webp 형식의 이미지 파일만 첨부할 수 있습니다.");
+                            return;
+                        }
+                        formData.append('files', files[i]);
+                    }
+
+                    formData.append('reviewRating', reviewRating);
+                    formData.append('reviewContent', reviewContent);
+
+                    fetch('/api/review/myReview', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
                         });
-                        document.getElementById('rating').value = event.target.dataset.value;
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function() {
+                console.log("페이지 로드");
+                document.querySelectorAll('#starRating .star').forEach(star => {
+                    console.log("별 이벤트 리스너 추가");
+                    star.addEventListener("click", event => {
+                        console.log("별 클릭");
+                        document.querySelectorAll('#starRating .star').forEach(s => {
+                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
+                        });
+                        document.getElementById("reviewRating").value = event.target.dataset.value;
                     });
                 });
             });
@@ -97,30 +178,37 @@
 <div layout:fragment="content">
     <div class="main-container">
         <div class="review-block">
-            <h1>주문 상품명</h1>
-            <form method="POST" action="/submitReview" enctype="multipart/form-data">
-                <label for="star-rating">별점</label><br>
-                <div id="star-rating">
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="5">★</span>
-                    <input type="hidden" id="rating" name="rating">
+            <form id="reviewForm" th:object="${review}">
+                <h1 th:text="${productTitle}"></h1>
+                <div id="ratingZone">
+                    <input class="review-block-title" value="별점">
+                    <div id="starRating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                        <input type="hidden" id="reviewRating" name="reviewRating" th:field="*{reviewRating}">
+                    </div>
                 </div>
-                <label for="review_content">리뷰</label><br>
-                    <textarea id="review_content" name="reviewContent" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
-                    <div id="image-preview">
-                        <label for="attachZone">후기 사진 등록</label><br>
-                        <div id="attachZone">
-                        </div>
-                        <input type="file" id="btnAttach" name="uploadFiles" multiple>
-                        <input type="file" id="changedFiles" name="changedFiles" style="display:none;" multiple>
+                <div id="textZone">
+                    <input class="review-block-title" value="리뷰">
+                    <textarea id="reviewContent" name="reviewContent" th:field="*{reviewContent}" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
+                    <div class="counting">
+                        <span class="textCount">0</span>
+                        <span class="textTotal">/ 200자</span>
+                    </div><br>
+                </div>
+                <div id="imagePreview">
+                    <input class="review-block-title" value="후기 사진 등록">
+                    <div id="attachZone">
                     </div>
-                    <div class="buttons">
-                        <button type="button" id="btnSave">등록</button>
-                        <button type="button" id="btnCancel">취소</button>
-                    </div>
+                    <input type="file" id="btnAttach" name="uploadFiles" multiple>
+                    <input type="file" id="changedFiles" name="changedFiles" style="display:none;" multiple>
+                </div>
+                <div class="buttons">
+                    <button type="button" id="btnSave">등록</button>
+                    <button type="button" id="btnCancel">취소</button>
                 </div>
             </form>
         </div>
