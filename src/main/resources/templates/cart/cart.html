@@ -14,7 +14,8 @@
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
   <style>
     * {
       padding: 0;
@@ -318,7 +319,7 @@
   <div class="cart-table-container">
     <table class="cart-table">
       <tr id="tr1">
-        <th id="th1"><input type="checkbox" id="checkAll"></th>
+        <th id="th1"><input class="th1-checkbox" type="checkbox" id="checkAll"></th>
         <th id="th2">이미지</th>
         <th id="th3">상품 정보</th>
         <th id="th4">판매가</th>
@@ -326,7 +327,7 @@
         <th id="th6">구매가</th>
         <th id="th7">선택</th>
       </tr>
-      <tr th:each="cart: ${cartList}">
+        <tr class="cart" th:each="cart: ${cartList}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
         <td id="td1"><input type="checkbox" name="check" value="1"></td>
         <td th:text="이미지"></td>
         <td th:text="${cart.product.getProductTitle()}"></td>
@@ -366,11 +367,253 @@
 
   <hr>
 
+  	
+ 
   <div class="order-btn">
-    <a href="#" class="all">전체상품주문</a>
-    <a href="#" class="selected">선택상품주문</a>
+    <a href="#" class="all" onclick="requestPay()">전체상품주문</a>
+    <a href="#" class="selected" onclick="requestSelectPay()">선택상품주문</a>
   </div>
+  
+  
 </section>
 
+	
+	
+	<script>
+	
+/* 		$('.cart').each(function() {
+		  const productId = $(this).data('product-id');
+		  const quantity = $(this).data('quantity-id');
+		  
+		  console.log('Product ID:', productId);
+		  console.log('Quantity:', quantity);
+		}); */
+		
+		
+		let productId = [];
+		let quantity = [];
+		$('.cart').each(function() {
+		    productId.push($(this).data('product-id'));
+		    quantity.push($(this).data('quantity-id'));
+		});
+		
+		console.log(productId);
+	
+		const IMP = window.IMP;
+		IMP.init("imp04710710");
+		
+		
+		//전체 상품 결제
+		
+		async function requestPay() {
+			 
+			
+			   	if (!confirm("전체 상품을 주문하시겠습니까?")) {
+			        return;
+			    } else {
+			    	$('.th1-checkbox').trigger('click');
+			    }
+			  			  
+			  $.get("/api/cart/user", function(user) {
+			    
+			    
+			    $.get("/api/cart", function(cart) {
+			    	
+			      // TODO: Modify here if your cart data structure is different
+			      let name = "";
+			      let amount = 0;
+			      for (let item of cart) {
+			        name += item.product.productTitle + ", ";
+			        amount += item.product.productPrice * item.cartQuantity;
+			      }
+			      
+			      // Initiate payment request
+			      IMP.request_pay(
+			        {
+			          pg: "kcp.A52CY",
+			          pay_method: "card",
+			          merchant_uid: 'merchant_' + new Date().getTime(),
+			          name: name,
+			          amount: amount,
+			          company : '포션이었다...',
+			          buyer_email: user.email,
+			          buyer_name: user.username,
+			          buyer_tel: user.tel,
+			          buyer_addr: user.my_address,
+			          buyer_postcode: user.my_postcode,
+			          
+
+			          
+			        }, function (rsp) {
+			        	
+			        	console.log(rsp);
+			        	
+			        	let paymentDTO = {
+			        			  pg: rsp.pg,
+			        			  pay_method: rsp.pay_method,
+			        			  imp_uid:rsp.imp_uid,
+			        			  merchant_uid: rsp.merchant_uid,
+			        			  name: rsp.name,
+			        			  amount: rsp.paid_amount,
+			        			  buyer_tel: rsp.buyer_tel,
+			        			  buyer_addr: rsp.buyer_addr,
+			        			  buyer_postcode: rsp.buyer_postcode,
+			        			  buyer_detailAddr: user.my_detailAddress,
+ 			        			  productId: productId,
+			        			  quantity: quantity
+			        			};
+			        	
+			        	$.ajax({
+			        		type: 'POST',
+			        		url:'/verifyIamport/' + rsp.imp_uid
+			        	}).done(function(result) {
+			        		
+			        		console.log(result);
+			        		
+			        		if(rsp.paid_amount === result.response.amount) {
+			        			alert("결제가 완료되었습니다.");
+			        			
+			        			$.ajax({
+			                        type: 'POST',
+			                        url: '/api/payment',  // your API endpoint to process payment
+			                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO
+			                        contentType: 'application/json'
+			                    }).done(function(result) {
+			                        // handle result
+			                        console.log(result);
+			                        window.location.href = "/";
+			                        
+			                    }).fail(function(error) {
+			                        // handle error
+			                        console.log(error);
+			                    });
+	        			
+			        		} else {
+			        			$('.th1-checkbox').trigger('click');
+			        			alert("결제 실패");
+			        		}
+			        		
+			        		
+			        	});
+			        });
+			    });
+			  });
+			}
+		
+		
+		
+		// 선택된 상품만 결제
+		
+		function requestSelectPay() {
+			  var selectedItems = []; // 선택된 상품들을 담을 배열
+			  
+			  // 선택된 체크박스들을 확인하고 선택된 상품들을 배열에 추가
+			  $('input[type="checkbox"][name="check"]:checked').each(function() {
+			    var productId = $(this).closest('.cart').data('product-id');
+			    var quantityId = $(this).closest('.cart').data('quantity-id');
+			    
+			    selectedItems.push({
+			      productId: productId,
+			      quantityId: quantityId
+			    });
+			  });
+			  
+			  console.log('선택된 아이템',selectedItems);
+
+			  
+			  // 선택된 상품들이 있는지 확인
+			  if (selectedItems.length === 0) {
+			    alert("주문할 상품을 선택해주세요.");
+			    return;
+			  }
+			 
+			  $.get("/api/cart/user", function(user) {
+				  $.get("/api/cart", function(cart) {
+				    let name = "";
+				    let amount = 0;
+				    for (let selectedItem of selectedItems) {
+				      for (let item of cart) {
+				        if (item.product.id == selectedItem.productId) {
+				        	console.log("Selected product found in cart", item);
+				          name += item.product.productTitle + ", ";
+				          amount += item.product.productPrice * item.cartQuantity;
+				          break;
+				        }
+				      }
+				    }
+				      
+				      // Initiate payment request
+				      IMP.request_pay(
+				        {
+				          pg: "kcp.A52CY",
+				          pay_method: "card",
+				          merchant_uid: 'merchant_' + new Date().getTime(),
+				          name: name,
+				          amount: amount,
+				          company : '포션이었다...',
+				          buyer_email: user.email,
+				          buyer_name: user.username,
+				          buyer_tel: user.tel,
+				          buyer_addr: user.my_address,
+				          buyer_postcode: user.my_postcode,
+				          
+
+				          
+				        }, function (rsp) {
+				        	
+				        	console.log(rsp);
+				        	
+				        	let paymentDTO = {
+				        			  pg: rsp.pg,
+				        			  pay_method: rsp.pay_method,
+				        			  imp_uid:rsp.imp_uid,
+				        			  merchant_uid: rsp.merchant_uid,
+				        			  name: rsp.name,
+				        			  amount: rsp.paid_amount,
+				        			  buyer_tel: rsp.buyer_tel,
+				        			  buyer_addr: rsp.buyer_addr,
+				        			  buyer_postcode: rsp.buyer_postcode,
+				        			  buyer_detailAddr: user.my_detailAddress,
+	 			        			  productId: productId,
+				        			  quantity: quantity
+				        			};
+				        	
+				        	$.ajax({
+				        		type: 'POST',
+				        		url:'/verifyIamport/' + rsp.imp_uid
+				        	}).done(function(result) {
+				        		
+				        		console.log(result);
+				        		
+				        		if(rsp.paid_amount === result.response.amount) {
+				        			alert("결제가 완료되었습니다.");
+				        			
+				        			$.ajax({
+				                        type: 'POST',
+				                        url: '/api/payment',  // your API endpoint to process payment
+				                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO
+				                        contentType: 'application/json'
+				                    }).done(function(result) {
+				                        // handle result
+				                        console.log(result);
+				                        window.location.href = "/";
+				                        
+				                    }).fail(function(error) {
+				                        // handle error
+				                        console.log(error);
+				                    });
+		        			
+				        		} else {
+				        			alert("결제 실패");
+				        		}
+				        		
+				        		
+				        	});
+				        });
+				    });
+				  });	  
+			}
+
+	</script>
 </body>
 </html>

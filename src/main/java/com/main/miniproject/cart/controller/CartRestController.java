@@ -1,14 +1,17 @@
 package com.main.miniproject.cart.controller;
 
-import com.main.miniproject.cart.repository.CartRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.main.miniproject.cart.entity.Cart;
+import com.main.miniproject.cart.repository.CartRepository;
 import com.main.miniproject.cart.service.CartService;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.repository.ProductRepository;
@@ -52,5 +55,22 @@ public class CartRestController {
 
 	    return ResponseEntity.ok().build();
 	}
+	
+    @GetMapping("/api/cart")
+    public ResponseEntity<List<Cart>> getCart(@AuthenticationPrincipal UserDetail userDetail) {
+    	
+    	User user = userDetail.getUser();
+    	
+        List<Cart> cartItems = cartService.getList(user);
+        return ResponseEntity.ok(cartItems);
+    }
+    
+    @GetMapping("/api/cart/user")
+    public ResponseEntity<User> getUser(@AuthenticationPrincipal UserDetail userDetail) {
+    	
+    	User user = userDetail.getUser();
+    	
+        return ResponseEntity.ok(user);
+    }
 
 }
