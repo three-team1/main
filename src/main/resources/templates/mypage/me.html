@@ -63,66 +63,6 @@
                 overflow: auto;
             }
 
-            .myInfo-tb {
-                border-collapse: collapse;
-                min-width: 510px;
-                min-height: 360px;
-            }
-
-            th, td {
-                border: 1px solid pink;
-                padding: 10px 10px;
-                text-align: left;
-                font-size: 1rem;
-                color: white;
-            }
-
-            .myInfo-th {
-                min-width: 100px;
-                text-align: center;
-            }
-
-            .myInfo-td {
-                min-width: 360px;
-            }
-
-            .input-noUpdate {
-                width: 350px;
-                height: 35px;
-                font-size: 1rem;
-                color: white;
-                background: transparent;
-                border: none;
-                outline: none;
-            }
-
-            .input-updateDetail {
-                width: 350px;
-                height: 35px;
-                font-size: 1rem;
-                color: white;
-                background: rgba(255, 192, 203, 0.4);
-                border: none;
-                outline: none;
-            }
-
-            .buttons {
-                text-align: center;
-            }
-
-            #btnSave, #btnCancel {
-                display: inline-block;
-                width: 70px;
-                height: 35px;
-                font-size: 1rem;
-                color: white;
-                background: pink;
-                border: none;
-                border-radius: 5px;
-                outline: none;
-                cursor: pointer;
-            }
-
             a:link {
                 color: white;
                 text-decoration: none;
@@ -169,37 +109,26 @@
     </th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            function updateUser() {
-                var data = {
-                    username: $("#username").val(),
-                    email: $("#email").val(),
-                    tel: $("#tel").val(),
-                    my_postcode: $("#my_postcode").val(),
-                    my_address: $("#my_address").val(),
-                    my_detailAddress: $("#my_detailAddress").val()
-                };
+            function divBtn4() {
+                window.location.href="/mypage/myInfo";
 
                 $.ajax({
                     url: "/api/mypage/myInfo",
-                    type: "PUT",
+                    type: "GET",
                     contentType: "application/json",
-                    data: JSON.stringify(data),
-                    success: function (result) {
-                        alert("정보가 성공적으로 수정되었습니다.");
-                        location.href = '/mypage/myInfo';
+                    success: function(user) {
+                        $('#username').val(user.username);
+                        $('#email').val(user.email);
+                        $('#tel').val(user.tel);
+                        $('#my_postcode').val(user.my_postcode);
+                        $('#my_address').val(user.my_address);
+                        $('#my_detailAddress').val(user.my_detailAddress);
                     },
-                    error: function (err) {
+                    error: function(err){
                         console.log(err);
                     }
                 });
             }
-
-            $(document).ready(function () {
-                $('#btnSave').click(function (e) {
-                    e.preventDefault();
-                    updateUser();
-                });
-            });
         </script>
     </th:block>
 </head>
@@ -217,7 +146,7 @@
                 <div class="menu-title" id="menu-title3" onclick="location.href='#'">
                     <p>내 리뷰 관리</p>
                 </div>
-                <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+                <div class="menu-title" id="menu-title4" onclick="divBtn4()">
                     <p>내 정보 관리</p>
                 </div>
             </div>
