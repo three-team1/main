@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	        http
 	            .csrf().disable()
 	            .authorizeRequests()
-	                .antMatchers("/login", "/register","/","/api/products","/api/productImages/**").permitAll()
+	                .antMatchers("/login", "/register","/","/api/products","/api/productImages/**","/api/**/**").permitAll()
 	                .antMatchers("/board/list").permitAll()
 					.antMatchers("/css/**", "/videos/**","/images/**", "/icon/**", "/json/**","/scss/**","/js/**").permitAll()
 	                .antMatchers("/admin/**").hasRole("ADMIN")			// 로그인, 회원가입 페이지는 누구나 접근 가능

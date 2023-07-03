@@ -75,10 +75,11 @@ public class CartRestController {
     
     @GetMapping("/api/cart/count")
     public ResponseEntity<Integer> getCartItemCount(@AuthenticationPrincipal UserDetail userDetail) {
-    	
-    	User user = userDetail.getUser();
-    	
+       
+
+        User user = userDetail.getUser();   	
         int count = cartService.countCart(user);
+        
         System.out.println("상품종류개수 : " + count);
         return ResponseEntity.ok(count);
     }
