@@ -94,6 +94,23 @@ div {
 	
 }
 
+.notification-badge {
+	display: flex;
+	text-align:center;
+    align-items: center;
+	width:10px;
+	height:10px;
+	position: relative;
+	right: -80px;
+	top: -35px;
+	border:2px solid lightcoral;
+	color: red !important;
+	font-weight:bold;
+	border-radius: 50%;
+	padding:5px;
+}
+
+
 .username {
 	 color: #FF0000; /* 사용자 이름을 빨간색으로 표시 */
     font-weight: bold;

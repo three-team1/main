@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.main.miniproject.cart.repository.CartRepository;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
@@ -30,23 +31,22 @@ public class PaymentService {
 	
 	private PaymentRepository paymentRepository;
 	
+	private CartRepository cartRepository;
+	
 	@Autowired
 	public PaymentService(OrdersRepository ordersRepository, OrderItemRepository orderItemRepository,ProductRepository productRepository
-			,PaymentRepository paymentRepository) {
+			,PaymentRepository paymentRepository,CartRepository cartRepository) {
 		this.ordersRepository = ordersRepository;
 		this.orderItemRepository = orderItemRepository;
 		this.productRepository = productRepository;
 		this.paymentRepository = paymentRepository;
+		this.cartRepository = cartRepository;
 	}
 	
 	
 	 	@Transactional
 	    public void processPayment(PaymentDTO paymentDTO, UserDetail userDetail) {
-	        // Here we should create Orders and OrderItem objects from paymentDTO
-	        // Then we should save them in the database
-	        // This is a very simplified version, you should adjust it according to your requirements and logic
-	        
-	 		
+
 	 		User user = userDetail.getUser();
 	 		
 	 		Payment payment = new Payment();
@@ -70,14 +70,20 @@ public class PaymentService {
 	        List<Long> productIds = paymentDTO.getProductId();
 	        List<Integer> quantities = paymentDTO.getQuantity();
 
+	        System.out.println("장바구니 수량 개수 : " + quantities);
+	        
 	        for (int i = 0; i < productIds.size(); i++) {
 	            OrderItem orderItem = new OrderItem();
 	            Product product = productRepository.findById(productIds.get(i)).get();
 	            orderItem.setOrder(order);
 	            orderItem.setProduct(product);
 	            orderItem.setOrderQuantity(quantities.get(i));
+	            
 	            orderItemRepository.save(orderItem);
 	        }
+	        
+	        cartRepository.clearCartByUser(user);
+	       
 	    }
 	
 }

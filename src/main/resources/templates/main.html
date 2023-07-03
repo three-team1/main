@@ -59,6 +59,7 @@
 				<div class="nav-bar-item">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -489,6 +490,11 @@
       updateSlide();
     });
 
+    
+    setInterval(function () {
+	    currentSlide = currentSlide === 3 ? 1 : currentSlide + 1;
+	    updateSlide();
+	}, 4000);
 
 
     let letters = document.querySelectorAll('.reveal-letter');
@@ -507,6 +513,18 @@
       });
 
       observer.observe(letter);
+    });
+    
+	function updateCartCount() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    };
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
     });
 
 

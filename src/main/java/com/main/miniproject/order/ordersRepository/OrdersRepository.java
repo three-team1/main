@@ -7,5 +7,7 @@ import com.main.miniproject.order.entity.Orders;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long>{
+	
+	
 
 }

@@ -225,7 +225,7 @@
           },
           success: function (response) {
             // Process response from server (e.g., update UI)
-            console.log(response);
+            console.log('수량이 변경되었습니다');
           },
           error: function (xhr, textStatus, errorThrown) {
             // Handle errors
@@ -274,6 +274,7 @@
       <div class="nav-bar-item">
         <a href="#"> <span></span> <span></span> <span></span> <span></span>
           장바구니
+          <span id="cart-count" class="notification-badge"></span>
         </a>
       </div>
     </div>
@@ -397,7 +398,8 @@
 		    quantity.push($(this).data('quantity-id'));
 		});
 		
-		console.log(productId);
+		console.log('상품 아이디 : ' + productId);
+		console.log('상품 개수 : ' + quantity);
 	
 		const IMP = window.IMP;
 		IMP.init("imp04710710");
@@ -617,7 +619,14 @@
 				        });
 				    });
 				  });	  
-			} 
+			}
+		
+	    $(document).ready(function() {
+	    	$.get("/api/cart/count", function(data) {
+	    		$('#cart-count').text(data);
+	    	});
+	    });
+
 
 	</script>
 </body>
