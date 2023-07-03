@@ -6,6 +6,7 @@ import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +37,12 @@ public class MypageViewController {
     @Autowired
     private CommentService commentService;
 
-/*
     @Autowired
-    private final OrdersService ordersService;
-*/
+    private OrdersService ordersService;
 
     @Autowired
-    public MypageViewController(UserInfoService userInfoService/*, OrdersService ordersService*/) {
+    public MypageViewController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
-//        this.ordersService = ordersService;
     }
 
     //마이페이지 주문/배송 조회 페이지
@@ -53,13 +51,11 @@ public class MypageViewController {
         ModelAndView mv = new ModelAndView();
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-/*
-        List<Orders> ordersList = ordersService.getOrdersList(user);
-        List<OrderItem> orderItemList = ordersService.getOrderItemList(user);
+//        List<Orders> ordersList = ordersService.getOrdersList(user.getId());
+//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user);
 
-        model.addAttribute("ordersList", ordersList);
-        model.addAttribute("orderItemList", orderItemList);
-*/
+//        model.addAttribute("orders", ordersList);
+//        model.addAttribute("orderitems", orderItemList);
 
         mv.setViewName("/mypage/me.html");
 

@@ -124,7 +124,7 @@
             }
 
             .table-responsive {
-                min-height : 400px;
+                min-height : 300px;
             }
 
             .id {
@@ -227,9 +227,34 @@
                 display: block;
             }
 
+            .btn-a {
+                width: 250px;
+                font-weight: bold;
+                margin: auto;
+            }
+
             .comment-list-box {
                 color: white;
             }
+
+            h3 {
+                color: white;
+            }
+
+            .comment-list {
+                margin-top: 40px;
+                padding: 10px;
+            }
+            .comment-author {
+                margin-bottom: 25px;
+                color: burlywood;
+                font-weight: bold;
+            }
+
+            .delete-comment-btn {
+                margin-top: 30px;
+            }
+
 
         </style>
     </th:block>
@@ -265,7 +290,7 @@
         <div class="section">
             <div class="tabmenu">
                 <ul>
-                    <li id="tab1" class="btnCon"><a class="btn first" href="#tab1">나의 글</a>
+                    <li id="tab1" class="btnCon"><a class="btn-a" href="#tab1">나의 글</a>
                         <div class="tabCon" >
                             <div class="container">
                                 <div class="table-header">
@@ -328,7 +353,7 @@
                         </div>
 
                     </li>
-                    <li id="tab2" class="btnCon"><a class="btn" href="#tab2">나의 댓글</a>
+                    <li id="tab2" class="btnCon"><a class="btn-a" href="#tab2">나의 댓글</a>
                         <div class="tabCon" >
                             <div class="container">
                                 <div class="table-header">
@@ -351,6 +376,7 @@
                                     <div class="comment-list" th:each="comment : ${comments}">
                                         <div class="comment-author" th:text="${comment.user.username}"></div>
                                         <div class="comment-content" th:text="${comment.commentContent}"></div>
+                                        <button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>
                                     </div>
                                 </div>
                             </div>
