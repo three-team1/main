@@ -107,7 +107,7 @@
 }
 
 .lightning-text-box p {
-  color: white;
+  color: black;
 }
 
 .lightning-text-box button.btn {
@@ -715,6 +715,10 @@
 
     <script>
     
+    let currentCategory = "전체";				// 카테고리 디폴트 설정 (첫 화면)
+    let currentSortBy = "number";				// 정렬 디폴트 설정 (첫 화면)
+    let currentSearchKeyword = "";				// 검색어 초기값
+
     
     function submitSearch(event) {
     	event.preventDefault();
@@ -835,9 +839,6 @@
   	} 
   	
   	
-    let currentCategory = "전체";				// 카테고리 디폴트 설정 (첫 화면)
-    let currentSortBy = "number";				// 정렬 디폴트 설정 (첫 화면)
-    let currentSearchKeyword = "";				// 검색어 초기값
   	
     const sortSelect = document.querySelector("#sort-select");     
     
@@ -889,17 +890,11 @@
     	  loadData(products);																// 위 로직이 실행된 최종 상품들을 출력.
     }
     
-    
-    
 
     async function fetchAndSortData() {
       const response = await fetch('/api/products');           // 컨트롤러 restApi 호출
       let products = await response.json();
      	
-      products.sort((a,b) => {
-          return b.id - a.id;
-      });
-      
       return products;											// 상품들을 반환
     }
     
@@ -923,9 +918,7 @@
       	  														// 그외에는 매개변수대로 들어온 정렬방식대로 출력
       	 
         
-        let classNames = ['mindLink', 'whereDoor', 'telespir', 'symponia', 'tereSycle', 'luminight',
-        				  'waterWhisper','Cronos','ifrit','bald','darkTemplar','hades',
-        				  'thor','icarus','kinesis','regencia']; // 상품 배열
+        let classNames = ['mindLink', 'whereDoor', 'telespir', 'symponia', 'tereSycle', 'luminight']; // 상품 배열
         
         for (let i = 0; i < products.length; i++) {
           let data = products[i];
@@ -971,8 +964,6 @@
           }
       }
   }
-      
-   
 	//카트에 담는 로직
 
 		function addToCart(itemId) {
@@ -980,14 +971,9 @@
 				url: "/insertCart/" + itemId,
 				type: "post",
 				success: function (response) {
-					// Process response from server (e.g., update UI, show a message, etc.)
-					if(response === "existed"){
-						console.log(response);
-						alert("해당 상품이 이미 장바구니에 존재합니다.");
-					} else {
-						console.log(response)
-						alert("해당상품을 장바구니에 담았습니다!");                                       // 장바구니를누르면 alert창으로 알림메세지 출력되면 좋을것같습니다
-					}
+					// Process response from server (e.g., update UI, show a message, etc.) 
+					alert("해당상품을 장바구니에 담았습니다!");                                       // 장바구니를누르면 alert창으로 알림메세지 출력되면 좋을것같습니다
+					console.log(response);                    
 				},
 				error: function (xhr, textStatus, errorThrown) {
 					console.log(xhr, textStatus, errorThrown); 

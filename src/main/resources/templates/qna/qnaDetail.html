@@ -15,22 +15,24 @@
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
-    $(function() {
+    $(function() { // -> $(document).ready() {}와 동일하다.
+      //// 페이지가 완전히 로드된 후 스크립트가 동작하도록 함. 순서 상 앞에 있어도 맨 마지막에 실행.
 
-      $("#qna-commentForm").submit(function(e) {
-        e.preventDefault();
+      $("#qna-commentForm").submit(function(e) { //submit이벤트가 발생하면 이 함수 실행
+        e.preventDefault(); //이벤트의 기본동작(폼의 제출)을 막는다.
+        //기본 동작을 막으면 폼이 서버로 전송되지 않고 자바스크립트로 정의한 동작을 실행할 수 있다.
 
         let commentContent = $(this).find('input[name="qna-commentContent"]').val();
         let boardId = $("#qnaId").val();
 
-        $.ajax( {
+        $.ajax( { //페이지를 새로고침하지 않도고 서버와 통신할 수 있음
           url: "/qna/comment/" + boardId,
           type:"POST",
-          data: JSON.stringify({ commentContent: commentContent }),
-          contentType: "application/json",
+          data: JSON.stringify({ commentContent: commentContent }), //JSON형식으로 변환하여 서버로 전송
+          contentType: "application/json", //서버로 보내는 데이터의 컨텐츠 타입을 JSON으로 설정
           success : function() {
             alert("댓글 작성이 완료되었습니다.");
-            location.reload();
+            location.reload(); //현재 페이지가 다시 로드되며 새로고침된 페이지가 표시된다.
           },
           error : function(err) {
             console.log(err);
