@@ -423,15 +423,15 @@
 			      let name = "";
 			      let amount = 0;
 			      for (let item of cart) {
-			        name += item.product.productTitle + ", ";
+			        name += item.product.productTitle + ",";
 			        amount += item.product.productPrice * item.cartQuantity;
 			      }
 			      
 			      // Initiate payment request
 			      IMP.request_pay(
 			        {
-			          pg: "kcp.A52CY",
-			          pay_method: "card",
+			          pg: 'kcp.T0000',
+			          pay_method: 'card',
 			          merchant_uid: 'merchant_' + new Date().getTime(),
 			          name: name,
 			          amount: amount,
@@ -451,7 +451,7 @@
 			        	let paymentDTO = {
 			        			  pg: rsp.pg,
 			        			  pay_method: rsp.pay_method,
-			        			  imp_uid:rsp.imp_uid,
+			        			  imp_uid: rsp.imp_uid,
 			        			  merchant_uid: rsp.merchant_uid,
 			        			  name: rsp.name,
 			        			  amount: rsp.paid_amount,
@@ -468,10 +468,13 @@
 			        		url:'/verifyIamport/' + rsp.imp_uid
 			        	}).done(function(result) {
 			        		
-			        		console.log(result);
+			        		console.log('중간결제까지 진입');
+			        		console.log('done : ' + result);
 			        		
 			        		if(rsp.paid_amount === result.response.amount) {
 			        			alert("결제가 완료되었습니다.");
+			        			
+			        			console.log("사전 검증 완료");
 			        			
 			        			$.ajax({
 			                        type: 'POST',
@@ -545,9 +548,9 @@
 				      // Initiate payment request
 				      IMP.request_pay(
 				        {
-				          pg: "kcp.A52CY",
+				          pg: "kcp.T0000",
 				          pay_method: "card",
-				          merchant_uid: 'merchant_' + new Date().getTime(),
+				          merchant_uid: 'merchant_'+new Date().getTime(),
 				          name: name,
 				          amount: amount,
 				          company : '포션이었다...',
@@ -555,9 +558,8 @@
 				          buyer_name: user.username,
 				          buyer_tel: user.tel,
 				          buyer_addr: user.my_address,
-				          buyer_postcode: user.my_postcode,
+				          buyer_postcode: user.my_postcode
 				          
-
 				          
 				        }, function (rsp) {
 				        	
@@ -583,10 +585,13 @@
 				        		url:'/verifyIamport/' + rsp.imp_uid
 				        	}).done(function(result) {
 				        		
-				        		console.log(result);
+				        		console.log('done : ' + result);
+				        		console.log(JSON.stringify(result, null, 2));
 				        		
 				        		if(rsp.paid_amount === result.response.amount) {
 				        			alert("결제가 완료되었습니다.");
+				        			
+				        			console.log("사전 검증 완료");
 				        			
 				        			$.ajax({
 				                        type: 'POST',
@@ -612,7 +617,7 @@
 				        });
 				    });
 				  });	  
-			}
+			} 
 
 	</script>
 </body>

@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 
 @lombok.extern.slf4j.Slf4j
 @RestController
-@RequiredArgsConstructor
 public class PaymentRestController {
 	
 	
@@ -33,7 +32,7 @@ public class PaymentRestController {
 	
 	@Autowired
 	public PaymentRestController(PaymentService paymentService) {
-		this.iamportClient = new IamportClient("6726834646432386", "R5GWEp4mtCCyGtQDDw07QCCg0YZo0qcABi9YedKuvMTRSriI2HQmhYA5a8sHWE96VicmlAb5UPOohGWE");
+		this.iamportClient = new IamportClient("6726834646432386", "j3ibQpza6I2mvrN9WFcOnEeFTarl5A3U9vZDS2jnUNImUu4xyHBRjogsegfEfVEGd38rK5qxGgEflHI5");
 		this.paymentService = paymentService;
 		
 	}
@@ -43,7 +42,7 @@ public class PaymentRestController {
 	// 여기서 사용된 Payment 객체는 Entity가아닌 IamPort에서 지원하는 Payment 객체임@@@@
     @PostMapping("/verifyIamport/{imp_uid}")
     public IamportResponse<Payment> paymentByImpUid(@PathVariable String imp_uid) throws IamportResponseException, IOException{
-        log.info("paymentByImpUid 진입");
+        log.info("paymentByImpUid 진입" + imp_uid);
         return iamportClient.paymentByImpUid(imp_uid);
     }
     
