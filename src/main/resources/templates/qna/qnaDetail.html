@@ -13,12 +13,73 @@
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(function() { // -> $(document).ready() {}와 동일하다.
+      //// 페이지가 완전히 로드된 후 스크립트가 동작하도록 함. 순서 상 앞에 있어도 맨 마지막에 실행.
+
+      $("#qna-commentForm").submit(function(e) { //submit이벤트가 발생하면 이 함수 실행
+        e.preventDefault(); //이벤트의 기본동작(폼의 제출)을 막는다.
+        //기본 동작을 막으면 폼이 서버로 전송되지 않고 자바스크립트로 정의한 동작을 실행할 수 있다.
+
+        let commentContent = $(this).find('input[name="qna-commentContent"]').val();
+        let boardId = $("#qnaId").val();
+
+        $.ajax( { //페이지를 새로고침하지 않도고 서버와 통신할 수 있음
+          url: "/qna/comment/" + boardId,
+          type:"POST",
+          data: JSON.stringify({ commentContent: commentContent }), //JSON형식으로 변환하여 서버로 전송
+          contentType: "application/json", //서버로 보내는 데이터의 컨텐츠 타입을 JSON으로 설정
+          success : function() {
+            alert("댓글 작성이 완료되었습니다.");
+            location.reload(); //현재 페이지가 다시 로드되며 새로고침된 페이지가 표시된다.
+          },
+          error : function(err) {
+            console.log(err);
+          }
+        })
+      })
+
+
+
+      $(".qna-delete-comment-btn").on("click", function() {
+        const commentId = $(this).data("id");
+
+        let confirmDelete = confirm("삭제하시겠습니까?");
+        if(!confirmDelete) {
+          return;
+        }
+
+        let commentSelect = $(this).closest(".qna-comment-list");
+
+        $.ajax({
+          url: "/comment/" + commentId,
+          type : "DELETE",
+          success : function() {
+            commentSelect.remove();
+
+          },
+          error : function(err) {
+            console.log(err);
+          }
+
+        })
+
+      })
+    });
+
+
+
+  </script>
+
+
+
   <style>
     .detail-form {
       display: flex; /*flex컨테이너로 설정*/
       flex-direction: column; /*항목들을 세로방향으로 배치한다. 요소들이 위에서 아래로 쌓인다*/
       justify-content: center; /* 수직 축을 따라 중앙으로 정렬한다. 수직의 가운데에 위치하게 된다.*/
-      align-items: center; /*수평 축을 따라 중앙으로 정렬한다. 수평의 가운데에 위치하게 된다.*/
+      align-items: center; /*수평 축을 따라 중앙으로 정렬한다. 수평의 가운데에 위치하게 된ss다.*/
       margin-bottom: 20px;
     }
 
@@ -70,9 +131,69 @@
       border: 1px solid black;
       background-color: mediumspringgreen;
     }
+
+    .qna-comment-section {
+      width: 1000px;
+      margin: auto;
+      color: lightblue;
+    }
+
+
+    #qna-commentForm {
+      display: flex;
+    }
+
+    .qna-comment-section input {
+      width: 600px;
+      height: 50px;
+      border: 2px solid lightgreen;
+      border-radius : 3px;
+    }
+
+    .qna-comment-section button {
+      width: 80px;
+      border-radius: 3px;
+      border: 2px solid lightblue;
+      background-color: black;
+      color: white;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .qna-comment-section button:hover {
+      background-color: white;
+      color: black;
+    }
+
+    .qna-comment-list-box {
+      color:white;
+      margin-top : 30px;
+
+    }
+
+    .qna-comment-list {
+      border-top : 1px solid gray;
+      border-bottom : 1px solid gray;
+      margin-top : 40px;
+      padding: 10px;
+    }
+
+    .qna-comment-author {
+      margin-bottom: 25px;
+      color: burlywood;
+      font-weight: bold;
+    }
+
+    .qna-delete-comment-btn {
+      margin-top : 30px;
+      width:50px !important;
+      color:red;
+      border : 2px solid lightcoral !important;
+    }
+
   </style>
 
-<body>
+    <body>
   <header>
     <div class="nav-bar-container">
 
@@ -101,7 +222,7 @@
         </div>
 
         <div class="nav-bar-item">
-          <a href="#"> <span></span> <span></span> <span></span> <span></span>
+          <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
             장바구니
           </a>
         </div>
@@ -163,6 +284,31 @@
       <a th:href="@{'/qna/list/update/' + ${qnaDetail.id}}"><button>수정</button></a>
       <a th:href="@{'/qna/list/delete/' + ${qnaDetail.id}}"><button>삭제</button></a>
     </div>
+
+    <div class="qna-comment-section">
+      <h3>댓글</h3>
+
+      <!-- 댓글 작성 폼 -->
+
+      <form id="qna-commentForm" th:action="'/qna/list/' + ${qnaDetail.id}" method="post" class="comment-form">
+        <input type="hidden" id="qnaId" th:value="${qnaDetail.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
+        <input name="qna-commentContent" placeholder="댓글을 입력하세요.">
+        <button type="submit">작성</button>
+      </form>
+
+      <!-- 댓글 목록 -->
+      <div class="qna-comment-list-box">
+        <div class="qna-comment-list" th:each="comment : ${comments}">
+          <div class="qna-comment-author" th:text="${comment.user.username}"></div>
+          <div class="qna-comment-content" th:text="${comment.commentContent}"></div>
+          <button class="qna-delete-comment-btn" th:data-id="${comment.id}">삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
   </section>
+
 </body>
 </html>

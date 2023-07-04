@@ -68,6 +68,7 @@ div {
 }
 
 .nav-bar-member-text {
+  position:relative;
   width: 110px;
   max-width: 110px;
   text-align: center;
@@ -80,6 +81,17 @@ div {
   text-decoration: none;
   font-weight : bold;
   color: lightblue;
+}
+
+.nav-bar-member-text img {
+	width:20px;
+	height:20px;
+	border-radius:50%;
+	object-fit: cover;
+	position:absolute;
+	top:43px;
+	left:0px;
+	
 }
 
 .username {
@@ -132,11 +144,7 @@ div {
   height: 700px;
   object-fit: fill;
   margin: auto;
-<<<<<<< HEAD
-  box-shadow:5px 5px 100px rgb(95, 180, 255) 
-=======
   box-shadow:5px 5px 50px rgb(95, 180, 255) 
->>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
 }
 
 .controllers {
@@ -293,14 +301,12 @@ div {
   font-weight: bold;
   border: none;
   border-radius: 3px;
-  color: #87CEEB;
   background-color: #2f3542;
+  color: #87CEEB;
   transition: all 1s;
   cursor:pointer; 
   
 }
-
-
 
 .hot-item button:hover {
   background: transparent;
@@ -647,16 +653,7 @@ div {
   font-size: 11px;
   display: flex;
   justify-content: space-between;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 1);
-=======
   box-shadow:5px 0px 40px rgb(73, 210, 255);
->>>>>>> d47c67711de7c9b7506d45e609eef67712eb8c7f
-=======
-
-  box-shadow:5px 0px 40px rgb(73, 210, 255);
->>>>>>> 3b429a8f1c80b2b9949c099ec39f7f1dfea94fbb
   padding: 35px;
 }
 

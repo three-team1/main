@@ -1,4 +1,4 @@
-package com.main.miniproject.product.entity;
+package com.main.miniproject.product.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

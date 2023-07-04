@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.main.miniproject.user.service.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +16,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.main.miniproject.board.entity.Board;
-
 import com.main.miniproject.board.entity.BoardImage;
 import com.main.miniproject.board.repository.BoardImageRepository;
 import com.main.miniproject.board.repository.BoardRepository;
+import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
+import com.main.miniproject.user.service.UserDetail;
 
 @Service
 public class BoardService {
@@ -32,6 +33,9 @@ public class BoardService {
 
     @Autowired
     private BoardImageRepository boardImageRepository;
+    
+    @Autowired
+    private CommentRepository commentRepository;
 
     public Board createBoard(Board board) {											//게시글 등록
 
@@ -93,6 +97,14 @@ public class BoardService {
 
             boardImageRepository.delete(boardImage);
         }
+        
+        List<Comment> commentList = commentRepository.findByBoardIdAndBoardType(id, "community");
+        
+        for(Comment comment : commentList) {
+        	
+        	commentRepository.delete(comment);
+        }
+        
 
         boardRepository.deleteById(id);
     }
@@ -124,5 +136,9 @@ public class BoardService {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         return userDetail.getUser();
 
+    }
+
+    public Page<Board> getMypageBoards(String userId, Pageable pageable) {
+        return boardRepository.findByUserUsername(userId, pageable);
     }
 }

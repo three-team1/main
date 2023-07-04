@@ -1,9 +1,6 @@
-package com.main.miniproject.cart.entity;
-
+package com.main.miniproject.comment.entity;
 
 import javax.persistence.Column;
-
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.main.miniproject.product.entity.Product;
+import com.main.miniproject.qna.entity.QNA;
+import com.main.miniproject.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,23 +19,30 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
 
+public class Comment {
+
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cart_item_id")
+	@Column(name = "comment_id")
 	private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @Column(name = "cart_quantity")
-    private Integer cartQuantity;
-}
 	
+	@Column(name = "comment_content")
+	private String commentContent;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+	
+	@Column( name = "board_type")
+	private String boardType;
+	
+	@Column(name = "board_id")
+	private Long boardId;
 
+
+	
+	
+	
+}

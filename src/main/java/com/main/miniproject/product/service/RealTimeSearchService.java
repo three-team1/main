@@ -29,12 +29,13 @@ public class RealTimeSearchService {
 			realTimeSearchKeyword = new RealTimeSearch();
 			
 			realTimeSearchKeyword.setSearchKeyword(searchKeyword);
-
+			realTimeSearchKeyword.setSearchUpdate(true);
 			realTimeSearchRepository.save(realTimeSearchKeyword);
 			
 		} else {
 			
 			realTimeSearchKeyword.setSearchCnt(realTimeSearchKeyword.getSearchCnt() + 1);
+			realTimeSearchKeyword.setSearchUpdate(true);
 			
 			
 			realTimeSearchRepository.save(realTimeSearchKeyword);

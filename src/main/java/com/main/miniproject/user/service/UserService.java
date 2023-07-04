@@ -27,8 +27,6 @@ public class UserService implements UserDetailsService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -41,6 +39,7 @@ public class UserService implements UserDetailsService{
     public User createUser(User user) {
 
         user.setRole(Role.USER);
+        user.setProvider("local");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
 

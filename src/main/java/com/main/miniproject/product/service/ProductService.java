@@ -11,7 +11,7 @@ import java.util.List;
 import com.main.miniproject.product.dto.ProductFormDto;
 import com.main.miniproject.product.dto.ProductImgDto;
 import com.main.miniproject.product.dto.ProductSearchDto;
-import com.main.miniproject.product.entity.ProductDTO;
+import com.main.miniproject.product.dto.ProductDTO;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.repository.ProductImageRepository;
 import lombok.extern.log4j.Log4j2;

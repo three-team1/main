@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/main.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+            rel="stylesheet">
+    <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+        function execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var roadAddr = data.roadAddress; // 도로명 주소 변수
+                    var extraRoadAddr = ''; // 참고 항목 변수
+
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraRoadAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraRoadAddr !== ''){
+                        extraRoadAddr = ' (' + extraRoadAddr + ')';
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('postcode').value = data.zonecode;
+                    document.getElementById("roadAddress").value = roadAddr;
+                    document.getElementById("jibunAddress").value = data.jibunAddress;
+
+                    // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                    if(data.autoRoadAddress) {
+                        var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                        guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                        guideTextBox.style.display = 'block';
+
+                    } else if(data.autoJibunAddress) {
+                        var expJibunAddr = data.autoJibunAddress;
+                        guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                        guideTextBox.style.display = 'block';
+                    } else {
+                        guideTextBox.innerHTML = '';
+                        guideTextBox.style.display = 'none';
+                    }
+                }
+            }).open();
+        }
+
+        $(document).ready(function() {
+            $("#order-email2").change(function() {
+                if ($(this).val() === "etc") {
+                    $(".emailAddress-etc").show();
+                    $("#self-email").hide();
+                } else {
+                    $(".emailAddress-etc").hide();
+                    $("#self-email").show();
+                }
+            });
+
+            // 초기에는 숨김 상태로 설정
+            $(".emailAddress-etc").hide();
+        });
+
+        $(document).ready(function() {
+            var paymentMethod = $("#payment-method");
+            var label = $("label[for='payment-method']");
+
+            label.on("click", function(event) {
+                event.preventDefault(); // 기본 동작 중지
+                paymentMethod.prop("checked", true); // 라디오 버튼 선택
+                label.css({
+                    "border": "1px solid blue",
+                    "color": "blue"
+                });
+            });
+        });
+
+    </script>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-size: 14px;
+        }
+
+        .order-top {
+            margin-bottom: 40px;
+        }
+
+        .order-top p {
+            font-size: 20px;
+        }
+
+        .order-total-div {
+            width: 60%;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: whitesmoke;
+            margin-bottom: 150px;
+        }
+
+        .order-top p {
+            margin-top: 250px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .icoRequired {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin: -2px 0 0;
+            vertical-align: middle;
+            text-indent: 150%;
+            font-size: 0;
+            line-height: 0;
+            white-space: nowrap;
+            background: url(//img.echosting.cafe24.com/skin/mobile/common/bg_required.png) no-repeat 0 0;
+            background-size: auto 6px;
+        }
+
+        .order-form-top {
+            width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-bottom: 1px solid black ;
+        }
+
+        .order-form-top p {
+            color: black;
+            font-weight: bold;
+        }
+
+        .order-form, .shipping-msg, #order-product-list, #order-payment, .total-payment-price {
+            width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .order-form-table > tr > td, th {
+            font-weight: 400;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .order-form-table th {
+            padding: 16px 10px 12px 0;
+        }
+
+        .order-form {
+            border-bottom: 1px solid black;
+        }
+
+        #order-name {
+            height: 40px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid darkgray;
+            outline-style: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        #address-td li {
+            list-style: none;
+        }
+
+        #address-td input {
+            height: 40px;
+            padding: 10px;
+            border: 1px solid darkgray;
+            outline-style: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        #postcode {
+            width: 150px;
+            margin-right: 0;
+        }
+
+        #roadAddress, #jibunAddress, #detailAddress {
+            width: 100%;
+        }
+
+        #address-btn {
+            background-color: white;
+        }
+
+        #order-tel-1, #order-tel-2, #order-tel-3, #order-email1, #order-email2, #order-email3 {
+            width: 235px;
+            padding: 0 20px 0 10px;
+            height: 40px;
+            word-break: break-all;
+            border: 1px solid darkgray;
+            box-sizing: border-box;
+            outline-style: none;
+            margin-bottom: 15px;
+        }
+
+        #order-email3 {
+            margin-left: 14px;
+
+        }
+
+        .shipping-msg {
+            border-bottom: 1px solid black;
+        }
+
+        #shipping-msg-select {
+            height: 40px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid darkgray;
+            color: darkgray;
+            outline-style: none;
+            box-sizing: border-box;
+        }
+
+
+        #order-product-list, #order-payment {
+            border-bottom: 1px solid black;
+        }
+
+        .total-payment-price {
+            background-color: aqua;
+            color: black;
+            border-bottom: 1px solid black;
+        }
+
+        #total-payment-price-table th, #total-price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #total-payment-price-table td {
+            float: right;
+        }
+
+        .payment {
+            width: 100%;
+            background-color: white;
+            margin: 0 auto;
+            padding: 20px;
+            border-bottom: 1px solid black;
+        }
+
+        #payment-method {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            border: 0;
+        }
+
+        #payment-top1, #payment-top2 {
+            margin-bottom: 15px;
+        }
+
+        .payment-inner label {
+            border: 1px solid darkgray;
+            display: block;
+            padding: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .payment-help {
+            background-color: mintcream;
+            padding: 20px;
+            border: 1px solid darkgray;
+            width: 100%;
+        }
+
+        .payment-help li {
+            list-style: none;
+            color: black;
+            font-size: 12px;
+            line-height: 15px;
+        }
+
+        .final-payment {
+            width: 100%;
+            margin: 0 auto;
+            background-color: aqua;
+            color: black;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid black;
+        }
+
+       .final-payment p {
+           font-size: 20px;
+           font-weight: bold;
+        }
+
+
+    </style>
+<body>
+    <header>
+        <div class="nav-bar-container">
+
+            <div class="nav-logo">
+                <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
+                </a>
+            </div>
+
+            <div class="nav-bar-item-box">
+                <div class="nav-bar-item">
+                    <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+                        컬렉션
+                    </a>
+                </div>
+
+                <div class="nav-bar-item">
+                    <a href="/board/list"> <span></span> <span></span> <span></span>
+                        <span></span> 커뮤니티
+                    </a>
+                </div>
+
+                <div class="nav-bar-item">
+                    <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+                        Q&A
+                    </a>
+                </div>
+
+                <div class="nav-bar-item">
+                    <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
+                        장바구니
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+                <p>
+                    환영합니다! <span class="username" sec:authentication="name"></span>님
+                </p>
+                <a href="/mypage">마이페이지</a>
+            </div>
+
+            <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a href="/admin">관리자페이지</a>
+            </div>
+
+            <div class="nav-bar-login" sec:authorize="isAuthenticated()">
+                <a href="/logout">로그아웃</a>
+            </div>
+
+            <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+                <a href="/login"> 로그인 </a>
+            </div>
+
+            <div class="nav-bar-join nav-bar-login"
+                 sec:authorize="!isAuthenticated()">
+                <a href="/register"> 회원가입 </a>
+            </div>
+        </div>
+    </header>
+
+    <section>
+            <div class="order-top">
+                <p>주문/결제</p>
+            </div>
+
+        <div class="order-total-div">
+            <div class="order-form-top">
+                <p>배송지</p>
+            </div>
+
+
+            <div class="order-form">
+                <table class="order-form-table">
+                    <tr>
+                        <th>받는 사람<span class="icoRequired">필수</span></th>
+                        <td>
+                            <input id="order-name" name="order-name" placeholder size="15" value type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>주소<span class="icoRequired">필수</span></th>
+                        <td id="address-td">
+                            <ul>
+                                <li>
+                                    <input type="text" id="postcode" placeholder="우편번호">
+                                    <input type="button" id="address-btn" onclick="execDaumPostcode()" value="주소 찾기"><br>
+                                </li>
+                                <li>
+                                    <input type="text" id="roadAddress" placeholder="도로명주소">
+                                </li>
+                                <li>
+                                    <input type="text" id="jibunAddress" placeholder="지번주소">
+                                </li>
+                                <li>
+                                    <input type="text" id="detailAddress" placeholder="상세주소">
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>연락처<span class="icoRequired">필수</span></th>
+                        <td>
+                            <div class="order-form-table-tel">
+                                <select id="order-tel-1" name="order-tel">
+                                    <option value="010">010</option>
+                                    <option value="011">011</option>
+                                    <option value="016">016</option>
+                                    <option value="017">017</option>
+                                    <option value="018">018</option>
+                                    <option value="019">019</option>
+                                </select>
+                                -
+                                <input id="order-tel-2" name="order-tel" maxlength="4" size="4" value type="text">
+                                -
+                                <input id="order-tel-3" name="order-tel" maxlength="4" size="4" value type="text">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이메일<span class="icoRequired">필수</span></th>
+                        <td>
+                            <div class-order-form-table-email>
+                                <input id="order-email1" name="order-email1" value type="text">
+                                @
+                                <span class="emailAddress">
+                                    <select id="order-email2">
+                                        <option value selected="selected"> - 이메일 선택 - </option>
+                                        <option value="naver.com">naver.com</option>
+                                        <option value="daum.net">daum.net</option>
+                                        <option value="gmail.com">gmail.com</option>
+                                        <option value="nate.com">nate.com</option>
+                                        <option value="etc" id="self-email">직접입력</option>
+                                    </select>
+                                    <span class="emailAddress-etc">
+                                        <input id="order-email3" name="order-email3" placeholder="직접입력" value type="text">
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!--배송 메시지-->
+            <div class="shipping-msg">
+                <select id="shipping-msg-select" name="shipping-msg-select">
+                    <option value="shipping-msg-0" selected="selected"> -- 메시지 선택 (선택사항) -- </option>
+                    <option value="shipping-msg-1">배송 전에 미리 연락바랍니다.</option>
+                    <option value="shipping-msg-2">부재 시 경비실에 맡겨주세요.</option>
+                    <option value="shipping-msg-3">부재 시 문 앞에 놓아주세요.</option>
+                    <option value="shipping-msg-4">빠른 배송 부탁드립니다.</option>
+                    <option value="shipping-msg-5">택배함에 보관해 주세요.</option>
+                </select>
+            </div>
+
+            <!--주문한 상품 리스트-->
+            <div id="order-product-list">
+                <div id="order-product-list-title" class="list-title">
+                    <h2>주문상품</h2>
+                </div>
+                <div class="order-product-contents">
+                    <table id="order-product-contents-table">
+                        <colgroup>
+                            <col style="width:10%">
+                            <col style="width:70%">
+                            <col style="width:20%">
+                        </colgroup>
+                        <tr>
+                            <td>상품이미지</td>
+                            <td>상품이름</td>
+                            <td>가격</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!--결제정보-->
+            <div id="order-payment">
+                <div id="order-payment-title">
+                    <h2>결제정보</h2>
+                </div>
+                <div id="order-payment-contents">
+                    <table id="order-payment-table">
+                        <colgroup>
+                            <col style="width:200%">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>주문상품</th>
+                                <td>
+                                    <span id="order-product-price">500,000</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>배송비</th>
+                                <td>
+                                    <span class="price">
+                                        +
+                                        <span id="ship-price">3,000</span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--최종 금액-->
+            <div class="total-payment-price">
+                <table id="total-payment-price-table">
+                    <colgroup>
+                        <col style="width:765px">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>최종 결제 금액</th>
+                            <td>
+                                <span id="total-price">503,000</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--결제수단-->
+            <div class="payment">
+                <div id="payment-top1">
+                    <h2>결제수단</h2>
+                </div>
+                <div id="payment-top2">
+                    <p>결제수단 선택</p>
+                </div>
+
+                <div class="payment-inner">
+                    <span>
+                        <input id="payment-method" name="payment-card" type="radio" checked="checked" autocomplete="off">
+                        <label for="payment-method">카드 결제</label>
+                    </span>
+                </div>
+
+                <div class="payment-help">
+                    <ul id="payment-help-list">
+                        <li>- 최소 결제 가능 금액은 총 결제금액에서 배송비를 제외한 금액입니다.</li>
+                        <li>- 소액 결제의 경우 PG사 정책에 따라 결제 금액 제한이 있을 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <!--최종 결제 통보-->
+            <div class="final-payment">
+                <p>결제하기</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
