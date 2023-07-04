@@ -39,6 +39,64 @@
             });
         }
 
+        $(document).ready(function (){
+            $('#saveBtn').on("click", (e) => {
+                e.preventDefault();
+                var id = $("#id").val().toString();
+
+                if(confirm($('#productTitle').val() + ' 상품을 등록하시겠습니까?')){
+
+                    const formData = new FormData($("#updateForm")[0]);
+
+                    $.ajax({
+                        url: '/admin/item/new',
+                        type: 'post',
+                        enctype: 'multipart/form-data',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        data: formData,
+                        success: () => {
+                            alert('상품 등록이 완료되었습니다.');
+                            location.href = '/admin/items/' + id;
+                        },
+                        error: () => {
+                            alert('상품 등록 중 오류가 발생했습니다.');
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $(document).ready(function (){
+            $('#updateBtn').on("click", (e) => {
+                e.preventDefault();
+                var id = $("#id").val().toString();
+
+                if(confirm($('#productTitle').val() + '의 정보를 수정하시겠습니까?')){
+
+                    const formData = new FormData($("#updateForm")[0]);
+
+                    $.ajax({
+                        url: '/admin/item/' + id,
+                        type: 'post',
+                        enctype: 'multipart/form-data',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: () => {
+                            alert('수정 완료되었습니다.');
+                            location.href = '/admin/item/' + id
+                        },
+                        error: () => {
+                            alert('상품 정보 수정 중 오류가 발생했습니다.');
+                        }
+                    });
+                }
+            });
+        });
+
 
     </script>
 
@@ -114,13 +172,13 @@
 
 <div layout:fragment="content">
     <div class="main-content">
-    <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
+    <form id="updateForm" enctype="multipart/form-data" th:object="${itemFormDto}">
 
         <p class="h2">
             새 상품 등록
         </p>
 
-        <input type="hidden" th:field="*{id}">
+        <input id="id" type="hidden" th:field="*{id}">
 
         <div class="form-group">
             <select th:field="*{productSellStatus}" class="custom-select">
@@ -142,7 +200,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">상품명</span>
             </div>
-            <input type="text" th:field="*{productTitle}" class="form-control" placeholder="상품명을 입력해주세요">
+            <input id="productTitle" type="text" th:field="*{productTitle}" class="form-control" placeholder="상품명을 입력해주세요">
         </div>
         <p th:if="${#fields.hasErrors('productTitle')}" th:errors="*{productTitle}" class="fieldError">Incorrect data</p>
 
@@ -191,13 +249,18 @@
             </div>
         </div>
 
+
+
+        <a th:href="@{'/admin/items'}">
+            <button id="listBtn" type="button">목록</button>
+        </a>
         <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button th:formaction="@{'/admin/item/new'}" type="submit" class="btn btn-primary">저장</button>
+            <button id="saveBtn" type="button" class="btn btn-primary">저장</button>
         </div>
         <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button th:formaction="@{'/admin/item/' + ${itemFormDto.id} }" type="submit" class="btn btn-primary">수정</button>
+            <button id="updateBtn" type="button" class="btn btn-primary">수정</button>
         </div>
-<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+
 
     </form>
 

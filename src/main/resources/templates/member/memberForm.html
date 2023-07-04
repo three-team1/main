@@ -12,33 +12,54 @@
     <link rel="stylesheet" th:href="@{/css/layout1.css}">
 
     <script th:inline="javascript">
+        $(document).ready(function (){
 
-        $(function () {
           $('#deleteUserBtn').on("click", (e) => {
             e.preventDefault();
-            if(confirm("회원을 삭제하시겠습니까?")){
+            var id = $("#id").val().toString();
 
-              // var memberId = $("#id").val();
+            if(confirm($('#username').val() + " 회원을 삭제하시겠습니까?")){
 
               $.ajax({
-                url: 'admin/memberDetail/' + id,
-                type: 'DELETE',
-                data: {
-                  id: $("#id").val()
+                url: '/admin/memberDetail/' + id,
+                type: 'post',
+                success: () => {
+                  alert('삭제 완료되었습니다.');
+                  location.href = '/admin/members'
                 },
-                success: (ogj) => {
-                  console.log('회원이 삭제되었습니다.');
-                  location.href = '/admin/members/'
-                },
-                error: (error) => {
-                  console.log('회원 삭제 중 오류가 발생했습니다.');
+                error: () => {
+                  alert('회원 삭제 중 오류가 발생했습니다.');
                 }
               });
 
             }
 
           });
-        })
+        });
+
+
+        $(document).ready(function (){
+          $('#updateUserBtn').on("click", (e) => {
+            e.preventDefault();
+            var id = $("#id").val().toString();
+
+            if(confirm($('#username').val() + ' 회원의 정보를 수정하시겠습니까?')){
+
+              $.ajax({
+                url: '/admin/memberDetail/updateMember/' + id,
+                type: 'post',
+                data: $("#updateForm").serialize(),
+                success: () => {
+                  alert('수정 완료되었습니다.');
+                  location.href = '/admin/memberDetail/' + id
+                },
+                error: () => {
+                  alert('회원 정보 수정 중 오류가 발생했습니다.');
+                }
+              });
+            }
+          });
+        });
 
 
 
@@ -117,19 +138,19 @@
 <body>
 <div layout:fragment="content">
   <div class="main-content">
-    <form th:action="@{'/admin/memberDetail/' + ${UserFormDto.id}}" role="form" method="get" enctype="multipart/form-data" th:object="${UserFormDto}">
+    <form id="updateForm" enctype="multipart/form-data" th:object="${UserFormDto}">
 
       <p class="h2">
          회원 상세 정보
       </p>
 
-      <input type="hidden" th:field="*{id}" name="id">
+      <input type="hidden" th:field="*{id}" id="id">
 
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text">아이디</span>
         </div>
-        <input type="number" th:field="*{id}" class="form-control">
+        <input type="number" th:field="*{id}" class="form-control" readonly>
       </div>
       <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError">Incorrect data</p>
 
@@ -137,7 +158,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">가입경로(local, kakao)</span>
         </div>
-        <input type="text" th:field="*{provider}" class="form-control">
+        <input type="text" th:field="*{provider}" class="form-control" readonly>
       </div>
       <p th:if="${#fields.hasErrors('provider')}" th:errors="*{provider}" class="fieldError">Incorrect data</p>
 
@@ -145,7 +166,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">카카오 아이디</span>
         </div>
-        <input type="number" th:field="*{providerId}" class="form-control">
+        <input type="number" th:field="*{providerId}" class="form-control" readonly>
       </div>
       <p th:if="${#fields.hasErrors('providerId')}" th:errors="*{providerId}" class="fieldError">Incorrect data</p>
 
@@ -153,7 +174,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">이름</span>
         </div>
-        <input type="text" th:field="*{username}" class="form-control">
+        <input id="username" type="text" th:field="*{username}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="fieldError">Incorrect data</p>
 
@@ -161,7 +182,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">이메일</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{email}"></textarea>
+        <input type="text" th:field="*{email}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError">Incorrect data</p>
 
@@ -169,7 +190,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">연락처</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{tel}"></textarea>
+        <input type="text" th:field="*{tel}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="fieldError">Incorrect data</p>
 
@@ -177,7 +198,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">우편번호</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{my_postcode}"></textarea>
+        <input type="text" th:field="*{my_postcode}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('my_postcode')}" th:errors="*{my_postcode}" class="fieldError">Incorrect data</p>
 
@@ -185,7 +206,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">주소</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{my_address}"></textarea>
+        <input type="text" th:field="*{my_address}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('my_address')}" th:errors="*{my_address}" class="fieldError">Incorrect data</p>
 
@@ -193,7 +214,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">상세주소</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{my_detailAddress}"></textarea>
+        <input type="text" th:field="*{my_detailAddress}" class="form-control">
       </div>
       <p th:if="${#fields.hasErrors('my_detailAddress')}" th:errors="*{my_detailAddress}" class="fieldError">Incorrect data</p>
 
@@ -202,11 +223,14 @@
         <div class="input-group-prepend">
           <span class="input-group-text">회원구분</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" th:field="*{role}"></textarea>
+        <input type="text" th:field="*{role}" class="form-control" readonly>
       </div>
       <p th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="fieldError">Incorrect data</p>
 
-      <button id="updateUserBtn" type="button" >수정</button>
+      <a th:href="@{'/admin/members'}">
+        <button id="memberListBtn" type="button" >목록</button>
+      </a>
+      <button id="updateUserBtn" type="button" >회원 정보 수정</button>
       <button id="deleteUserBtn" type="button" >회원 삭제</button>
 
     </form>

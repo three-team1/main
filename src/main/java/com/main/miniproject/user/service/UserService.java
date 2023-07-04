@@ -67,6 +67,13 @@ public class UserService implements UserDetailsService{
     public void updateUser(UserFormDto userFormDto) {
         User user = userRepository.findById(userFormDto.getId()).orElseThrow(EntityNotFoundException::new);
 
+        user.setUsername(userFormDto.getUsername());
+        user.setEmail(userFormDto.getEmail());
+        user.setTel(userFormDto.getTel());
+        user.setMy_postcode(userFormDto.getMy_postcode());
+        user.setMy_address(userFormDto.getMy_address());
+        user.setMy_detailAddress(userFormDto.getMy_detailAddress());
+
 
         userRepository.save(user);
     }

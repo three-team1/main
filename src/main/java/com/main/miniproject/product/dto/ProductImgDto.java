@@ -1,6 +1,7 @@
 package com.main.miniproject.product.dto;
 
 import com.main.miniproject.product.entity.ProductImage;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

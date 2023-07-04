@@ -25,8 +25,6 @@ public class ProductImageService {
     @Value(value = "${itemImgLocation}")
     private String itemImgLocation;
     private final ProductImageRepository productImageRepository;
-
-
     private final FileService fileService;
 
     @Autowired
@@ -36,12 +34,12 @@ public class ProductImageService {
     }
 
     public List<ProductImage> getAllProductImages() {
-    	
+
         return productImageRepository.findAll();
     }
-	
+
     public List<ProductImage> getProductImagesByProduct(Product product) {
-    	
+
     	return productImageRepository.findByProduct(product);
     }
     public void saveProductImg(ProductImage productImage, MultipartFile productImgFile) throws IOException {
@@ -82,5 +80,10 @@ public class ProductImageService {
 
 
     }
+
+    public void deleteItemImg(Long productImgIds){
+        productImageRepository.deleteById(productImgIds);
+    }
+
 
 }

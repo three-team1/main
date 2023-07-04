@@ -50,6 +50,7 @@
 
         });
 
+
 		$(document).ready(function() {
 			// 전체 선택 체크박스 요소를 가져옵니다.
 			var $checkAll = $("#allcheck");
@@ -89,8 +90,7 @@
 			$('#deleteproductBtn').on("click", function (e) {
 				e.preventDefault();
 
-
-				var $checked = $('input[name=rowcheck]:checked');
+				var $checked = $('input[id=rowcheck]:checked');
 
 				if ($checked.length < 1) {
 					alert("삭제할 상품을 선택해주세요.");
@@ -113,7 +113,7 @@
 							id: idList[i]
 						},
 						success: (obj) => {
-							alert("삭제되었습니다.")
+							alert("삭제 완료되었습니다.")
 							console.log(obj);
 
 						},
@@ -153,22 +153,27 @@
 			<thead>
 				<tr>
 					<td> <input type="checkbox" id="allcheck" > </td>
+					<td>제품상태</td>
 					<td>상품번호</td>
 					<td>상품명</td>
-					<td>제품상태</td>
 					<td>재고수량</td>
+					<td>조회 및 수정</td>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="product, status: ${items.getContent()}"
-                    th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''">
-					<td> <input type="checkbox" class="rowcheck" name="rowcheck" th:value="${product.id}"> </td>
+				<tr th:each="product, status: ${items.getContent()}">
+					<td> <input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}"> </td>
+					<td th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
 					<td th:text="${product.id}"></td>
-					<td><a th:href="'/admin/item/'+${product.id}"
-						th:text="${product.productTitle}"></a></td>
-					<td
-						th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
-					<td th:text="${product.productQuantity}"></td>
+					<td th:text="${product.productTitle}"></td>
+					<td th:text="${product.productQuantity}"
+						th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''"></td>
+					<td>
+						<a th:href="@{'/admin/item/' + ${product.id}}">
+							<button type="button">선택</button>
+						</a>
+					</td>
+
 				</tr>
 			</tbody>
 		</table>
