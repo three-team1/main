@@ -36,4 +36,5 @@ public class OrderItem {
 	@Column(name = "order_quantity")
 	private int orderQuantity;
 	
+	
 }

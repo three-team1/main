@@ -460,8 +460,8 @@
 			        			  buyer_addr: rsp.buyer_addr,
 			        			  buyer_postcode: rsp.buyer_postcode,
 			        			  buyer_detailAddr: user.my_detailAddress,
- 			        			  productId: productId,
-			        			  quantity: quantity
+ 			        			  productId:productId,
+			        			  quantity:quantity
 			        			};
 			        	
 			        	$.ajax({
@@ -511,11 +511,11 @@
 			  // 선택된 체크박스들을 확인하고 선택된 상품들을 배열에 추가
 			  $('input[type="checkbox"][name="check"]:checked').each(function() {
 			    var productId = $(this).closest('.cart').data('product-id');
-			    var quantityId = $(this).closest('.cart').data('quantity-id');
+			    var quantity = $(this).closest('.cart').data('quantity-id');
 			    
 			    selectedItems.push({
 			      productId: productId,
-			      quantityId: quantityId
+			      quantity: quantity
 			    });
 			  });
 			  

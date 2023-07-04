@@ -39,7 +39,6 @@ public class PaymentRestController {
 	}
 	
 	
-	
 	// 여기서 사용된 Payment 객체는 Entity가아닌 IamPort에서 지원하는 Payment 객체임@@@@
     @PostMapping("/verifyIamport/{imp_uid}")
     public IamportResponse<Payment> paymentByImpUid(@PathVariable String imp_uid) throws IamportResponseException, IOException{
