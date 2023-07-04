@@ -15,12 +15,19 @@
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
+<<<<<<< HEAD
     $(function() { // -> $(document).ready() {}와 동일하다.
       //// 페이지가 완전히 로드된 후 스크립트가 동작하도록 함. 순서 상 앞에 있어도 맨 마지막에 실행.
 
       $("#qna-commentForm").submit(function(e) { //submit이벤트가 발생하면 이 함수 실행
         e.preventDefault(); //이벤트의 기본동작(폼의 제출)을 막는다.
         //기본 동작을 막으면 폼이 서버로 전송되지 않고 자바스크립트로 정의한 동작을 실행할 수 있다.
+=======
+    $(function() {
+
+      $("#qna-commentForm").submit(function(e) {
+        e.preventDefault();
+>>>>>>> d18cbc1 (충돌 해결)
 
         let commentContent = $(this).find('input[name="qna-commentContent"]').val();
         let boardId = $("#qnaId").val();
@@ -69,6 +76,12 @@
     });
 
   </script>
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> d18cbc1 (충돌 해결)
   <style>
     * {
       margin: 0;
