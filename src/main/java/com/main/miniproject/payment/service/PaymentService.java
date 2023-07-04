@@ -70,12 +70,15 @@ public class PaymentService {
 	        List<Long> productIds = paymentDTO.getProductId();
 	        List<Integer> quantities = paymentDTO.getQuantity();
 
+	        System.out.println("장바구니 수량 개수 : " + quantities);
+	        
 	        for (int i = 0; i < productIds.size(); i++) {
 	            OrderItem orderItem = new OrderItem();
 	            Product product = productRepository.findById(productIds.get(i)).get();
 	            orderItem.setOrder(order);
 	            orderItem.setProduct(product);
 	            orderItem.setOrderQuantity(quantities.get(i));
+	            
 	            orderItemRepository.save(orderItem);
 	        }
 	        
