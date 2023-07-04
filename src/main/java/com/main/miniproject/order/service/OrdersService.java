@@ -16,10 +16,10 @@ import java.util.List;
 public class OrdersService {
     private OrdersRepository ordersRepository;
 
-//    public List<Orders> getOrdersList(Long user) {
-//
-//        return ordersRepository.findAllByUser(user);
-//    }
+    public List<Orders> getOrdersList(Long user) {
+
+        return ordersRepository.findAllByUser(user);
+    }
 
 
 
