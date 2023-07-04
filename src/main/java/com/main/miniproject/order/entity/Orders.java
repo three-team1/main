@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.main.miniproject.cart.entity.Cart;
 import com.main.miniproject.payment.entity.Payment;
 import com.main.miniproject.user.entity.User;
 
@@ -25,7 +26,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "orders")
 public class Orders {
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_id")
@@ -50,12 +50,16 @@ public class Orders {
 	private String orderTel;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "cart_id")
+	private Cart cart;
 	
 	@ManyToOne
 	@JoinColumn(name = "payment_id")
 	private Payment payment;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
 }
 

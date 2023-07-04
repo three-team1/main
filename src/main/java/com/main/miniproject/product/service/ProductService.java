@@ -1,6 +1,9 @@
 package com.main.miniproject.product.service;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.main.miniproject.product.dto.ProductDTO;
@@ -25,11 +29,14 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
+@Transactional
 public class ProductService {
+
 
 	private final ProductRepository productRepository;
 	private final ProductImageRepository productImageRepository;
 	private final ProductImageService productImageService;
+
 
 
 	@Autowired
@@ -37,6 +44,7 @@ public class ProductService {
 		this.productRepository = productRepository;
 		this.productImageRepository=productImageRepository;
 		this.productImageService=productImageService;
+
 	}
 
 	public List<Product> getAllProducts() {
@@ -129,9 +137,29 @@ public class ProductService {
 
 	//상품 삭제하기
 
-	 public void deleteProduct(Product product){
+	 public void deleteProduct(Long id){
 
-		 productRepository.delete(product);
+		Product product = productRepository.findById(id).get();
+
+		List<ProductImage> productImages = productImageRepository.findByProduct(product);
+
+		for(ProductImage productImage : productImages){
+
+			try{
+				Path filePath = Paths.get("C:/miniproject/images" + productImage.getName());
+				Files.deleteIfExists(filePath);
+			}catch (IOException e){
+				e.printStackTrace();
+				//적절한 예외 처리 필요
+			}
+
+			productImageRepository.delete(productImage);
+
+		}
+
+		productRepository.deleteById(id);
+
+
 	 }
 
 
@@ -141,6 +169,9 @@ public class ProductService {
 	public Page<Product> getAdminProductPage(ProductSearchDto productSearchDto, Pageable pageable){
 		return productRepository.getAdminProductPage(productSearchDto, pageable);
 	}
+
+
+
 
 	public List<ProductDTO> searchProducts(String searchKeyword) {
 

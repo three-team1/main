@@ -1,7 +1,6 @@
 package com.main.miniproject.cart.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,9 +29,6 @@ public class CartRestController {
 	
 	@Autowired
 	private ProductRepository productRepository;
-
-	@Autowired
-	private CartRepository cartRepository;
 	
 	@Autowired
 	private CartService cartService;
@@ -40,10 +36,13 @@ public class CartRestController {
 	@Autowired
 	private ProductImageService productImageService;
 	
+	@Autowired
+	private CartRepository cartRepository;
+	
 	@PostMapping("/insertCart/{id}")
 	public ResponseEntity<?> insertCart(@PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {
 
-	    User user = userRepository.findById(userDetail.getUser().getId()).get();
+	    User user = userRepository.findById(userDetail.getUser().getId()).get(); 
 
 	    Product product = productRepository.findById(id).get();
 
@@ -61,7 +60,6 @@ public class CartRestController {
 				.productImage(imageUrl)
 				.build();
 		cartService.insertCart(cart);
-
 	    return ResponseEntity.ok().build();
 	}
 	

@@ -14,37 +14,50 @@
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <style>
     * {
       padding: 0;
       margin: 0;
+      font-size: 14px;
     }
 
-    .cart-header{
+    .cart-cart {
+      text-align: center;
       margin-top: 250px;
-    }
-
-    .cart-header p{
-      margin-left: 900px;
-      font-size: 12px;
+      margin-bottom: 20px;
       color: white;
     }
 
-    hr {
-      margin: 30px auto;
-      max-width: 800px;
+    .cart-cart p {
+      font-size: 20px;
+    }
+
+    .cart-total-div {
+      width: 60%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: whitesmoke;
+      margin-bottom: 150px;
+    }
+
+    .cart-header {
+      background-color: #86cfda;
+      height: 50px;
+      text-align: right;
+      padding: 20px;
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
     }
 
     .cart-table {
-      font-size: 12px;
-      color: #999;
+      color: black;
       text-align: center;
       border: 1px solid white;
       border-collapse: collapse;
-      width: 800px;
-      margin: 20px auto;
+      background-color: white;
+      width: 100%;
+      margin: 0 auto;
     }
 
     .cart-table th, td {
@@ -52,7 +65,7 @@
     }
 
     .cart table, #tr1 {
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid black;
     }
 
     #th1, #td1 {
@@ -98,32 +111,28 @@
     }
 
     .order-btn {
-      margin: 50px auto 200px auto;
+      margin: 30px auto;
       text-align: center;
     }
 
     .order-btn a {
       text-decoration: none;
-      border: 1px solid white;
       color: black;
       padding: 5px 40px 5px 40px;
-      font-size: 12px;
     }
 
-    .order-btn .all, .selected{
-      background-color: white;
-      color: black;
+    .order-btn .order-go {
+      background-color: #86cfda;
+      border: 1px solid black;
     }
 
-    .order-btn .all:hover, .selected:hover {
-      background-color: aqua;
-      color: black;
+    #tr-border {
+      border-top : 1px solid black;
+      border-bottom: 1px solid black;
     }
     
-    .images img {
+    .images img{
     	width:100px;
-    	height:80px;
-    	border-radius:5px;
     }
   </style>
 
@@ -167,7 +176,7 @@
 
       $(".totalCost").each(function () {
         const totalPrice = parseInt($(this).siblings("td#itemCost").text(), 10)
-                          * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
+                * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
 
         $(this).text(numberWithCommas(totalPrice));
       });
@@ -280,7 +289,6 @@
       <div class="nav-bar-item">
         <a href="#"> <span></span> <span></span> <span></span> <span></span>
           장바구니
-          <span id="cart-count" class="notification-badge"></span>
         </a>
       </div>
     </div>
@@ -312,341 +320,69 @@
 </header>
 
 <section>
-  <div class="cart-header">
-    <ul class="cart-menu">
-      <li>
-        <a href="#"></a>
-      </li>
-      <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-
-    </ul>
-  </div>
-  <hr>
-
-  <div class="cart-table-container">
-    <table class="cart-table">
-      <tr id="tr1">
-        <th id="th1"><input class="th1-checkbox" type="checkbox" id="checkAll"></th>
-        <th id="th2">이미지</th>
-        <th id="th3">상품 정보</th>
-        <th id="th4">판매가</th>
-        <th id="th5">수량</th>
-        <th id="th6">구매가</th>
-        <th id="th7">선택</th>
-      </tr>
-        <tr class="cart" th:each="cart: ${cartList}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
-        <td id="td1"><input type="checkbox" name="check" value="1"></td>
-        <td class="images"><img th:src="${cart.productImage}"></td>
-        <td th:text="${cart.product.getProductTitle()}"></td>
-        <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
-        </td>
-        <td>
-          <div class="qty">
-            <form action="/updateCart" method="post" style="display: inline">
-              <div class="minus">
-                <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
-              </div>
-              <input style="display: none" type="text" name="id" th:value="${cart.id}">
-              <input type="text" name="cartQuantity" id="itemCnt" th:value="${cart.cartQuantity}" readonly="readonly">
-              <div class="plus">
-                <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
-              </div>
-            </form>
-          </div>
-        </td>
-        <td class="totalCost" >
-        </td>
-        <td>
-          <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
-        </td>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>선택한 상품 개수</th>
-        <th id="checkCnt"></th>
-        <th>총 금 액</th>
-        <th id="payMoney">0</th>
-      </tr>
-    </table>
+  <div class="cart-cart">
+    <p>c a r t</p>
   </div>
 
-  <hr>
+  <div class="cart-total-div">
+    <div class="cart-header">
+        <p>장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
+    </div>
 
-  	
- 
-  <div class="order-btn">
-    <a href="#" class="all" onclick="requestPay()">전체상품주문</a>
-    <a href="#" class="selected" onclick="requestSelectPay()">선택상품주문</a>
+    <div class="cart-table-container">
+      <table class="cart-table">
+        <tr id="tr1">
+          <th id="th1"><input type="checkbox" id="checkAll"></th>
+          <th id="th2">이미지</th>
+          <th id="th3">상품 정보</th>
+          <th id="th4">판매가</th>
+          <th id="th5">수량</th>
+          <th id="th6">구매가</th>
+          <th id="th7">선택</th>
+        </tr>
+        <tr th:each="cart: ${cartList} ">
+          <td id="td1"><input type="checkbox" name="check" value="1"></td>
+          <td class="images"><img th:src="${cart.productImage}"></td>
+          <td th:text="${cart.product.getProductTitle()}"></td>
+          <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
+          </td>
+          <td>
+            <div class="qty">
+              <form action="/updateCart" method="post" style="display: inline">
+                <div class="minus">
+                  <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: black;"></i></a>
+                </div>
+                <input style="display: none" type="text" name="id" th:value="${cart.id}">
+                <input type="text" name="cartQuantity" id="itemCnt" th:value="${cart.cartQuantity}" readonly="readonly">
+                <div class="plus">
+                  <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: black;"></i></a>
+                </div>
+              </form>
+            </div>
+          </td>
+          <td class="totalCost" >
+          </td>
+          <td>
+            <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
+          </td>
+        </tr>
+        <tr id="tr-border">
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>선택한 상품 개수</th>
+          <th id="checkCnt"></th>
+          <th>총 금 액</th>
+          <th id="payMoney">0</th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="order-btn">
+      <a href="/order" class="order-go">전체상품주문</a>
+    </div>
   </div>
-  
-  
 </section>
 
-	
-	
-	<script>
-	
-/* 		$('.cart').each(function() {
-		  const productId = $(this).data('product-id');
-		  const quantity = $(this).data('quantity-id');
-		  
-		  console.log('Product ID:', productId);
-		  console.log('Quantity:', quantity);
-		}); */
-		
-		
-		let productId = [];
-		let quantity = [];
-		$('.cart').each(function() {
-		    productId.push($(this).data('product-id'));
-		    quantity.push($(this).data('quantity-id'));
-		});
-		
-		console.log(productId);
-	
-		const IMP = window.IMP;
-		IMP.init("imp04710710");
-		
-		
-		//전체 상품 결제
-		
-		
-				async function checkProductQuantity(productId, orderQuantity) {
-				    try {
-				        await $.ajax({
-				            url: `/api/product/${productId}/validateQuantity`,
-				            data: { orderQuantity: orderQuantity }
-				        });
-				        return true;
-				    } catch (error) {			    	
-				        alert(error.responseText);
-				        return false;
-				    }
-				}
-		
-		async function requestPay() {
-			 
-			
-			   	if (!confirm("전체 상품을 주문하시겠습니까?")) {
-			        return;
-			    } else {
-			    	$('.th1-checkbox').trigger('click');
-			    }
-			   	
-			   	
-			  			  
-			  $.get("/api/cart/user", function(user) {
-			    		    
-			    $.get("/api/cart", async function(cart) {
-			    	
-			      let name = "";
-			      let amount = 0;
-			      for (let item of cart) {
-			        name += item.product.productTitle + ", ";
-			        amount += item.product.productPrice * item.cartQuantity;
-			        
-			        let isQuantitySufficient = await checkProductQuantity(item.product.id, item.cartQuantity);
-			        if (!isQuantitySufficient) {
-			            return; // 재고가 부족하면 결제를 중단합니다.
-			        }
-			        
-			      }
-			      
-			      // Initiate payment request
-			      IMP.request_pay(
-			        {
-			          pg: "kcp.T0000",
-			          pay_method: "card",
-			          merchant_uid: 'merchant_' + new Date().getTime(),
-			          name: name,
-			          amount: amount,
-			          company : '포션이었다...',
-			          buyer_email: user.email,
-			          buyer_name: user.username,
-			          buyer_tel: user.tel,
-			          buyer_addr: user.my_address,
-			          buyer_postcode: user.my_postcode,
-			          
-
-			          
-			        }, function (rsp) {
-			        	
-			        	console.log(rsp);
-			        	
-			        	let paymentDTO = {
-			        			  pg: rsp.pg,
-			        			  pay_method: rsp.pay_method,
-			        			  imp_uid:rsp.imp_uid,
-			        			  merchant_uid: rsp.merchant_uid,
-			        			  name: rsp.name,
-			        			  amount: rsp.paid_amount,
-			        			  buyer_tel: rsp.buyer_tel,
-			        			  buyer_addr: rsp.buyer_addr,
-			        			  buyer_postcode: rsp.buyer_postcode,
-			        			  buyer_detailAddr: user.my_detailAddress,
- 			        			  productId:productId,
-			        			  quantity:quantity
-			        			};
-			        	
-			        	$.ajax({
-			        		type: 'POST',
-			        		url:'/verifyIamport/' + rsp.imp_uid
-			        	}).done(function(result) {
-			        		
-			        		console.log(result);
-			        		
-			        		if(rsp.paid_amount === result.response.amount) {
-			        			alert("결제가 완료되었습니다.");
-			        			
-			        			$.ajax({
-			                        type: 'POST',
-			                        url: '/api/payment',  // your API endpoint to process payment
-			                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO
-			                        contentType: 'application/json'
-			                    }).done(function(result) {
-			                        // handle result
-			                        console.log(result);
-			                        window.location.href = "/";
-			                        
-			                    }).fail(function(error) {
-			                        // handle error
-			                        console.log(error);
-			                    });
-	        			
-			        		} else {
-			        			$('.th1-checkbox').trigger('click');
-			        			alert("결제 실패");
-			        		}
-			        		
-			        		
-			        	});
-			        });
-			    });
-			  });
-			}
-		
-		
-		
-		// 선택된 상품만 결제
-		
-		function requestSelectPay() {
-			  var selectedItems = []; // 선택된 상품들을 담을 배열
-			  
-			  // 선택된 체크박스들을 확인하고 선택된 상품들을 배열에 추가
-			  $('input[type="checkbox"][name="check"]:checked').each(function() {
-			    var productId = $(this).closest('.cart').data('product-id');
-			    var quantity = $(this).closest('.cart').data('quantity-id');
-			    
-			    selectedItems.push({
-			      productId: productId,
-			      quantity: quantity
-			    });
-			  });
-			  
-			  console.log('선택된 아이템',selectedItems);
-
-			  
-			  // 선택된 상품들이 있는지 확인
-			  if (selectedItems.length === 0) {
-			    alert("주문할 상품을 선택해주세요.");
-			    return;
-			  }
-			 
-			  $.get("/api/cart/user", function(user) {
-				  $.get("/api/cart", function(cart) {
-				    let name = "";
-				    let amount = 0;
-				    for (let selectedItem of selectedItems) {
-				      for (let item of cart) {
-				        if (item.product.id == selectedItem.productId) {
-				        	console.log("Selected product found in cart", item);
-				          name += item.product.productTitle + ", ";
-				          amount += item.product.productPrice * item.cartQuantity;
-				          break;
-				        }
-				      }
-				    }
-				      
-				      // Initiate payment request
-				      IMP.request_pay(
-				        {
-				          pg: "kcp.T0000",
-				          pay_method: "card",
-				          merchant_uid: 'merchant_' + new Date().getTime(),
-				          name: name,
-				          amount: amount,
-				          company : '포션이었다...',
-				          buyer_email: user.email,
-				          buyer_name: user.username,
-				          buyer_tel: user.tel,
-				          buyer_addr: user.my_address,
-				          buyer_postcode: user.my_postcode,
-				          
-
-				          
-				        }, function (rsp) {
-				        	
-				        	console.log(rsp);
-				        	
-				        	let paymentDTO = {
-				        			  pg: rsp.pg,
-				        			  pay_method: rsp.pay_method,
-				        			  imp_uid:rsp.imp_uid,
-				        			  merchant_uid: rsp.merchant_uid,
-				        			  name: rsp.name,
-				        			  amount: rsp.paid_amount,
-				        			  buyer_tel: rsp.buyer_tel,
-				        			  buyer_addr: rsp.buyer_addr,
-				        			  buyer_postcode: rsp.buyer_postcode,
-				        			  buyer_detailAddr: user.my_detailAddress,
-	 			        			  productId: productId,
-				        			  quantity: quantity
-				        			};
-				        	
-				        	$.ajax({
-				        		type: 'POST',
-				        		url:'/verifyIamport/' + rsp.imp_uid
-				        	}).done(function(result) {
-				        		
-				        		console.log(result);
-				        		
-				        		if(rsp.paid_amount === result.response.amount) {
-				        			alert("결제가 완료되었습니다.");
-				        			
-				        			$.ajax({
-				                        type: 'POST',
-				                        url: '/api/payment',  // your API endpoint to process payment
-				                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO
-				                        contentType: 'application/json'
-				                    }).done(function(result) {
-				                        // handle result
-				                        console.log(result);
-				                        window.location.href = "/";
-				                        
-				                    }).fail(function(error) {
-				                        // handle error
-				                        console.log(error);
-				                    });
-		        			
-				        		} else {
-				        			alert("결제 실패");
-				        		}
-				        		
-				        		
-				        	});
-				        });
-				    });
-				  });	  
-			}
-		
-	    $(document).ready(function() {
-	    	$.get("/api/cart/count", function(data) {
-	    		$('#cart-count').text(data);
-	    	});
-	    });
-
-	</script>
 </body>
 </html>

@@ -17,7 +17,7 @@ import com.main.miniproject.user.entity.User;
 @Transactional
 public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByUser(User user);
-
+    
     Cart findByProductAndUser(Product product, User user);
     
     @Modifying
