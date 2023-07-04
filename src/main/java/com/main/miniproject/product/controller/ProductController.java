@@ -49,6 +49,9 @@ public class ProductController {
 	@Autowired
 	private final ProductService productService;
 
+	@Autowired
+	private final ProductImageService productImageService;
+
 
 
 	@GetMapping("/admin/item/new")
@@ -61,18 +64,9 @@ public class ProductController {
 
 	//상품 등록
 	@PostMapping("/admin/item/new")
-	public String itemNew(@Valid ProductFormDto productFormDto, BindingResult bindingResult,
+	public String itemNew(@Valid ProductFormDto productFormDto,
 						  Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
 
-		//진행 중 에러가 있으면 진행하지 않고 item/itemForm으로 이동
-		if(bindingResult.hasErrors()) {
-			return "item/itemForm";
-		}
-
-//		if(itemImgFileList.get(0).isEmpty() && productFormDto.getId() == null) {
-//			model.addAttribute("errorMessage", "첫 번째 상품 이미지는 필수입니다.");
-//			return "item/itemForm";
-//		}
 
 		try {
 			productService.saveProduct(productFormDto, itemImgFileList);
@@ -81,7 +75,7 @@ public class ProductController {
 			return "item/itemForm";
 		}
 
-		return"redirect:/admin/items";
+		return "redirect:/admin/items";
 	}
 
 
@@ -93,7 +87,7 @@ public class ProductController {
 		try {
 			//itemService에 있는 getItemDetail 메소드
 			ProductFormDto productFormDto = productService.getProductDetail(itemId);
-			log.info(productFormDto);
+
 			model.addAttribute("itemFormDto", productFormDto);
 		} catch (EntityNotFoundException e) {
 			model.addAttribute("errorMessage", "존재하지 않는 상품입니다.");
@@ -109,27 +103,20 @@ public class ProductController {
 
 	//상품 정보 수정
 	@PostMapping("/admin/item/{itemId}")
-	public String itemUpdate(@Valid ProductFormDto productFormDto, BindingResult bindingResult,
+	public String itemUpdate(@Valid ProductFormDto productFormDto, @PathVariable("itemId") Long id,
 							 Model model, @RequestParam("itemImgFile")List<MultipartFile> itemImgFileList) {
 
-		//진행 중 에러가 있으면 진행하지 않고 item/itemForm으로 이동
-		if(bindingResult.hasErrors()) {
-			return "/item/itemForm";
-		}
 
 		//상품은 이미지 없이 텍스트만 있어서는 안된다. 첫 번째 상품 이미지 필수 입력.
 		if(itemImgFileList.get(0).isEmpty() && productFormDto.getId() == null) {
 			model.addAttribute("errorMessage", "첫 번째 상품 이미지는 필수입니다.");
 			return "/item/itemForm";
 		}
+
+
 		//itemService에 있는 updateItem 메소드 실행.
 		//진행 중 오류 발생 시 item/itemForm으로 되돌아감.
 		try {
-
-			log.info("DTO값 : " + productFormDto);
-			log.info("DTO값 : " + itemImgFileList.get(0));
-			log.info("size: " +itemImgFileList.size() );
-
 			productService.updateProduct(productFormDto, itemImgFileList);
 
 		} catch (IOException e) {
@@ -137,9 +124,10 @@ public class ProductController {
 			return "/item/itemForm";
 		}
 
-		//정상적으로 처리 완료되면 루트로 되돌리기
-		return "redirect:/";
+		return "redirect:/admin/item/{itemId}";
 	}
+
+
 
 	//상품관리 탭에서 상품목록 가져오기
 	@GetMapping({"/admin/items", "/admin/items/{page}"})	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
@@ -160,10 +148,11 @@ public class ProductController {
 
 
 	//상품 삭제하기
-	@PostMapping("/admin/delItems")
-	public void deleteProduct(Product product){
+	@DeleteMapping("/admin/items")
+	public void deleteProduct(Long id){
 
-		productService.deleteProduct(product);
+		productImageService.deleteItemImg(id);
+		productService.deleteProduct(id);
 
 	}
 
