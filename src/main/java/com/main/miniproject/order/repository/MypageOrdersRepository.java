@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders, Long> {
+public interface MypageOrdersRepository extends JpaRepository<Orders, Long> {
 
     List<Orders> findAllByUser(Long user);
 

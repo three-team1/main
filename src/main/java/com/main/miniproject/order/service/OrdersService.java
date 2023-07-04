@@ -1,7 +1,7 @@
 package com.main.miniproject.order.service;
 
 import com.main.miniproject.order.entity.Orders;
-import com.main.miniproject.order.repository.OrdersRepository;
+import com.main.miniproject.order.repository.MypageOrdersRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class OrdersService {
-    private OrdersRepository ordersRepository;
+    private MypageOrdersRepository ordersRepository;
 
     public List<Orders> getOrdersList(Long user) {
 
