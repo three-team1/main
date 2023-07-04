@@ -119,6 +119,12 @@
       background-color: aqua;
       color: black;
     }
+    
+    .images img {
+    	width:100px;
+    	height:80px;
+    	border-radius:5px;
+    }
   </style>
 
   <script>
@@ -225,7 +231,7 @@
           },
           success: function (response) {
             // Process response from server (e.g., update UI)
-            console.log('수량이 변경되었습니다');
+            console.log(response);
           },
           error: function (xhr, textStatus, errorThrown) {
             // Handle errors
@@ -330,7 +336,7 @@
       </tr>
         <tr class="cart" th:each="cart: ${cartList}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
         <td id="td1"><input type="checkbox" name="check" value="1"></td>
-        <td th:text="이미지"></td>
+        <td class="images"><img th:src="${cart.productImage}"></td>
         <td th:text="${cart.product.getProductTitle()}"></td>
         <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
         </td>
@@ -398,14 +404,27 @@
 		    quantity.push($(this).data('quantity-id'));
 		});
 		
-		console.log('상품 아이디 : ' + productId);
-		console.log('상품 개수 : ' + quantity);
+		console.log(productId);
 	
 		const IMP = window.IMP;
 		IMP.init("imp04710710");
 		
 		
 		//전체 상품 결제
+		
+		
+				async function checkProductQuantity(productId, orderQuantity) {
+				    try {
+				        await $.ajax({
+				            url: `/api/product/${productId}/validateQuantity`,
+				            data: { orderQuantity: orderQuantity }
+				        });
+				        return true;
+				    } catch (error) {			    	
+				        alert(error.responseText);
+				        return false;
+				    }
+				}
 		
 		async function requestPay() {
 			 
@@ -415,25 +434,31 @@
 			    } else {
 			    	$('.th1-checkbox').trigger('click');
 			    }
+			   	
+			   	
 			  			  
 			  $.get("/api/cart/user", function(user) {
-			    
-			    
-			    $.get("/api/cart", function(cart) {
+			    		    
+			    $.get("/api/cart", async function(cart) {
 			    	
-			      // TODO: Modify here if your cart data structure is different
 			      let name = "";
 			      let amount = 0;
 			      for (let item of cart) {
-			        name += item.product.productTitle + ",";
+			        name += item.product.productTitle + ", ";
 			        amount += item.product.productPrice * item.cartQuantity;
+			        
+			        let isQuantitySufficient = await checkProductQuantity(item.product.id, item.cartQuantity);
+			        if (!isQuantitySufficient) {
+			            return; // 재고가 부족하면 결제를 중단합니다.
+			        }
+			        
 			      }
 			      
 			      // Initiate payment request
 			      IMP.request_pay(
 			        {
-			          pg: 'kcp.T0000',
-			          pay_method: 'card',
+			          pg: "kcp.T0000",
+			          pay_method: "card",
 			          merchant_uid: 'merchant_' + new Date().getTime(),
 			          name: name,
 			          amount: amount,
@@ -453,7 +478,7 @@
 			        	let paymentDTO = {
 			        			  pg: rsp.pg,
 			        			  pay_method: rsp.pay_method,
-			        			  imp_uid: rsp.imp_uid,
+			        			  imp_uid:rsp.imp_uid,
 			        			  merchant_uid: rsp.merchant_uid,
 			        			  name: rsp.name,
 			        			  amount: rsp.paid_amount,
@@ -470,13 +495,10 @@
 			        		url:'/verifyIamport/' + rsp.imp_uid
 			        	}).done(function(result) {
 			        		
-			        		console.log('중간결제까지 진입');
-			        		console.log('done : ' + result);
+			        		console.log(result);
 			        		
 			        		if(rsp.paid_amount === result.response.amount) {
 			        			alert("결제가 완료되었습니다.");
-			        			
-			        			console.log("사전 검증 완료");
 			        			
 			        			$.ajax({
 			                        type: 'POST',
@@ -552,7 +574,7 @@
 				        {
 				          pg: "kcp.T0000",
 				          pay_method: "card",
-				          merchant_uid: 'merchant_'+new Date().getTime(),
+				          merchant_uid: 'merchant_' + new Date().getTime(),
 				          name: name,
 				          amount: amount,
 				          company : '포션이었다...',
@@ -560,8 +582,9 @@
 				          buyer_name: user.username,
 				          buyer_tel: user.tel,
 				          buyer_addr: user.my_address,
-				          buyer_postcode: user.my_postcode
+				          buyer_postcode: user.my_postcode,
 				          
+
 				          
 				        }, function (rsp) {
 				        	
@@ -587,13 +610,10 @@
 				        		url:'/verifyIamport/' + rsp.imp_uid
 				        	}).done(function(result) {
 				        		
-				        		console.log('done : ' + result);
-				        		console.log(JSON.stringify(result, null, 2));
+				        		console.log(result);
 				        		
 				        		if(rsp.paid_amount === result.response.amount) {
 				        			alert("결제가 완료되었습니다.");
-				        			
-				        			console.log("사전 검증 완료");
 				        			
 				        			$.ajax({
 				                        type: 'POST',
@@ -626,7 +646,6 @@
 	    		$('#cart-count').text(data);
 	    	});
 	    });
-
 
 	</script>
 </body>

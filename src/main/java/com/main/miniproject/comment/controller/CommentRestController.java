@@ -25,6 +25,14 @@ public class CommentRestController {
     	
     }
     
+    @PostMapping("/board/comment/reply")
+    public ResponseEntity<?> postReply(@RequestBody Comment comment) {
+        String boardType = "community";
+        commentService.saveComment(comment, comment.getParentCommentId(), boardType);
+        System.out.println(comment);
+        return ResponseEntity.ok().build();
+    }
+    
     @PostMapping("/board/comment/{boardId}")
     public ResponseEntity<?> postComment(@PathVariable Long boardId, @RequestBody Comment comment) {
     

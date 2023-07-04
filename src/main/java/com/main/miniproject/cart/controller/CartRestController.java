@@ -14,7 +14,9 @@ import com.main.miniproject.cart.entity.Cart;
 import com.main.miniproject.cart.repository.CartRepository;
 import com.main.miniproject.cart.service.CartService;
 import com.main.miniproject.product.entity.Product;
+import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.repository.ProductRepository;
+import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
 import com.main.miniproject.user.service.UserDetail;
@@ -35,6 +37,9 @@ public class CartRestController {
 	@Autowired
 	private CartService cartService;
 	
+	@Autowired
+	private ProductImageService productImageService;
+	
 	@PostMapping("/insertCart/{id}")
 	public ResponseEntity<?> insertCart(@PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {
 
@@ -45,11 +50,15 @@ public class CartRestController {
 		if(cartRepository.findByProductAndUser(product, user) != null){
 			return ResponseEntity.ok().body("existed");
 		}
+		
+		List<ProductImage> productImages = productImageService.getProductImagesByProduct(product);
+		String imageUrl = productImages.isEmpty() ? null : productImages.get(0).getUrl();
 
 		Cart cart = Cart.builder()
 				.product(product)
 				.user(user)
 				.cartQuantity(1)
+				.productImage(imageUrl)
 				.build();
 		cartService.insertCart(cart);
 

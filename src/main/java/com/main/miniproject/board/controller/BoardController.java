@@ -1,7 +1,9 @@
 package com.main.miniproject.board.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -106,28 +108,39 @@ public class BoardController {
 	}
 
 	@GetMapping("/board/detail/{id}")
-	public String getBoard(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetail userDetail) {
+	public String getBoard(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetail userDetail
+							) {
 	    Board board = boardService.getBoard(id);
+	    	     
 	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
 	    List<Comment> commentList = commentService.commentList(id, "community");
+	    
+	    Map<Long, List<Comment>> commentReplies = new HashMap<>();
+
+	    for(Comment comment : commentList) {
+	        List<Comment> replies = commentService.commentReplyList(comment.getId());
+	        commentReplies.put(comment.getId(), replies);
+	    }
+	    	    
 	    
 	    model.addAttribute("userDetail",userDetail);
 	    model.addAttribute("board", board);
 	    model.addAttribute("images",boardImageList);
 	    model.addAttribute("comments",commentList);
+	    model.addAttribute("commentReplys",commentReplies);
 	    
 	    return "boardDetail";
 	}
 
 
 	@GetMapping("/board/edit/{id}")
-	public String editBoard(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetail userDetail) {
+	public String editBoard(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
 
 
 		Board board = boardService.getBoard(id);
 		List<BoardImage> boardImageList = boardImageService.boardImageList(board);
 
-		model.addAttribute("userDetail",userDetail);
+		model.addAttribute("userDetail",userDetail); 
 		model.addAttribute("images",boardImageList);
 		model.addAttribute("board",board);
 

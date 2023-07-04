@@ -74,10 +74,14 @@ public class PaymentService {
 	        
 	        for (int i = 0; i < productIds.size(); i++) {
 	            OrderItem orderItem = new OrderItem();
-	            Product product = productRepository.findById(productIds.get(i)).get();
+	            Product product = productRepository.findById(productIds.get(i)).get();	            
+	            
 	            orderItem.setOrder(order);
 	            orderItem.setProduct(product);
 	            orderItem.setOrderQuantity(quantities.get(i));
+	            
+	            product.setProductQuantity(product.getProductQuantity() - quantities.get(i));
+	            productRepository.save(product);
 	            
 	            orderItemRepository.save(orderItem);
 	        }
@@ -85,5 +89,18 @@ public class PaymentService {
 	        cartRepository.clearCartByUser(user);
 	       
 	    }
+	 	
+	 	public void validateGetQuantity(Product product, int orderQuantity) throws Exception {
+	 	    int productQuantity = product.getProductQuantity();
+	 	    if(productQuantity < orderQuantity) {
+	 	        throw new Exception(product.getProductTitle() + " 상품의 재고를 확인해주세요.");
+	 	    }
+	 	}
+	 	
+	
+	 	
+	 	
+	 	
+
 	
 }

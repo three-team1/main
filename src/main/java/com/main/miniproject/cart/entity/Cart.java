@@ -26,10 +26,15 @@ public class Cart {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@Column(name ="product_image")
+	private String productImage;
+	
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Column(name = "cart_quantity") //상품 수량
 	private Integer cartQuantity;
+	
+
 }
