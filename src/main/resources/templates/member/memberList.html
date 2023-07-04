@@ -2,10 +2,20 @@
 <html lang="en"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{layouts/layout}">
+	  layout:decorate="~{layouts/layout2}">
 
 <!-- 사용자 스크립트 추가 -->
 <head>
+	<th:block layout:fragment="css">
+		<style>
+
+
+
+		</style>
+	</th:block>
+
+
+
 <th:block layout:fragment="script">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
 		  integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
@@ -31,7 +41,6 @@
             + "?searchBy=" + searchBy
             + "&searchQuery=" + searchQuery;
         }
-
         
     </script>
 </th:block>
@@ -39,6 +48,7 @@
 <body>
 
 <div layout:fragment="content">
+	<div class="main-content">
 	<form th:action="@{'/admin/members/' + ${members.number}}" role="form"
 		method="get" th:object="${members}">
 
@@ -46,21 +56,31 @@
 			<thead>
 				<tr>
 					<td>아이디</td>
+					<td>가입경로(local, kakao)</td>
+					<td>카카오 아이디</td>
 					<td>이름</td>
 					<td>이메일</td>
 					<td>연락처</td>
+					<td>주소</td>
 					<td>회원구분</td>
+					<td>조회 및 수정</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="member, status: ${members.getContent()}">
 					<td th:text="${member.id}"></td>
-					<td><a th:href="'/admin/members/'+${member.id}"
-						th:text="${member.username}"></a></td>
-					<td
-						th:text="${member.email}"></td>
-					<td th:text="${member.my_address}"></td>
+					<td th:text="${member.provider}"></td>
+					<td th:text="${member.providerId}"></td>
+					<td	th:text="${member.username}"></td>
+					<td th:text="${member.email}"></td>
+					<td th:text="${member.tel}"></td>
+					<td th:text="${member.my_postcode} + ', ' + ${member.my_address } + ', ' +${member.my_detailAddress}"></td>
 					<td th:text="${member.role}"></td>
+					<td>
+						<a th:href="@{'/admin/memberDetail/' + ${member.id}}">
+						<button type="button">선택</button>
+						</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -117,8 +137,9 @@
             <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색명을 입력해주세요">
             <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
         </div>
-    </form>
 
+    </form>
+	</div>
 </div>
 
 </body>

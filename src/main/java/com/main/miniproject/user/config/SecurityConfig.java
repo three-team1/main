@@ -8,28 +8,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.main.miniproject.user.service.CustomOAuth2UserService;
-import com.main.miniproject.user.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-
-		@Autowired
-		private UserService userService;
-		
-		@Autowired
-	    private PasswordEncoder passwordEncoder;
 		
 		@Autowired
 	    private CustomOAuth2UserService customOAuth2UserService;
@@ -39,9 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	        http
 	            .csrf().disable()
 	            .authorizeRequests()
-	                .antMatchers("/login", "/register","/","/api/products","/api/productImages/**").permitAll()
+	                .antMatchers("/login", "/register","/","/api/products","/api/productImages/**","/api/**/**").permitAll()
 	                .antMatchers("/board/list").permitAll()
-	                .antMatchers("/css/**", "/videos/**","/images/**", "/icon/**", "/json/**","/scss/**","/js/**").permitAll()
+					.antMatchers("/css/**", "/videos/**","/images/**", "/icon/**", "/json/**","/scss/**","/js/**").permitAll()
 	                .antMatchers("/admin/**").hasRole("ADMIN")			// 로그인, 회원가입 페이지는 누구나 접근 가능
 	                .anyRequest().authenticated()                      // 그 외 페이지는 인증된 사용자만 접근 가능
 	            .and()
@@ -58,13 +51,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	                })
 	            .and()	
 	            .logout()  // 로그아웃 설정
-	                .logoutSuccessUrl("/");  // 로그아웃 성공 시 리다이렉트할 페이지 URL
-
-	        Kakao(http);
-	                  
+	                .logoutSuccessUrl("/"); // 로그아웃 성공 시 리다이렉트할 페이지 URL
+	        		
+            oauth(http);
 	    }
 			
-		private void Kakao(HttpSecurity http) throws Exception {
+		private void oauth(HttpSecurity http) throws Exception {
 		     http
 	            .oauth2Login()
 	                .userInfoEndpoint()

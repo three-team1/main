@@ -14,36 +14,50 @@
           href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <style>
     * {
       padding: 0;
       margin: 0;
+      font-size: 14px;
     }
 
-    .cart-header{
+    .cart-cart {
+      text-align: center;
       margin-top: 250px;
-    }
-
-    .cart-header p{
-      margin-left: 740px;
-      font-size: 12px;
+      margin-bottom: 20px;
       color: white;
     }
 
-    hr {
-      margin: 30px auto;
-      max-width: 800px;
+    .cart-cart p {
+      font-size: 20px;
+    }
+
+    .cart-total-div {
+      width: 60%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: whitesmoke;
+      margin-bottom: 150px;
+    }
+
+    .cart-header {
+      background-color: #86cfda;
+      height: 50px;
+      text-align: right;
+      padding: 20px;
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
     }
 
     .cart-table {
-      font-size: 12px;
-      color: #999;
+      color: black;
       text-align: center;
       border: 1px solid white;
       border-collapse: collapse;
-      width: 800px;
-      margin: 20px auto;
+      background-color: white;
+      width: 100%;
+      margin: 0 auto;
     }
 
     .cart-table th, td {
@@ -51,7 +65,7 @@
     }
 
     .cart table, #tr1 {
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid black;
     }
 
     #th1, #td1 {
@@ -63,7 +77,7 @@
     }
 
     #th3, #td3 {
-      width: 25%;
+      width: 20%;
     }
 
     #th4, #td4 {
@@ -79,7 +93,7 @@
     }
 
     #th7 #td7 {
-      width: 10%;
+      width: 15%;
     }
 
     td > a {
@@ -87,35 +101,38 @@
       color : red;
     }
 
-    #ct_qty {
-      width: 20px;
+    #itemCnt {
+      width: 24px;
     }
 
-    .plus, .minus, #ct_qty {
+    .plus, .minus, #itemCnt {
       display: inline;
       text-align: center;
     }
+
     .order-btn {
-      margin: 50px auto 200px auto;
+      margin: 30px auto;
       text-align: center;
     }
 
     .order-btn a {
       text-decoration: none;
-      border: 1px solid white;
       color: black;
       padding: 5px 40px 5px 40px;
-      font-size: 12px;
     }
 
-    .order-btn .all, .selected{
-      background-color: white;
-      color: black;
+    .order-btn .order-go {
+      background-color: #86cfda;
+      border: 1px solid black;
     }
 
-    .order-btn .all:hover, .selected:hover {
-      background-color: aqua;
-      color: black;
+    #tr-border {
+      border-top : 1px solid black;
+      border-bottom: 1px solid black;
+    }
+    
+    .images img{
+    	width:100px;
     }
   </style>
 
@@ -125,6 +142,9 @@
       $("#checkAll").click(function() { //#checkAll를 클릭했을 때 실행
         if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true); //#checkAll이 체크가 되면, check의 체크박스를 모두 체크하게 설
         else $("input[name=check]").prop("checked", false); //그렇지 않은 경우에는 체크박스의 상태를 선택 해제 상태로 설정
+        // 체크박스 클릭 시 payMoney, 상품 개수 업데이트
+        updatePayMoney();
+        updateItemCnt()
       });
 
       $("input[name=check]").click(function() {
@@ -133,13 +153,106 @@
 
         if(total != checked) $("#checkAll").prop("checked", false); //개수가 같지 않으면 올체크를 풀고
         else $("#checkAll").prop("checked", true); //개수가 같으면 올체크 표시
+
+        // 체크박스 클릭시 payMoney 업데이트
+        updatePayMoney();
+        // 체크박스 클릭시 상품 개수 업데이트
+        updateItemCnt();
+
       });
 
-      var money = $('.money').text();
-      var money2 = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      $('.money').text(money2);
+      //천 단위 콤마 찍기
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").concat(" 원");
+      }
+
+      //숫자를 제외한 변수들을 제거하는 정규식
+      function parsePriceString(priceString) {
+        // Remove all non-numeric characters except for digits
+        const numericString = priceString.replace(/[^\d]/g, '');
+        return parseInt(numericString, 10);
+      }
 
 
+      $(".totalCost").each(function () {
+        const totalPrice = parseInt($(this).siblings("td#itemCost").text(), 10)
+                * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
+
+        $(this).text(numberWithCommas(totalPrice));
+      });
+
+      $(".money").each(function() {
+        const price = parseInt($(this).text(), 10);
+        $(this).text(numberWithCommas(price));
+      });
+
+      function updateItemCnt() {
+        let itemCnt = $("input[name=check]:checked").length;
+
+        $("#checkCnt").text(itemCnt);
+      }
+
+
+      function updatePayMoney() {
+        let payPrice = 0;
+
+        $("input[name=check]:checked").each(function () {
+          let payPriceStr = $(this).parents("tr").find("td.totalCost").text();
+          payPrice = payPrice + parsePriceString(payPriceStr);
+        });
+
+        $("#payMoney").text(numberWithCommas(payPrice));
+      }
+
+
+      //클릭하면 증감되는 자바스크립트
+      $("a.plusCnt, a.minusCnt").on("click", function (e) {
+        e.preventDefault();
+
+        let quantityInput = $(this).parents("form").find("input[name='cartQuantity']");
+        let idInput = $(this).parents("form").find("input[name='id']");
+        let quantity = parseInt(quantityInput.val(), 10);
+
+        if ($(this).hasClass("plusCnt")) {
+          quantity += 1;
+        } else if ($(this).hasClass("minusCnt") && quantity > 1) {
+          quantity -= 1;
+        }
+
+        quantityInput.val(quantity);
+
+        // Update the .totalCost value
+        const itemCostText = $(this).parents("tr").find("td#itemCost").text();
+        const itemCost = parsePriceString(itemCostText);
+        const totalPrice = numberWithCommas(itemCost * quantity);
+        $(this).parents("tr").find("td.totalCost").text(totalPrice);
+
+        // 수량 변경시 payMoney 업데이트
+        updatePayMoney();
+
+        // Send AJAX request
+        $.ajax({
+          url: "/updateCart",
+          type: "post",
+          data: {
+            id: idInput.val(),
+            cartQuantity: quantityInput.val()
+          },
+          success: function (response) {
+            // Process response from server (e.g., update UI)
+            console.log(response);
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            // Handle errors
+            console.log(xhr, textStatus, errorThrown);
+          }
+        });
+      });
+
+      // 페이지 로드시 payMoney 값 설정
+      updatePayMoney();
+      // 페이지 로드 시 상품 개수 값 설정
+      updateItemCnt();
 
     });
 
@@ -207,56 +320,67 @@
 </header>
 
 <section>
-  <div class="cart-header">
-    <ul class="cart-menu">
-      <li>
-        <a href="#"></a>
-      </li>
-      <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-    </ul>
-  </div>
-  <hr>
-
-  <div class="cart-table-container">
-    <table class="cart-table">
-      <tr id="tr1">
-        <th id="th1"><input type="checkbox" id="checkAll"></th>
-        <th id="th2">이미지</th>
-        <th id="th3">상품 정보</th>
-        <th id="th4">판매가</th>
-        <th id="th5">수량</th>
-        <th id="th6">구매가</th>
-        <th id="th7">선택</th>
-      </tr>
-      <tr th:each="cart: ${cartList}">
-        <td id="td1"><input type="checkbox" name="check" value="1"></td>
-        <td th:text="이미지"></td>
-        <td th:text="${cart.product.getProductTitle()}"></td>
-        <td  th:text="${cart.product.getProductPrice()}"></td>
-        <td>
-          <div class="qty">
-            <div class="minus">
-              <a href="javascript:change_qty2('m')"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
-            </div>
-            <input type="text" name="ct_qty" id="ct_qty" value="1" readonly="readonly">
-            <div class="plus">
-              <a href="javascript:change_qty2('p')"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
-            </div>
-          </div>
-        </td>
-        <td th:text="${cart.product.getProductPrice()}"></td>
-        <td>
-          <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
-        </td>
-      </tr>
-    </table>
+  <div class="cart-cart">
+    <p>c a r t</p>
   </div>
 
-  <hr>
+  <div class="cart-total-div">
+    <div class="cart-header">
+        <p>장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
+    </div>
 
-  <div class="order-btn">
-    <a href="#" class="all">전체상품주문</a>
-    <a href="#" class="selected">선택상품주문</a>
+    <div class="cart-table-container">
+      <table class="cart-table">
+        <tr id="tr1">
+          <th id="th1"><input type="checkbox" id="checkAll"></th>
+          <th id="th2">이미지</th>
+          <th id="th3">상품 정보</th>
+          <th id="th4">판매가</th>
+          <th id="th5">수량</th>
+          <th id="th6">구매가</th>
+          <th id="th7">선택</th>
+        </tr>
+        <tr th:each="cart: ${cartList} ">
+          <td id="td1"><input type="checkbox" name="check" value="1"></td>
+          <td class="images"><img th:src="${cart.productImage}"></td>
+          <td th:text="${cart.product.getProductTitle()}"></td>
+          <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
+          </td>
+          <td>
+            <div class="qty">
+              <form action="/updateCart" method="post" style="display: inline">
+                <div class="minus">
+                  <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: black;"></i></a>
+                </div>
+                <input style="display: none" type="text" name="id" th:value="${cart.id}">
+                <input type="text" name="cartQuantity" id="itemCnt" th:value="${cart.cartQuantity}" readonly="readonly">
+                <div class="plus">
+                  <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: black;"></i></a>
+                </div>
+              </form>
+            </div>
+          </td>
+          <td class="totalCost" >
+          </td>
+          <td>
+            <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
+          </td>
+        </tr>
+        <tr id="tr-border">
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>선택한 상품 개수</th>
+          <th id="checkCnt"></th>
+          <th>총 금 액</th>
+          <th id="payMoney">0</th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="order-btn">
+      <a href="/order" class="order-go">전체상품주문</a>
+    </div>
   </div>
 </section>
 

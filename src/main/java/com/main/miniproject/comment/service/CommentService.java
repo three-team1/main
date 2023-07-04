@@ -29,6 +29,13 @@ public class CommentService {
 				
 	}
 	
+	public List<Comment> commentReplyList(Long parentCommentId){
+	
+	return commentRepository.findByParentCommentId(parentCommentId);
+	
+	}	
+	
+	
 	public void saveComment(Comment comment, Long boardId, String boardType) {
 	    User user = getCurrentUser();
 	    comment.setUser(user);
@@ -47,6 +54,11 @@ public class CommentService {
             throw new RuntimeException("권한이 없습니다.");
         }
 		commentRepository.deleteById(commentId);
+	}
+	
+	public Comment getComment(Long commentID) {
+		
+		return commentRepository.findById(commentID).get();
 	}
 	
 	
