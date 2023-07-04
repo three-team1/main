@@ -19,31 +19,45 @@
     * {
       padding: 0;
       margin: 0;
+      font-size: 14px;
     }
 
-    .cart-header{
+    .cart-cart {
+      text-align: center;
       margin-top: 250px;
-    }
-
-    .cart-header p{
-      margin-left: 850px;
-      font-size: 13px;
+      margin-bottom: 20px;
       color: white;
     }
 
-    hr {
-      margin: 30px auto;
-      max-width: 800px;
+    .cart-cart p {
+      font-size: 20px;
+    }
+
+    .cart-total-div {
+      width: 60%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: whitesmoke;
+      margin-bottom: 150px;
+    }
+
+    .cart-header {
+      background-color: #86cfda;
+      height: 50px;
+      text-align: right;
+      padding: 20px;
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
     }
 
     .cart-table {
-      font-size: 13px;
-      color: #999;
+      color: black;
       text-align: center;
       border: 1px solid white;
       border-collapse: collapse;
-      width: 800px;
-      margin: 20px auto;
+      background-color: white;
+      width: 100%;
+      margin: 0 auto;
     }
 
     .cart-table th, td {
@@ -51,7 +65,7 @@
     }
 
     .cart table, #tr1 {
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid black;
     }
 
     #th1, #td1 {
@@ -63,7 +77,7 @@
     }
 
     #th3, #td3 {
-      width: 25%;
+      width: 20%;
     }
 
     #th4, #td4 {
@@ -79,7 +93,7 @@
     }
 
     #th7 #td7 {
-      width: 10%;
+      width: 15%;
     }
 
     td > a {
@@ -96,20 +110,29 @@
       text-align: center;
     }
 
-    .cart-table-container {
+    .order-btn {
+      margin: 30px auto;
       text-align: center;
     }
 
-    #order-btn {
-      font-size: 15px;
-      width: 10%;
-      margin-top: 50px;
-      margin-bottom: 150px;
-      padding: 5px;
+    .order-btn a {
+      text-decoration: none;
+      color: black;
+      padding: 5px 40px 5px 40px;
     }
 
-    #order-btn:hover {
-      background-color: aqua;
+    .order-btn .order-go {
+      background-color: #86cfda;
+      border: 1px solid black;
+    }
+
+    #tr-border {
+      border-top : 1px solid black;
+      border-bottom: 1px solid black;
+    }
+    
+    .images img{
+    	width:100px;
     }
   </style>
 
@@ -119,6 +142,9 @@
       $("#checkAll").click(function() { //#checkAll를 클릭했을 때 실행
         if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true); //#checkAll이 체크가 되면, check의 체크박스를 모두 체크하게 설
         else $("input[name=check]").prop("checked", false); //그렇지 않은 경우에는 체크박스의 상태를 선택 해제 상태로 설정
+        // 체크박스 클릭 시 payMoney, 상품 개수 업데이트
+        updatePayMoney();
+        updateItemCnt()
       });
 
       $("input[name=check]").click(function() {
@@ -127,6 +153,12 @@
 
         if(total != checked) $("#checkAll").prop("checked", false); //개수가 같지 않으면 올체크를 풀고
         else $("#checkAll").prop("checked", true); //개수가 같으면 올체크 표시
+
+        // 체크박스 클릭시 payMoney 업데이트
+        updatePayMoney();
+        // 체크박스 클릭시 상품 개수 업데이트
+        updateItemCnt();
+
       });
 
       //천 단위 콤마 찍기
@@ -144,11 +176,7 @@
 
       $(".totalCost").each(function () {
         const totalPrice = parseInt($(this).siblings("td#itemCost").text(), 10)
-                          * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
-
-        console.log(parseInt($(this).siblings("td#itemCost").text(), 10));
-        console.log(parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10));
-        console.log(totalPrice);
+                * parseInt($(this).parent("tr").find("input[name='cartQuantity']").val(), 10);
 
         $(this).text(numberWithCommas(totalPrice));
       });
@@ -157,6 +185,24 @@
         const price = parseInt($(this).text(), 10);
         $(this).text(numberWithCommas(price));
       });
+
+      function updateItemCnt() {
+        let itemCnt = $("input[name=check]:checked").length;
+
+        $("#checkCnt").text(itemCnt);
+      }
+
+
+      function updatePayMoney() {
+        let payPrice = 0;
+
+        $("input[name=check]:checked").each(function () {
+          let payPriceStr = $(this).parents("tr").find("td.totalCost").text();
+          payPrice = payPrice + parsePriceString(payPriceStr);
+        });
+
+        $("#payMoney").text(numberWithCommas(payPrice));
+      }
 
 
       //클릭하면 증감되는 자바스크립트
@@ -181,6 +227,9 @@
         const totalPrice = numberWithCommas(itemCost * quantity);
         $(this).parents("tr").find("td.totalCost").text(totalPrice);
 
+        // 수량 변경시 payMoney 업데이트
+        updatePayMoney();
+
         // Send AJAX request
         $.ajax({
           url: "/updateCart",
@@ -199,6 +248,11 @@
           }
         });
       });
+
+      // 페이지 로드시 payMoney 값 설정
+      updatePayMoney();
+      // 페이지 로드 시 상품 개수 값 설정
+      updateItemCnt();
 
     });
 
@@ -266,18 +320,16 @@
 </header>
 
 <section>
-  <div class="cart-header">
-    <ul class="cart-menu">
-      <li>
-        <a href="#"></a>
-      </li>
-      <p class="p-right">장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
-    </ul>
+  <div class="cart-cart">
+    <p>c a r t</p>
   </div>
-  <hr>
 
-  <div class="cart-table-container">
-    <form class="cart-Form" action="/order" method="post">
+  <div class="cart-total-div">
+    <div class="cart-header">
+        <p>장바구니에 담긴 상품은 14일 동안 보관됩니다</p>
+    </div>
+
+    <div class="cart-table-container">
       <table class="cart-table">
         <tr id="tr1">
           <th id="th1"><input type="checkbox" id="checkAll"></th>
@@ -288,9 +340,9 @@
           <th id="th6">구매가</th>
           <th id="th7">선택</th>
         </tr>
-        <tr th:each="cart: ${cartList}">
+        <tr th:each="cart: ${cartList} ">
           <td id="td1"><input type="checkbox" name="check" value="1"></td>
-          <td th:text="이미지"></td>
+          <td class="images"><img th:src="${cart.productImage}"></td>
           <td th:text="${cart.product.getProductTitle()}"></td>
           <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
           </td>
@@ -298,13 +350,13 @@
             <div class="qty">
               <form action="/updateCart" method="post" style="display: inline">
                 <div class="minus">
-                  <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></a>
+                  <a href="#" class="minusCnt"><i class="fa-solid fa-minus" style="color: black;"></i></a>
                 </div>
                 <input style="display: none" type="text" name="id" th:value="${cart.id}">
                 <input type="text" name="cartQuantity" id="itemCnt" th:value="${cart.cartQuantity}" readonly="readonly">
                 <div class="plus">
-                  <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: #ffffff;"></i></a>
-                </div>ㅌ
+                  <a href="#" class="plusCnt"><i class="fa-solid fa-plus" style="color: black;"></i></a>
+                </div>
               </form>
             </div>
           </td>
@@ -314,9 +366,21 @@
             <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
           </td>
         </tr>
+        <tr id="tr-border">
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>선택한 상품 개수</th>
+          <th id="checkCnt"></th>
+          <th>총 금 액</th>
+          <th id="payMoney">0</th>
+        </tr>
       </table>
-      <button type="submit" id="order-btn">주문하기</button>
-    </form>
+    </div>
+
+    <div class="order-btn">
+      <a href="/order" class="order-go">전체상품주문</a>
+    </div>
   </div>
 </section>
 

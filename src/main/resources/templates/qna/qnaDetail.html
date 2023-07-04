@@ -68,27 +68,44 @@
       })
     });
 
-
-
   </script>
-
-
-
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+    }
+
+    .detail-detail {
+      text-align: center;
+      margin-top: 250px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .detail-detail p{
+      font-size: 20px;
+    }
+
+    .detail-total-div {
+      width: 60%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: whitesmoke;
+      margin-bottom: 150px;
+    }
+
     .detail-form {
       display: flex; /*flex컨테이너로 설정*/
       flex-direction: column; /*항목들을 세로방향으로 배치한다. 요소들이 위에서 아래로 쌓인다*/
       justify-content: center; /* 수직 축을 따라 중앙으로 정렬한다. 수직의 가운데에 위치하게 된다.*/
-      align-items: center; /*수평 축을 따라 중앙으로 정렬한다. 수평의 가운데에 위치하게 된ss다.*/
-      margin-bottom: 20px;
     }
 
     #detail-table {
-      margin-top:250px;
       background-color: white;
       border: 1px solid black;
       border-collapse: collapse;
-      width: 600px;
+      width: 100%;
     }
 
     #detail-table th {
@@ -100,7 +117,6 @@
     }
 
     #detail-table th, td {
-      font-size: 12px;
       border: none;
     }
 
@@ -125,11 +141,10 @@
 
     .detail-btn button {
       display: inline-block;
-      margin-bottom: 100px;
-      font-size: 12px;
+      margin: 20px auto;
       padding: 5px;
       border: 1px solid black;
-      background-color: mediumspringgreen;
+      background-color: #86cfda;
     }
 
     .qna-comment-section {
@@ -255,34 +270,40 @@
   </header>
 
   <section>
-    <div class="detail-form">
-      <table id="detail-table">
-        <tr>
-          <th>no.</th>
-          <td th:text="${qnaDetail.id}"></td> <!--모델로 담아온 이름. DTO 멤버변수명 써야함-->
-        </tr>
-        <tr>
-          <th>title</th>
-          <td th:text="${qnaDetail.qnaTitle}"></td>
-        </tr>
-        <tr>
-          <th>hits</th>
-          <td th:text="${qnaDetail.qnaCnt}"></td>
-        </tr>
-        <tr>
-          <th>date</th>
-          <td th:text="*{#temporals.format(qnaDetail.qnaRegdate, 'yy-MM-dd HH:mm:ss')}"></td>
-        </tr>
-        <tr id="content-area">
-          <th style="height: 300px">content</th>
-          <td><textarea th:text="${qnaDetail.qnaContent}" cols="50" rows="20" style="width: 100%" readonly></textarea></td>
-        </tr>
-      </table>
+    <div class="detail-detail">
+      <p>q n a</p>
     </div>
-    <div class="detail-btn">
-      <a href="/qna/list"><button>목록</button></a>
-      <a th:href="@{'/qna/list/update/' + ${qnaDetail.id}}"><button>수정</button></a>
-      <a th:href="@{'/qna/list/delete/' + ${qnaDetail.id}}"><button>삭제</button></a>
+
+    <div class="detail-total-div">
+      <div class="detail-form">
+        <table id="detail-table">
+          <tr>
+            <th>no.</th>
+            <td th:text="${qnaDetail.id}"></td> <!--모델로 담아온 이름. DTO 멤버변수명 써야함-->
+          </tr>
+          <tr>
+            <th>title</th>
+            <td th:text="${qnaDetail.qnaTitle}"></td>
+          </tr>
+          <tr>
+            <th>hits</th>
+            <td th:text="${qnaDetail.qnaCnt}"></td>
+          </tr>
+          <tr>
+            <th>date</th>
+            <td th:text="*{#temporals.format(qnaDetail.qnaRegdate, 'yy-MM-dd HH:mm:ss')}"></td>
+          </tr>
+          <tr id="content-area">
+            <th style="height: 300px">content</th>
+            <td><textarea th:text="${qnaDetail.qnaContent}" cols="50" rows="20" style="width: 100%" readonly></textarea></td>
+          </tr>
+        </table>
+      </div>
+      <div class="detail-btn">
+        <a href="/qna/list"><button>목록</button></a>
+        <a th:href="@{'/qna/list/update/' + ${qnaDetail.id}}"><button>수정</button></a>
+        <a th:href="@{'/qna/list/delete/' + ${qnaDetail.id}}"><button>삭제</button></a>
+      </div>
     </div>
 
     <div class="qna-comment-section">

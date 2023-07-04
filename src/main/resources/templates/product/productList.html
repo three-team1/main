@@ -107,7 +107,7 @@
 }
 
 .lightning-text-box p {
-  color: black;
+  color: white;
 }
 
 .lightning-text-box button.btn {
@@ -242,7 +242,9 @@
     text-align: center;
     bottom: -40%;
     display:flex;
-    left: 42%;
+    justify-content: space-around;
+
+
   }
 
   .product-header-logo img {
@@ -266,17 +268,37 @@
   }
   
   .top10-search-keyword{
-    margin-left: 200px;
     width: 400px;
   
   }
 
-  .top10-search-keyword span{
+  .top10-search-keyword span, .top10-sell-products span{
     color: #83a4d4;
     
   }
 
   .top10-search-keyword table {
+    width: 400px;
+    color: wheat;
+    margin-bottom: 100px;
+    
+  }
+  
+  <!-- 상품 구매 순위 css-->
+  
+  .top10-sell-products {
+  	width: 400px;
+  }
+  
+  .top10-sell-products h1{
+  color:white;
+  text-align : center;
+  font-size: 16px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  }
+
+  .top10-sell-products table {
     width: 400px;
     color: wheat;
     margin-bottom: 100px;
@@ -516,6 +538,7 @@
             <span></span>
             <span></span>
             장바구니
+            <span id="cart-count" class="notification-badge"></span>
         </a>
 				</div>
 
@@ -568,7 +591,7 @@
         <p class="fade-in">바람의 자유로움으로 세계를 숨결처럼 가볍게 만들고, 기회를 발견하고, 변화를 일으키세요.</p>
         <p class="fade-in">바람의 힘을 손에 쥔 당신, 경계를 허물고, 무한한 가능성을 창조하세요.</p>
 
-				<button class="btn fade-in">장바구니</button>
+				<button class="btn fade-in" onclick="addToCart('14')">장바구니</button>
 				<button class="btn-more fade-in">더 알아보기</button>
 			</div>
 		</div>
@@ -586,7 +609,7 @@
         <p class="fade-in2">이것은 강력한 전하를 발산하며, 그 충격은 모든 것을 파괴하거나 새로운 것을 생성할 수 있습니다.</p>
         <p class="fade-in2">번개의 능력을 통해 당신은 더 큰 가능성을 추구하고, 더 큰 도전을 이기며, 더 큰 성취를 이룰 수 있습니다.</p>
 
-				<button class="btn fade-in2">장바구니</button>
+				<button class="btn fade-in2" onclick="addToCart('13')">장바구니</button>
 				<button class="btn-more fade-in2">더 알아보기</button>
 			</div>
 		</div>
@@ -605,7 +628,7 @@
         <p class="fade-in3">염력의 능력으로 세계를 아무런 제약 없이 조작하고, 장애물을 없애고, 변화를 불러오세요.</p>
         <p class="fade-in3">당신의 의지로 세상을 바꿀 수 있는 염력의 능력을 경험하세요.</p>
 
-				<button class="btn fade-in3">장바구니</button>
+				<button class="btn fade-in3" onclick="addToCart('15')">장바구니</button>
 				<button class="btn-more fade-in3">더 알아보기</button>
 
 			</div>
@@ -629,6 +652,24 @@
       </div>
   
       <div class="product-header-logo">
+
+		
+		<div class="top10-sell-products">
+        <p id="counter-product" style="color : red"></p>
+        <h1>상품 구매 순위 <span>TOP 10</span></h1>
+      	<table>
+      		<tr>
+      			<th>상품 이름</th>
+      			<th>구매 횟수</th>
+      		</tr>
+      		<tr>
+      			<td></td>
+      			<td></td>
+      		</tr>
+      	</table>
+      	</div>
+		
+
 
       	<div>
 
@@ -656,6 +697,7 @@
       		</tr>
       	</table>
       	</div>
+      	
       </div>
 
     </div>
@@ -715,10 +757,6 @@
 
     <script>
     
-    let currentCategory = "전체";				// 카테고리 디폴트 설정 (첫 화면)
-    let currentSortBy = "number";				// 정렬 디폴트 설정 (첫 화면)
-    let currentSearchKeyword = "";				// 검색어 초기값
-
     
     function submitSearch(event) {
     	event.preventDefault();
@@ -758,6 +796,8 @@
     }
     
     // 실시간 검색어 리스트 ajax로 요청하기 
+    
+    
 	
     $(document).ready(function() {
     	
@@ -772,12 +812,10 @@
     			counter = 15;
     		}
     	}, 900);
-    		
- 
+
   	    // 페이지가 로드되면 즉시 실행되는 함수
   	    updateSearchList(); // 처음 로딩시 1회 실행
-
-  	    
+	    
   	    // 15초마다 서버에 요청을 보냄.
   	    setInterval(function() {
   	        updateSearchList();
@@ -820,17 +858,13 @@
   	                		'<td>' + (updateSearches[keyword] ? '갱신됨!' : '') + '</td>' +
   	                		'</tr>');
   	            }
-  	            
-  	            
-  	            	
-  	           
+  	                
   	            $.ajax({
   	                url: '/api/updateSearches',
   	                type: 'POST',
   	            });
   	        },
-  	      
-  	               
+  	                    
   	        error: function(error) {
   	            // 에러 발생 시 처리할 로직
   	            console.error(error);
@@ -839,6 +873,61 @@
   	} 
   	
   	
+  		// 상품 구매 순위
+  function updateProductList() {
+  	$.ajax({
+  	    url: '/api/top10sells',
+  	    type: 'GET',
+  	    success: function(response) {
+  	        // 테이블의 내용을 비웁니다.
+  	        $('.top10-sell-products table tr:not(:first)').remove();
+  	        
+  	        // 응답을 순회하면서 각 행을 테이블에 추가합니다.
+  	        $.each(response, function(i, item) {
+  	            $('<tr>').append(
+  	                $('<td>').text(item.product.productTitle),
+  	                $('<td>').text(item.salesCount),
+  	               // $('<td>').text('갱신됨') // 여기에 갱신 여부를 설정합니다.
+  	            ).appendTo('.top10-sell-products table');
+  	        });
+  	    },
+  	    error: function(xhr, textStatus, errorThrown) {
+  	        console.error('Error!', textStatus, errorThrown);
+  	    }
+  	});
+  }
+  		
+	// 실시간 상품 구매순위 카운트
+  $(document).ready(function() {
+  	
+  	let counter = 15;
+  	
+  	const intervaild = setInterval(function() {
+  		counter--;
+  		if(counter >= 0) {
+  			$("#counter-product").text(counter + 's');
+  		} else {
+  			updateProductList();
+  			counter = 15;
+  		}
+  	}, 900);
+  		
+  		
+  		updateProductList();
+  		
+  	    // 15초마다 서버에 요청을 보냄.
+  	    setInterval(function() {
+  	        updateProductList();
+  	    }, 15000); // 15초마다 반복
+  });
+	
+	
+	
+	
+	
+    let currentCategory = "전체";				// 카테고리 디폴트 설정 (첫 화면)
+    let currentSortBy = "number";				// 정렬 디폴트 설정 (첫 화면)
+    let currentSearchKeyword = "";				// 검색어 초기값
   	
     const sortSelect = document.querySelector("#sort-select");     
     
@@ -890,11 +979,17 @@
     	  loadData(products);																// 위 로직이 실행된 최종 상품들을 출력.
     }
     
+    
+    
 
     async function fetchAndSortData() {
       const response = await fetch('/api/products');           // 컨트롤러 restApi 호출
       let products = await response.json();
      	
+      products.sort((a,b) => {
+          return b.id - a.id;
+      });
+      
       return products;											// 상품들을 반환
     }
     
@@ -918,7 +1013,9 @@
       	  														// 그외에는 매개변수대로 들어온 정렬방식대로 출력
       	 
         
-        let classNames = ['mindLink', 'whereDoor', 'telespir', 'symponia', 'tereSycle', 'luminight']; // 상품 배열
+        let classNames = ['mindLink', 'whereDoor', 'telespir', 'symponia', 'tereSycle', 'luminight',
+        				  'waterWhisper','Cronos','ifrit','bald','darkTemplar','hades',
+        				  'thor','icarus','kinesis','regencia']; // 상품 배열
         
         for (let i = 0; i < products.length; i++) {
           let data = products[i];
@@ -964,6 +1061,8 @@
           }
       }
   }
+      
+   
 	//카트에 담는 로직
 
 		function addToCart(itemId) {
@@ -971,9 +1070,15 @@
 				url: "/insertCart/" + itemId,
 				type: "post",
 				success: function (response) {
-					// Process response from server (e.g., update UI, show a message, etc.) 
-					alert("해당상품을 장바구니에 담았습니다!");                                       // 장바구니를누르면 alert창으로 알림메세지 출력되면 좋을것같습니다
-					console.log(response);                    
+					// Process response from server (e.g., update UI, show a message, etc.)
+					if(response === "existed"){
+						console.log(response);
+						alert("해당 상품이 이미 장바구니에 존재합니다.");
+					} else {
+						console.log(response)
+						alert("해당상품을 장바구니에 담았습니다!");
+						updateCartCount()
+					}
 				},
 				error: function (xhr, textStatus, errorThrown) {
 					console.log(xhr, textStatus, errorThrown); 
@@ -982,6 +1087,20 @@
 		}
 
 		// ... 다른 코드 ...
+		
+		
+		function updateCartCount() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    };
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    });
+    
 
 
 
@@ -1076,6 +1195,11 @@
         updateSlide();
       });
 
+      
+      setInterval(function () {
+    	    currentSlide = currentSlide === 3 ? 1 : currentSlide + 1;
+    	    updateSlide();
+    	}, 4000);
 
 
     </script>

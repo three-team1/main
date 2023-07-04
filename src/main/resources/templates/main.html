@@ -59,6 +59,7 @@
 				<div class="nav-bar-item">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -93,6 +94,9 @@
 		</div>
 
 	</header>
+	
+	
+	
 
 	<div class="bg-main-video-img">
 
@@ -178,6 +182,7 @@
       </div>
     </div>-->
 	</div>
+
 
 	<script>
 	
@@ -489,6 +494,11 @@
       updateSlide();
     });
 
+    
+    setInterval(function () {
+	    currentSlide = currentSlide === 3 ? 1 : currentSlide + 1;
+	    updateSlide();
+	}, 4000);
 
 
     let letters = document.querySelectorAll('.reveal-letter');
@@ -508,6 +518,25 @@
 
       observer.observe(letter);
     });
+    
+	function updateCartCount() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    }; 
+    
+         $.ajax({
+            type: "GET",
+            url: "/api/cart/count",
+            success: function(data) {  
+            	
+            	$('#cart-count').text(data);
+            },
+            error: function() {
+                console.log("장바구니 수량을 불러오는데 실패했습니다.");
+            }
+        }); 
+   
 
 
     /*  네이버 맵 지도 API 코드 ---------------------------------------*/

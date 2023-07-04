@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Table;
 
 import com.main.miniproject.cart.entity.Cart;
@@ -57,6 +56,10 @@ public class Orders {
 	@ManyToOne
 	@JoinColumn(name = "payment_id")
 	private Payment payment;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
 }
 

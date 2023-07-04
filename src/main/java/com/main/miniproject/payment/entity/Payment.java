@@ -21,10 +21,13 @@ public class Payment {
 	@Column(name = "payment_id")
 	private Long id;
 	
-	
 	@Column(name = "payment_plan")
 	private String paymentPlan;
+
+	@Column(name = "imp_uid")
+	private String impUid;
 	
-	
+	@Column(name = "merchant_uid")
+	private String merchantUid;
 	
 }

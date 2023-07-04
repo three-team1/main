@@ -109,6 +109,7 @@
 				<div class="nav-bar-item">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -158,6 +159,16 @@
         <button class="btn-write btn-to-list">목록으로</button>
        </a>
 	</div>
+
+	<script>
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    });
+	
+	</script>
 
 </body>
 </html>
