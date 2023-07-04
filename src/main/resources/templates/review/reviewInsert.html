@@ -17,7 +17,19 @@
             }
 
             .review-block {
-                margin-bottom: 15px;
+                padding: 5px;
+                height: 600px;
+                width: 470px;
+                background: transparent;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .review-writing {
+                margin-bottom: 10px;
                 padding: 5px 15px;
                 height: 530px;
                 width: 450px;
@@ -80,7 +92,7 @@
             }
 
             .buttons {
-                text-align: right;
+                text-align: center;
             }
 
             #btnSave, #btnCancel {
@@ -128,6 +140,7 @@
                     let files = $("#btnAttach")[0].files;
                     let validExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
                     let formData = new FormData();
+
                     for(let i = 0; i < files.length; i++){
                         let ext = files[i].name.split('.').pop().toLowerCase();
                         if (!validExtensions.includes(ext)) {
@@ -140,20 +153,24 @@
                     formData.append('reviewRating', reviewRating);
                     formData.append('reviewContent', reviewContent);
 
-                    fetch('/api/review/myReview', {
-                        method: 'POST',
-                        body: formData,
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data)
+                    $.ajax({
+                        url: "/api/review/myReview",
+                        type: "POST",
+                        data: formData,
+                        //데이터 쿼리 문자열 변환 방지
+                        processData: false,
+                        //브라우저에서 FormData 올바른 multipart/form-data MIME 타입으로 설정
+                        contentType: false,
+                        success: function (data) {
                             if (data.redirect) {
                                 window.location.href = data.redirect;
                             }
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
+                        },
+                        error: function (err) {
+                            console.error('Error', err);
+                            alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
+                        }
+                    });
                 });
             });
         </script>
@@ -179,32 +196,33 @@
     <div class="main-container">
         <div class="review-block">
             <form id="reviewForm" th:object="${review}">
-                <h1 th:text="${productTitle}"></h1>
-                <div id="ratingZone">
-                    <input class="review-block-title" value="별점">
-                    <div id="starRating">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                        <input type="hidden" id="reviewRating" name="reviewRating" th:field="*{reviewRating}">
+                <div class="review-writing">
+                    <h1 th:text="${productTitle}"></h1>
+                    <div id="ratingZone">
+                        <input class="review-block-title" value="별점">
+                        <div id="starRating">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                            <input type="hidden" id="reviewRating" name="reviewRating" th:field="*{reviewRating}">
+                        </div>
                     </div>
-                </div>
-                <div id="textZone">
-                    <input class="review-block-title" value="리뷰">
-                    <textarea id="reviewContent" name="reviewContent" th:field="*{reviewContent}" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
-                    <div class="counting">
-                        <span class="textCount">0</span>
-                        <span class="textTotal">/ 200자</span>
-                    </div><br>
-                </div>
-                <div id="imagePreview">
-                    <input class="review-block-title" value="후기 사진 등록">
-                    <div id="attachZone">
+                    <div id="textZone">
+                        <input class="review-block-title" value="리뷰">
+                        <textarea id="reviewContent" name="reviewContent" th:field="*{reviewContent}" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
+                        <div class="counting">
+                            <span class="textCount">0</span>
+                            <span class="textTotal">/ 200자</span>
+                        </div><br>
                     </div>
-                    <input type="file" id="btnAttach" name="uploadFiles" multiple>
-                    <input type="file" id="changedFiles" name="changedFiles" style="display:none;" multiple>
+                    <div id="imagePreview">
+                        <input class="review-block-title" value="후기 사진 등록">
+                        <div id="attachZone">
+                        </div>
+                        <input type="file" id="btnAttach" name="btnAttach" accept=".jpg, .jpeg, .png, .gif, .webp" multiple>
+                    </div>
                 </div>
                 <div class="buttons">
                     <button type="button" id="btnSave">등록</button>

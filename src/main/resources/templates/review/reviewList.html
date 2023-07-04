@@ -6,69 +6,168 @@
 <head>
     <th:block layout:fragment="css">
         <style>
+            .main-container {
+                margin-top: 172px;
+                min-height: 640px;
+                min-width: 670px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .review-block {
+                padding: 5px;
+                height: 600px;
+                width: 650px;
+                background: transparent;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
             .review-card {
-                border: 1px solid #ddd;
+                border: 1px solid aqua;
                 margin-bottom: 20px;
-                padding: 20px;
-                position: relative;
+                padding: 10px;
+                height: 150px;
+                width: 640px;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                flex-wrap: wrap;
+                color: white;
             }
-            .review-card .reviewer-name {
-                font-weight: bold;
+
+            .goldStar {
+                color: gold;
+            }
+
+            .greyStar {
+                color: gray;
+            }
+
+            .review-card .username {
                 margin-bottom: 10px;
             }
-            .review-card .review-content {
+
+            .review-card .reviewContent {
                 margin-bottom: 10px;
             }
-            .review-card .review-date {
+
+            .review-card .reviewRegdate {
                 color: #777;
                 font-size: 14px;
             }
-            .review-card img.preview {
-                position: absolute;
-                right: 20px;
-                top: 20px;
-                width: 150px;
-                height: 150px;
+
+            .review-card .thumbnail {
+                width: 100px;
+                height: 100px;
+                cursor: pointer;
             }
-            .review-card img.full {
+
+            .review-card .full {
+                display: none;
                 width: 60%;
+                cursor: pointer;
+            }
+
+            .thumbnail-container {
+                position: relative;
+                display: inline-block;
+                width: 100px;
+                height: 100px;
+            }
+
+            .thumbnail-container::after {
                 display: none;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 20px;
+                height: 20px;
+                background: gray;
+                color: white;
+                text-align: center;
+                line-height: 20px;
             }
-            .review-card .edit, .review-card .delete {
-                display: none;
+
+            .pagination {
+                margin-top: 20px;
+                width: 200px;
+                text-align: center;
             }
-            .review-card:hover .edit, .review-card:hover .delete {
-                display: block;
+
+            .selected {
+                color: aqua;
             }
-            .star-rating {
-                color: gold;
-                margin-left: 5px;
+
+            h1 {
+                color: white;
             }
         </style>
     </th:block>
     <th:block layout:fragment="script">
-        <script th:inline="javascript">
-            function toggleImage(element) {
-                const image = element.querySelector('img');
-                image.style.display = image.style.display === 'none' ? 'block' : 'none';
-            }
+        <script type="text/javascript">
+            $(function () {
+                $(".thumbnail, .full").on("click", function () {
+                    const imageContainer = $(this).parent().next(".images-container");
+                    $(this).hide();
+                    imageContainer.css("display", "block").css("visibility", "visible");
+                });
+
+                $(".images-container").on("click", ".full", function () {
+                    const thumbnail = $(this).parent().prev().children(".thumbnail");
+                    $(this).parent().css("display", "none").css("visibility", "hidden");
+                    thumbnail.show();
+                });
+            });
         </script>
     </th:block>
 </head>
+<body>
 <div layout:fragment="content">
     <div class="main-container">
-        <h1>Product Review Page</h1>
-        <div class="review-card">
-            <div class="reviewer-name" id="user_id">Reviewer 1<span class="star-rating">★★★★☆</span></div>
-            <div class="review-content" id="review_content" onclick="toggleImage(this)">This product is amazing!
-                <img class="full" id="review_img_url" src="path_to_image_1" alt="review_image" onclick="event.stopPropagation()">
+        <div class="review-block">
+            <h1>상품 후기</h1>
+            <div th:each="review : ${reviews}">
+                <div class="review-card">
+                    <div>
+                        <div class="starRating">
+                            <span th:each="star : ${#numbers.sequence(1, 5)}"
+                                  th:class="${star <= review.reviewRating} ? 'goldStar' : 'greyStar'">★</span>
+                            <span th:text="${review.reviewRating}"></span>
+                        </div>
+                        <div class="userInfo">
+                            <span class="username" th:text="${review.user.username}"></span>
+                            <span class="reviewRegdate" th:text="${#temporals.format(review.reviewRegdate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </div>
+                        <div class="reviewContent">
+                            <p th:text="${review.reviewContent}"></p>
+                        </div>
+                    </div>
+                    <div th:if="${reviewImages.containsKey(review.id)}">
+                        <div class="thumbnail-container">
+                            <img class="thumbnail" th:src="@{${reviewImages.get(review.id)[0].url}}" alt="리뷰 이미지 썸네일">
+                        </div>
+                        <div class="images-container" style="display: none; visibility: hidden;" th:each="reviewImage : ${reviewImages.get(review.id)}">
+                            <img class="full" th:src="@{${reviewImage.url}}" alt="리뷰 이미지" onclick="toggleImage(this)">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" id="reviewModifiy" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('수정')">수정</button>
+                        <button type="button" id="reviewDelete" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('삭제')">삭제</button>
+                    </div>
+                </div>
             </div>
-            <div class="review-date" id="review_regdate">
-                June 30, 2023
-            </div>
-            <a class="edit" href="#" id="review_id">Edit</a>
-            <a class="delete" href="#">Delete</a>
-            <a href="path_to_image_1" target="_blank"><img class="preview" src="path_to_image_1" alt="review_image"></a>
+        </div>
+        <div class="pagination">
+            <th:block th:if="${page.totalPages > 0}" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                <a th:href="@{/review/list(page=${i})}" th:text="${i + 1}"
+                   th:class="${page.number == i ? 'selected' : ''}">1</a>
+            </th:block>
         </div>
     </div>
 </div>

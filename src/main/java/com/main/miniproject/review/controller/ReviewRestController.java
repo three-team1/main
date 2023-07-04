@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +70,10 @@ public class ReviewRestController {
 
         reviewService.insertReview(review);
 
+        List<ReviewImage> reviewImages = new ArrayList<>();
+
         if(files != null && files.length > 0) {
-            List<ReviewImage> reviewImages = reviewFileService.saveFiles(review, files);
+            reviewImages = reviewFileService.saveFiles(review, files);
 
             for(ReviewImage reviewImage : reviewImages) {
                 reviewImageService.saveReviewImage(reviewImage);
@@ -79,7 +82,9 @@ public class ReviewRestController {
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "리뷰가 작성되었습니다.");
-        response.put("redirect", "/mypage/me");
+        response.put("redirect", "/review/list");
+        response.put("imageCount", String.valueOf(reviewImages.size()));
+        response.put("firstImageUrl", reviewImages.isEmpty() ? "" : reviewImages.get(0).getUrl());
 
         return ResponseEntity.ok(response);
     }

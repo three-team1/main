@@ -51,11 +51,14 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                     System.out.println(ioe.getMessage());
                 }
 
+                //이미지 파일 상대경로로 저장하기
+                String fileURL = "/review/images" + File.separator + today + File.separator + fileName;
+
                 ReviewImage reviewImage = ReviewImage.builder()
                         .review(review)
                         .name(fileName)
                         .originName(fileOrigin)
-                        .url(filePath)
+                        .url(fileURL)
                         .build();
 
                 reviewImages.add(reviewImage);
