@@ -287,7 +287,9 @@ div {
   padding-bottom: 20px;
   width: 300px;
   height: 500px;
-  background: linear-gradient(45deg, #FDF5E6, #FFF);
+  background: linear-gradient(135deg, #2b2b2b, #000000);
+  /* background: linear-gradient(45deg, #FDF5E6, #FFF);*/
+  
   
 }
 
@@ -304,12 +306,13 @@ div {
 
 .hot-item-p {
     font-weight: bold;  
-    color: #2f3542;
+    color: lightgray;
     text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
     text-align: justify;
     padding-left: 10px;
     padding-right: 10px;
     height: 100px;
+    line-height:20px;
 }
 
 .hot-item button {
@@ -330,6 +333,7 @@ div {
 }
 
 .hot-item-price {
+  margin-top:50px;
   color: #FF4500;
 }
 
@@ -469,11 +473,49 @@ div {
   box-shadow: 0 4px 8px 0 rgba(255, 255, 0, 0.5), 0 6px 20px 0 rgba(255, 165, 0, 0.5);
 }
 
+.워터위스퍼 {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 255, 0.5), 0 6px 20px 0 rgba(135, 206, 235, 0.7);
+}
+
+.크로노스 {
+	box-shadow: 0 4px 8px 0 rgba(128, 128, 128, 0.5), 0 6px 20px 0 rgba(211, 211, 211, 0.5);
+}
+
+.이프리트 {
+	box-shadow: 0 4px 8px 0 rgba(220, 20, 60, 0.5), 0 6px 20px 0 rgba(255, 69, 0, 0.7);
+}
+
+.다크템플러 {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(25, 25, 112, 0.6);
+}
+
+.하데스 {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(105, 105, 105, 1);
+}
+
+.토르 {
+    box-shadow: 0 4px 8px 0 rgba(30, 144, 255, 0.5), 0 6px 20px 0 rgba(0, 0, 139, 0.6);
+}
+
+.이카루스 {
+
+  box-shadow: 0 4px 8px 0 rgba(100, 149, 237, 0.5), 0 6px 20px 0 rgba(70, 130, 180, 0.6);
+}
+
+.키네시스 {
+  box-shadow: 0 4px 8px 0 rgba(72, 61, 139, 0.5), 0 6px 20px 0 rgba(123, 104, 238, 0.6);
+}
+
+
+.리젠시아 {
+  box-shadow: 0 4px 8px 0 rgba(255, 20, 147, 0.5), 0 6px 20px 0 rgba(255, 105, 180, 0.6);
+}
+
 .mindLink{
   background: -webkit-linear-gradient(left, #000080, #4169E1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
   
 }
 
@@ -481,36 +523,108 @@ div {
   background: linear-gradient(to right, #87CEEB, #00BFFF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .telespir {
   background: linear-gradient(to right, #800080, #DA70D6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
 .symponia { 
   background: linear-gradient(to right, #FF0000, #FF4500);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .tereSycle {
   background: linear-gradient(to right, #006400, #32CD32);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .luminight {
   background: linear-gradient(to right, #FFFF00, #FFA500);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
+
+.waterWhisper{
+	  background: linear-gradient(to right, #0000FF, #87CEEB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.ifrit {
+	  background: linear-gradient(to right, #FF4500, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+	
+}
+
+.Cronos{
+  background: linear-gradient(to right, #808080, #D3D3D3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.hades {
+  background: linear-gradient(to right, #000000, #1b1b1b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.bald {
+	color:white;
+	
+}
+
+.darkTemplar {
+	  background: linear-gradient(to right, #000000, #191970);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+	
+}
+
+.thor {
+
+    background: linear-gradient(to right, #1E90FF, #00008B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.icarus {
+	  background: linear-gradient(to right, #6495ED, #4682B4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.kinesis {
+  background: linear-gradient(to right, #483D8B, #7B68EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.regencia {
+  background: linear-gradient(to right, #FF0000, #FF69B4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
 
 
 
