@@ -51,12 +51,14 @@ public class MypageViewController {
 
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-//        List<Orders> ordersList = ordersService.getOrdersList(user);
-        List<Orders> ordersList = ordersService.getOrdersByUserId(user.getId());
-//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user.getUsername());
+
+
+        List<Orders> ordersList = ordersService.getOrdersList(user);
+
+        List<Orders> prodList = ordersService.getProductsList(user.getId());
 
         model.addAttribute("orders", ordersList);
-//        model.addAttribute("orderitems", orderItemList);
+        model.addAttribute("products", prodList);
 
         return "mypage/me";
     }
