@@ -12,11 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserInfoServiceImpl implements UserInfoService {
     private UserRepository userRepository;
 
@@ -37,7 +38,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public User getMyInfo(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
         return user;
     }
 
@@ -48,7 +49,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         String username = user.getUsername();
 
         User updateduser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
         updateduser.setEmail(user.getEmail());
         updateduser.setTel(user.getTel());
@@ -70,13 +71,34 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public boolean checkPassword(String username, String checkPassword) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
         String realPassword = user.getPassword();
 
         boolean matches = encoder.matches(checkPassword, realPassword);
 
         return matches;
+    }
+
+    //비밀번호 변경
+    @Override
+    @Transactional
+    public boolean changePassword(String username, String password, String newPassword, String confirmPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
+
+        String realPassword = user.getPassword();
+
+        if (encoder.matches(password, realPassword)) {
+            if (newPassword.equals(confirmPassword)) {
+                user.updatePassword(encoder.encode(confirmPassword));
+                userRepository.save(user);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
