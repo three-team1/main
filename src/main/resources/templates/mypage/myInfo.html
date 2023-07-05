@@ -122,7 +122,7 @@
                 window.location.href="/mypage/myInfo";
 
                 $.ajax({
-                    url: "/mypage/myInfo",
+                    url: "/api/mypage/myInfo",
                     type: "GET",
                     contentType: "application/json",
                     success: function(user) {
@@ -190,7 +190,7 @@
         </div>
         <div class="section">
             <h1>마이페이지</h1>
-            <form id="infoForm" action="/api/mypage/myInfo" method="get">
+            <form id="infoForm" action="/mypage/myInfo" method="get">
                 <input type="hidden" id="userId" name="userId" th:value="${#authentication.principal.user.id}">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">

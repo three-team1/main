@@ -44,7 +44,7 @@
     "product_id" : 5,
     "product_title": "테레사이클",
     "product_price": 450000,
-    "product_content": "능력 : 테레사이클은 \"자연의 능력\" 이며 환경을 보호하고, 자원을 재활용하는 에코 파워. 테레사이클론으로 당신은 지구를 보호하는 슈퍼히어로가 될 수 있습니다.",
+    "product_content": "능력 : 테레사이클은 \"자연의 능력\" 이며 환경을 보호하고, 자원을 재활용하는 친환경적 초능력입니다. 테레사이클로 당신은 지구를 보호하는 슈퍼히어로가 될 수 있습니다.",
 
     "product_quantity" : 20,
     "product_type": "자연"
@@ -91,6 +91,70 @@
   "product_quantity" : 20,
   "product_type": "속성"
 
-  }
+  },
+
+  {
+    "product_id" : 10,
+    "product_title": "대머리",
+    "product_price": 90,
+    "product_content": "능력 : 대머리는 \"탈모의 능력\"이며 당신의 머리카락을 없애버립니다. 아, 웃지마세요 당신도 언젠가 대머리가 될수도 있습니다. 우리는 그들을 사랑하고 존중해줘야 할 것입니다..",
+    "product_quantity" : 5,
+    "product_type": "초인"
+  
+  },
+    {
+    "product_id" : 11,
+    "product_title": "다크템플러",
+    "product_price": 1500000,
+    "product_content": "능력 : 다크템플러는 \"그림자의 능력\"이며 이 능력을 이용해 자신을 보이지 않게 만들거나, 어둠 속에서 그림자를 마음대로 조종해보세요. 당신의 그림자는 더 이상 단순한 반영체가 아니라, 자신만의 유일무이한 힘을 가진 동반자로 거듭나게 됩니다.",
+    "product_quantity" : 15,
+    "product_type": "초인"
+  
+    },
+    {
+      "product_id" : 12,
+      "product_title": "하데스",
+      "product_price": 150000000,
+      "product_content": "능력 : 하데스는 \"죽음의 능력\"이며 이 능력은 당신에게 삶과 죽음, 그리고 그 사이의 세계에 대한 깊은 이해를 선사할 것입니다. 이 능력을 소유하면, 당신은 죽음의 신 하데스처럼 죽음을 이해하고 그 위로 군림하는 힘을 가질 수 있습니다.",
+      "product_quantity" : 2,
+      "product_type": "초월"
+    
+    },
+    {
+      "product_id" : 13,
+      "product_title": "토르",
+      "product_price": 3500000,
+      "product_content": "능력 : 토르는 \"번개의 능력\"이며 에너지의 움직임을 지배하며, 강력한 힘과 빠른 속도를 자랑합니다. 마블의 토르처럼, 번개의 힘을 마음껏 누리십시오. 묠니르는 당신을 알아볼 것입니다.",
+      "product_quantity" : 5,
+      "product_type": "초인"
+    
+    },
+    {
+      "product_id" : 14,
+      "product_title": "이카루스",
+      "product_price": 2950000,
+      "product_content": "능력 : 이카루스는 \"바람의 능력\"이며 바람의 흐름을 자유자재로 다룰 수 있게 됩니다. 당신의 날개로 세계 곳곳 어디든, 드높은 창공을 누비며 날아보세요. 비로소 당신은 하늘과 한몸이 될것입니다.",
+      "product_quantity" : 5,
+      "product_type": "초인"
+      
+      },
+      {
+      "product_id" : 15,
+      "product_title": "키네시스",
+      "product_price": 13200000,
+      "product_content": "능력 : 키네시스는 \"염력의 능력\"이며 물리적 제약을 초월하는 능력을 지닙니다. 당신의 마음만으로 물체를 움직이고, 상황을 조정할 수 있습니다.",
+      "product_quantity" : 12,
+      "product_type": "초인"
+        
+      },
+      {
+        "product_id" : 16,
+        "product_title": "리젠시아",
+        "product_price": 55000000,
+        "product_content": "능력 : 리젠시아는 \"재생의 능력\"이며 이 능력은 여러분의 심장이 언제나 최적의 상태를 유지할 수 있도록 보장합니다. 당신은 어떠한것이든 살려낼 수 있는 힘을 가집니다. 힐러처럼 말이죠.",
+        "product_quantity" : 4,
+        "product_type": "초월"
+          
+        }
   
 ]

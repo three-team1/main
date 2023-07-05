@@ -14,22 +14,42 @@
           rel="stylesheet">
   <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+    }
 
     .qna-qna {
       text-align: center;
-      font-size: 12px;
       margin-top: 250px;
+      margin-bottom: 20px;
       color: white;
+    }
+
+    .qna-qna p {
+      font-size: 20px;
+    }
+
+    .qna-total-div {
+      width: 60%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: whitesmoke;
+      margin-bottom: 150px;
     }
 
     .qna-table table {
       background-color: white;
       table-layout: fixed;
-      margin: 30px auto;
-      width: 600px;
+      margin: 0 auto;
+      width: 100%;
       border-collapse: collapse;
       border: 1px solid black;
-      font-size: 12px;
+    }
+
+    #qna-table-tr1 {
+      background-color: #86cfda;
     }
 
     th {
@@ -76,27 +96,25 @@
 
     .insert-btn {
       text-align: center;
-      margin-bottom: 100px;
     }
 
     .insert-btn button {
-      background-color: mediumspringgreen;
+      background-color: #86cfda;
       border: 1px solid black;
-      font-size: 12px;
       padding: 5px;
+      margin-bottom: 10px;
     }
 
     .paging {
       display: flex;
       justify-content: center;
-      margin-bottom: 30px;
+      margin: 20px auto;
     }
 
     .paging a {
       margin: 2px 10px 2px 10px;
       text-decoration: none;
-      color: white;
-      font-size: 13px;
+      color: #86cfda;
     }
 
     </style>
@@ -166,40 +184,50 @@
     <div class="qna-qna">
       <p>q n a</p>
     </div>
-    <div class="qna-table">
-      <table>
-        <tr>
-          <th id="th1">no.</th>
-          <th id="th2">title</th>
-          <th id="th3">writer</th>
-          <th id="th4">data</th>
-          <th id="th5">hits</th>
-        </tr>
-        <tr th:each="qna: ${qnaList}">
-          <td th:text="${qna.id}"></td>
-          <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
-          <td th:text="${qna.user.username}"></td>
-          <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
-          <td th:text="${qna.qnaCnt}"></td>
-        </tr>
-      </table>
-    </div>
 
-    <div class="paging">
-      <th:block>
-        <a th:href="@{/qna/list(page=0)}">처음</a>
-      </th:block>
-      <th:block th:each="pageNumber : ${pageNumbers}"
-                th:class="${pageNumber == currentPage} ? 'active' : ''">
-        <a th:href="@{/qna/list(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
-      </th:block>
-      <th:block>
-        <a th:href="@{/qna/list(page=${totalPages - 1})}">마지막</a>
-      </th:block>
-    </div>
+    <div class="qna-total-div">
+      <div class="qna-table">
+        <table>
+          <tr id="qna-table-tr1">
+            <th id="th1">no.</th>
+            <th id="th2">title</th>
+            <th id="th3">writer</th>
+            <th id="th4">data</th>
+            <th id="th5">hits</th>
+          </tr>
+          <tr th:each="qna: ${qnaList}">
+            <td th:text="${qna.id}"></td>
+            <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
+            <td th:text="${qna.user.username}"></td>
+            <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
+            <td th:text="${qna.qnaCnt}"></td>
+          </tr>
+        </table>
+      </div>
 
-    <div class="insert-btn">
-      <a href="/qna/insert"><button>글쓰기</button></a>
+      <div class="paging">
+        <th:block>
+          <a th:href="@{/qna/list(page=0)}">처음</a>
+        </th:block>
+        <th:block th:each="pageNumber : ${pageNumbers}">
+        <span th:class="${pageNumber == currentPage ? 'active' : ''}">
+            <a th:href="@{/qna/list(page=${pageNumber})}"
+               th:text="${pageNumber + 1}"
+               th:style="${pageNumber == currentPage ? 'color: red;' : 'color: #86cfda;'}"
+            ></a>
+        </span>
+        </th:block>
+        <th:block>
+          <a th:href="@{/qna/list(page=${totalPages - 1})}">마지막</a>
+        </th:block>
+      </div>
+
+
+
+      <div class="insert-btn">
+        <a href="/qna/insert"><button>글쓰기</button></a>
+      </div>
+
     </div>
   </section>
 

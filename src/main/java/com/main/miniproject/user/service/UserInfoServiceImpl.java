@@ -1,5 +1,6 @@
 package com.main.miniproject.user.service;
 
+import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
 
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpSession;
 
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class UserInfoServiceImpl implements UserInfoService {
     private UserRepository userRepository;
 
@@ -47,16 +48,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void updateMyInfo(User user, HttpSession session) {
         String username = user.getUsername();
 
-        User updatedUser = userRepository.findByUsername(username)
+        User updateduser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "이/가 존재하지 않음"));
 
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setTel(user.getTel());
-        updatedUser.setMy_postcode(user.getMy_postcode());
-        updatedUser.setMy_address(user.getMy_address());
-        updatedUser.setMy_detailAddress(user.getMy_detailAddress());
+        updateduser.setEmail(user.getEmail());
+        updateduser.setTel(user.getTel());
+        updateduser.setMy_postcode(user.getMy_postcode());
+        updateduser.setMy_address(user.getMy_address());
+        updateduser.setMy_detailAddress(user.getMy_detailAddress());
 
-        userRepository.save(updatedUser);
+        userRepository.save(updateduser);
 
         //수정된 정보 security에 업데이트
         UserDetail userDetail = (UserDetail) userService.loadUserByUsername(user.getUsername());

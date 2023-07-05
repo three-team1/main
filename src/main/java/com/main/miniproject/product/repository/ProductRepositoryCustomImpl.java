@@ -31,8 +31,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 		queryFactory = new JPAQueryFactory(em);
 	}
 
-
-
+	
+	
 	@Override
 	public Page<Product> getAdminProductPage(ProductSearchDto productSearchDto, Pageable pageable) {
 
@@ -59,16 +59,16 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 		return new PageImpl<>(content, pageable, total);
 	}
 
-
-
+	
+	
 	// 쿼리 dsl의 메소드
 	// null이거나 null이 아닌 값을 같은지 확인해서 boolean 비교
 	private BooleanExpression searchSellStatusEq(ProductSellStatus searchSellStatus) {
 		return searchSellStatus == null ? null : QProduct.product.productSellStatus.eq(searchSellStatus);
 	}
 
-
-
+	
+	
 //	private BooleanExpression regDtsAfter(String searchDateType) {
 //
 //		LocalDateTime dateTime = LocalDateTime.now();
@@ -92,8 +92,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 //		return item.regTime.after(dateTime);
 //	}
 
-
-
+	
+	
 	private BooleanExpression searchByLike(String searchBy, String searchQuery) {
 
 		// 상품명으로 검색

@@ -1,12 +1,6 @@
 package com.main.miniproject.order.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.main.miniproject.product.entity.Product;
 
@@ -18,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "orderitems")
 @Data
 @Builder
 public class OrderItem {
@@ -37,5 +32,6 @@ public class OrderItem {
 	
 	@Column(name = "order_quantity")
 	private int orderQuantity;
+	
 	
 }

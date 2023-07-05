@@ -30,7 +30,8 @@
 			text-align: left;
 			color: wheat;
 			padding: 20px;
-			border: 1px solid gray;
+			border: 2px solid beige;
+			border-radius : 5px;
 			
 		}
 
@@ -137,8 +138,7 @@
 		}
 		
 		.comment-list {
-			border-top : 1px solid gray;
-			border-bottom : 1px solid gray;
+			border-top : 1px solid lightsalmon;		
 			margin-top : 40px;
 			padding: 10px;
 		}
@@ -147,15 +147,82 @@
 			margin-bottom: 25px;
 			color: burlywood;
 			font-weight: bold;
+			
+		}
+
+		.comment-btn{
+			border-bottom: 1px solid lightsalmon;
+		
 		}
 		
 		.delete-comment-btn {
 			margin-top : 30px;
-			width:50px !important;
+			width:40px !important;
+			height:20px;
+			font-size: 8px;
 			color:red;
 			border : 2px solid lightcoral !important;
+			margin-bottom: 10px;
+			
 		}
 
+		.reply-list-container {
+			display: flex;
+		}
+
+		.reply-list-img{
+			margin: auto;
+			width: 50px;
+		}
+
+		.reply-list-container img{
+			width: 15px;
+			margin-left: 20px;
+		}
+		
+		.reply-list-box{
+			width: 1000px;
+			height: 80px;
+			border-bottom: 1px solid gray;
+			padding: 10px;
+		}
+
+		.reply-author{
+			color: burlywood;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.replyCommentForm {
+			margin-left: 55px;
+		}
+
+		.replyCommentForm input{
+			width: 550px;
+			height: 50px;
+			border: 2px solid lightgray;
+			border-radius : 3px;
+		}
+
+		.submit-reply-btn {
+			width: 80px;
+			height: 50px;
+			border-radius: 3px;
+			border: 2px solid lightblue;
+			background-color: black;
+			color: white;
+			transition: all 0.2s;
+			cursor: pointer;
+			margin-left: 0px;
+		}
+		
+
+		/*<div class="replyCommentForm" style="display: none;">
+					<h5>대댓글 작성</h5>
+				    <input type="hidden" class="parent-comment-id">
+				    <input class="reply-content"></textarea>
+				    <button class="submit-reply-btn" onclick="submitReply()">답글 작성</button>
+				</div>*/
 
 
 	</style>
@@ -188,14 +255,15 @@
 				</div>
 
 				<div class="nav-bar-item">
-					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+					<a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
 						Q&A
 					</a>
 				</div>
 
 				<div class="nav-bar-item">
-					<a href="#"> <span></span> <span></span> <span></span> <span></span>
+					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -206,6 +274,7 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
+				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
 				<a href="/mypage">마이페이지</a>
 			</div>
 
@@ -269,23 +338,47 @@
 		
 		<div class="comment-section">
 		    <h3>댓글</h3>
-	
+
 		    <!-- 댓글 작성 폼 -->
 		    <form id="commentForm" th:action="'/board/comment/' + ${board.id}" method="post" class="comment-form">
 		    	<input type="hidden" id="boardId" th:value="${board.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
 		        <input name="commentContent" placeholder="댓글을 입력하세요.">
 		        <button type="submit">작성</button>
 		    </form>
-		
+
 		    <!-- 댓글 목록 -->
 		    <div class="comment-list-box">
+		    
 		        <div class="comment-list" th:each="comment : ${comments}">
-		            <div class="comment-author" th:text="${comment.user.username}"></div>
-		            <div class="comment-content" th:text="${comment.commentContent}"></div>
-		            <button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>
-		        </div>
+		            <div class="comment-author" th:text="${comment.user.username}">용이</div>
+		            <div class="comment-content" th:text="${comment.commentContent}" onclick="showReplyForm(this)">굿</div>	       
+		            <div class="comment-btn">
+					<button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>				
+					</div>
+				
+					<div class="reply-list-container" th:each="reply : ${commentReplys[comment.id]}" >
+						<div class="reply-list-img">
+							<img src="/icon/대댓글아이콘.png">
+						</div>
+						<div class="reply-list-box">					
+							<div class="reply-list" >		                
+								<div class="reply-author" th:text="${reply.user.username}">용이</div>
+								<div class="reply-content" th:text="${reply.commentContent}">뭐해</div>
+							</div>
+						</div>
+					</div>	 
+					           
+			    </div>  
 		    </div>
-		</div>
+		        
+				<div class="replyCommentForm" style="display: none;">
+					<h5>대댓글 작성</h5>
+				    <input type="hidden" class="parent-comment-id">
+				    <input class="reply-content"></input>
+				    <button class="submit-reply-btn" onclick="submitReply()">답글 작성</button>
+				</div>
+		        
+		    </div>
 		
 		<br>
     
@@ -338,6 +431,55 @@
     		
     	});
     	
+        $(document).ready(function() {
+        	$.get("/api/cart/count", function(data) {
+        		$('#cart-count').text(data);
+        	});
+        });
+    	
+        
+        function showReplyForm(element) {
+            let replyForm = document.querySelector('.replyCommentForm');
+            replyForm.style.display = 'block';
+            
+            let commentContentDiv = element; // 해당 태그
+            let commentListDiv = commentContentDiv.parentNode; // 해당 부모태그 
+            let commentId = commentListDiv.querySelector('.delete-comment-btn').getAttribute('data-id');
+            
+            console.log(commentId); // 로그로 ID 확인
+            
+            replyForm.querySelector('.parent-comment-id').value = commentId;
+            commentListDiv.insertAdjacentElement('afterend', replyForm);
+        }
+        
+        
+       function submitReply(){
+    	   
+        	let replyForm = document.querySelector('.replyCommentForm');
+            let commentId = replyForm.querySelector('.parent-comment-id').value;
+            let replyContent = replyForm.querySelector('.reply-content').value;
+            
+            // AJAX 호출을 만들고 실행하기
+            $.ajax({
+                url: "/board/comment/reply",
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify ({
+                    parentCommentId: commentId,
+                    commentContent: replyContent
+                }),
+                success: function(response) {
+                    alert('대댓글 작성이 완료되었습니다.');
+                    location.reload();  // 페이지 새로고침
+                },
+                error: function(xhr, status, error) {
+                    alert('대댓글 작성에 실패하였습니다.');
+                }
+            });
+        }
+        
+ 
+        
     </script>
     
     

@@ -18,7 +18,7 @@
 
             .review-block {
                 padding: 5px;
-                height: 600px;
+                height: 640px;
                 width: 470px;
                 background: transparent;
                 border: none;
@@ -29,9 +29,9 @@
             }
 
             .review-writing {
-                margin-bottom: 10px;
+                margin-bottom: 5px;
                 padding: 5px 15px;
-                height: 530px;
+                height: 550px;
                 width: 450px;
                 background: rgba(255, 255, 255, 0.3);
                 border: 1px dotted aqua;
@@ -39,11 +39,11 @@
             }
 
             .review-block-title {
-                margin-bottom: 10px;
+                margin-bottom: 5px;
                 background: transparent;
                 border: none;
                 outline: none;
-                font-size: 1.2rem;
+                font-size: 20px;
                 color: white;
             }
 
@@ -52,9 +52,10 @@
             }
 
             .star {
+                top: 10px;
                 cursor: pointer;
                 color: gray;
-                font-size: 2.5rem;
+                font-size: 45px;
                 margin-right: 3px;
             }
 
@@ -71,7 +72,7 @@
             }
 
             .textCount, .textTotal {
-                font-size: 0.7rem;
+                font-size: 12px;
                 color: white;
             }
 
@@ -99,7 +100,7 @@
                 display: inline-block;
                 width: 70px;
                 height: 35px;
-                font-size: 1rem;
+                font-size: 14px;
                 color: white;
                 background: rgba(255,192,203, 0.4);
                 border: 1px solid pink;
@@ -108,9 +109,8 @@
                 cursor: pointer;
             }
 
-            h1 {
+            h2 {
                 color: white;
-                margin: 10px 0;
             }
         </style>
     </th:block>
@@ -167,8 +167,8 @@
                             }
                         },
                         error: function (err) {
-                            console.error('Error', err);
-                            alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
+                        console.error('Error', err);
+                        alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
                         }
                     });
                 });
@@ -176,18 +176,18 @@
         </script>
         <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
-                console.log("페이지 로드");
-                document.querySelectorAll('#starRating .star').forEach(star => {
-                    console.log("별 이벤트 리스너 추가");
-                    star.addEventListener("click", event => {
-                        console.log("별 클릭");
-                        document.querySelectorAll('#starRating .star').forEach(s => {
-                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
-                        });
-                        document.getElementById("reviewRating").value = event.target.dataset.value;
+            console.log("페이지 로드");
+            document.querySelectorAll('#starRating .star').forEach(star => {
+                console.log("별 이벤트 리스너 추가");
+                star.addEventListener("click", event => {
+                    console.log("별 클릭");
+                    document.querySelectorAll('#starRating .star').forEach(s => {
+                        s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
                     });
+                    document.getElementById("reviewRating").value = event.target.dataset.value;
                 });
             });
+        });
         </script>
     </th:block>
 </head>
@@ -197,7 +197,7 @@
         <div class="review-block">
             <form id="reviewForm" th:object="${review}">
                 <div class="review-writing">
-                    <h1 th:text="${productTitle}"></h1>
+                    <h2 th:text="${productTitle}"></h2>
                     <div id="ratingZone">
                         <input class="review-block-title" value="별점">
                         <div id="starRating">

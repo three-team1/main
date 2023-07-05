@@ -23,19 +23,19 @@ public class Review {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "review_id")
 	private Long id;
-	
+
 	@Column(name = "review_title")
 	private String reviewTitle;
-	
+
 	@Column(name = "review_content")
 	private String reviewContent;
-	
+
 	@Column(name = "review_regdate")
 	private LocalDateTime reviewRegdate = LocalDateTime.now();
 
 	@Column(name = "review_rating")
 	private Integer reviewRating;		//별점 추가
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
