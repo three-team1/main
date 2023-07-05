@@ -41,13 +41,9 @@ public class Comment {
 	@Column(name = "board_id")
 	private Long boardId;
 
-<<<<<<< HEAD
+
 	@Column(name = "parent_comment_id")
 	private Long parentCommentId;
-=======
->>>>>>> d18cbc1 (충돌 해결)
-
-	
 	
 	
 }
