@@ -47,19 +47,17 @@ public class MypageViewController {
 
     //마이페이지 주문/배송 조회 페이지
     @GetMapping("/me")
-    public ModelAndView mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView();
+    public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-//        List<Orders> ordersList = ordersService.getOrdersList(user.getId());
-//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user);
+        List<Orders> ordersList = ordersService.getOrdersList(user);
+//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user.getUsername());
 
-//        model.addAttribute("orders", ordersList);
+        model.addAttribute("orders", ordersList);
 //        model.addAttribute("orderitems", orderItemList);
 
-        mv.setViewName("/mypage/me.html");
-
-        return mv;
+        return "mypage/me";
     }
 
     //마이페이지 내 정보 관리 페이지

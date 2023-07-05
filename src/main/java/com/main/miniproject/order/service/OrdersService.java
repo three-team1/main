@@ -2,24 +2,27 @@ package com.main.miniproject.order.service;
 
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.repository.OrdersRepository;
+import com.main.miniproject.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Data
 public class OrdersService {
-    private OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
 
-//    public List<Orders> getOrdersList(Long user) {
-//
-//        return ordersRepository.findAllByUser(user);
-//    }
+
+
+    public List<Orders> getOrdersList(User user) {
+
+        return ordersRepository.findAllByUser(user);
+    }
 
 
 
