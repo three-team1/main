@@ -45,8 +45,8 @@
 
   "product_img_name" : "자연의능력 상품사진",
 
-  "product_img_url" : "/images/modern-tech-background-networking-connections.jpg",
-  "product_img_ori_name" : "modern-tech-background-networking-connections.jpg"
+  "product_img_url" : "/images/자연.jpg",
+  "product_img_ori_name" : "자연.jpg"
 },
 
 {
@@ -83,6 +83,62 @@
   "product_img_name" : "불의능력 상품사진",
   "product_img_url" : "/images/explosion-man.jpg",
   "product_img_ori_name" : "explosion-man.jpg"
+
+},
+{
+  "product_img_id" : 10,
+  "product_id" : 10,
+  "product_img_name" : "탈모의능력 상품사진",
+  "product_img_url" : "/images/대머리.png",
+  "product_img_ori_name" : "대머리.png"
+
+},
+{
+  "product_img_id" : 11,
+  "product_id" : 11,
+  "product_img_name" : "그림자의능력 상품사진",
+  "product_img_url" : "/images/그림자.jpg",
+  "product_img_ori_name" : "대머리.jpg"
+
+},
+{
+  "product_img_id" : 12,
+  "product_id" : 12,
+  "product_img_name" : "죽음의능력 상품사진",
+  "product_img_url" : "/images/죽음.jpg",
+  "product_img_ori_name" : "죽음.jpg"
+
+},
+{
+  "product_img_id" : 13,
+  "product_id" : 13,
+  "product_img_name" : "번개의능력 상품사진",
+  "product_img_url" : "/images/토르.jpg",
+  "product_img_ori_name" : "토르.jpg"
+
+},
+{
+  "product_img_id" : 14,
+  "product_id" : 14,
+  "product_img_name" : "바람의능력 상품사진",
+  "product_img_url" : "/images/바람.jpg",
+  "product_img_ori_name" : "바람.jpg"
+
+},
+{
+  "product_img_id" : 15,
+  "product_id" : 15,
+  "product_img_name" : "염력의능력 상품사진",
+  "product_img_url" : "/images/염력.jpg",
+  "product_img_ori_name" : "염력.jpg"
+
+},
+{
+  "product_img_id" : 16,
+  "product_id" : 16,
+  "product_img_name" : "재생의능력 상품사진",
+  "product_img_url" : "/images/재생.jpg",
+  "product_img_ori_name" : "재생.jpg"
 
 }
 ]

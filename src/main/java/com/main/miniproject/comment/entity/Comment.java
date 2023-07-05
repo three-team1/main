@@ -34,6 +34,10 @@ public class Comment {
 	
 	@Column(name = "board_id")
 	private Long boardId;
+
+	@Column(name = "parent_comment_id")
+	private Long parentCommentId;
+
 	
 	
 	
