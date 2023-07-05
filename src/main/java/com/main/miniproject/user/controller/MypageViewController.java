@@ -51,7 +51,8 @@ public class MypageViewController {
 
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-        List<Orders> ordersList = ordersService.getOrdersList(user);
+//        List<Orders> ordersList = ordersService.getOrdersList(user);
+        List<Orders> ordersList = ordersService.getOrdersByUserId(user.getId());
 //        List<OrderItem> orderItemList = ordersService.getOrderItemList(user.getUsername());
 
         model.addAttribute("orders", ordersList);
@@ -59,6 +60,10 @@ public class MypageViewController {
 
         return "mypage/me";
     }
+    /*List<Orders> orders = orderService.getOrdersByUserId(userDetail.getId())
+
+    model.addAttribute "orders",orders*/
+
 
     //마이페이지 내 정보 관리 페이지
     @GetMapping("/myInfo")

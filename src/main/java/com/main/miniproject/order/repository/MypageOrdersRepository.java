@@ -10,7 +10,8 @@ import java.util.List;
 @Repository
 public interface MypageOrdersRepository extends JpaRepository<Orders, Long> {
 
-    List<Orders> findAllByUser(User user);
+//    List<Orders> findAllByUser(User user);
 
 
+    List<Orders> findByUserId(Long userId);
 }
