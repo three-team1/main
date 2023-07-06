@@ -12,6 +12,11 @@
 	<link
 	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
 	rel="stylesheet">
+	
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
+	
 	<link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
 <style>
 
@@ -176,6 +181,7 @@ a {
 				<div class="nav-bar-item">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -218,7 +224,7 @@ a {
 	<div class="container">
 
 		<div class="table-header">
-			<h1>게시판 목록</h1>
+			<h1>커뮤니티</h1>
 		</div>
 
 		<div class="table-search">
@@ -273,7 +279,15 @@ a {
 				th:class="${page.number == i ? 'selected' : ''}">1</a>
 		</th:block>
 	</div>
-
+	
+	<script>
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    });
+	</script>
 
 </body>
 </html>

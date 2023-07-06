@@ -18,6 +18,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
 
+    
     public Cart getCart(Long id){
         Cart cart = new Cart();
 
@@ -42,9 +43,14 @@ public class CartService {
 
     public void insertCart(Cart cart) {
 
-
-
         cartRepository.save(cart);
 
+    }
+    
+    public int countCart(User user) {
+    			
+    List<Cart> cartUserList = cartRepository.findAllByUser(user);  
+    	
+    	return cartUserList.size();
     }
 }

@@ -28,7 +28,8 @@
 			text-align: left;
 			color: wheat;
 			padding: 20px;
-			border: 1px solid gray;
+			border: 2px solid beige;
+			border-radius : 5px;
 			
 		}
 
@@ -97,6 +98,7 @@
             border-radius: 3px;
             font-weight: bold;
             margin-top: 10px;
+            cursor:pointer;
             
         }
 
@@ -140,6 +142,7 @@
 				<div class="nav-bar-item">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
+						<span id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -238,5 +241,12 @@
 				})
 			});
 
+			
+		    $(document).ready(function() {
+		    	$.get("/api/cart/count", function(data) {
+		    		$('#cart-count').text(data);
+		    	});
+		    });
+			
 </script>
 </html>

@@ -1,14 +1,15 @@
 package com.main.miniproject.order.service;
 
-import com.main.miniproject.order.repository.OrderRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.main.miniproject.order.ordersRepository.OrdersRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
-    public OrderRepository orderRepository;
+    public OrdersRepository orderRepository;
 }
 

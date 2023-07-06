@@ -2,7 +2,10 @@ package com.main.miniproject.comment.service;
 
 import java.util.List;
 
+import com.main.miniproject.board.entity.Board;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,13 @@ public class CommentService {
 				
 	}
 	
+	public List<Comment> commentReplyList(Long parentCommentId){
+	
+	return commentRepository.findByParentCommentId(parentCommentId);
+	
+	}	
+	
+	
 	public void saveComment(Comment comment, Long boardId, String boardType) {
 	    User user = getCurrentUser();
 	    comment.setUser(user);
@@ -46,6 +56,11 @@ public class CommentService {
 		commentRepository.deleteById(commentId);
 	}
 	
+	public Comment getComment(Long commentID) {
+		
+		return commentRepository.findById(commentID).get();
+	}
+	
 	
 	
 	public User getCurrentUser() {											// 사용자 인증정보 반환
@@ -55,5 +70,10 @@ public class CommentService {
 	return userDetail.getUser();
 	
 	}
-	
+
+	//mypage내 댓글조회 구현
+	public List<Comment> getMypagecomments(String userId) {
+		return commentRepository.findByUserUsername(userId);
+	}
+
 }
