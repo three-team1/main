@@ -68,13 +68,6 @@
                 cursor: pointer;
             }
 
-            .review-card .full {
-                display: none;
-                width: auto;
-                height: 400px;
-                cursor: pointer;
-            }
-
             .thumbnail-container {
                 position: relative;
                 display: inline-block;
@@ -102,6 +95,20 @@
                 display: block;
             }
 
+            .images-container > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 1px;
+            }
+
+            .images-container img {
+                display: block;
+                height: auto;
+                cursor: pointer;
+            }
+
             .pagination {
                 margin-top: 20px;
                 width: 200px;
@@ -121,23 +128,36 @@
         <script type="text/javascript">
             $(function () {
                 $(".thumbnail").on("click", function () {
-                    const imageContainer = $(this).parent().next(".images-container");
-                    $(this).hide();
-                    imageContainer.css("display", "block").css("visibility", "visible");
+                    const reviewCard = $(this).closest(".review-card");
+                    reviewCard.find(".images-container").css("display", "block").css("visibility", "visible");
 
-                    // 이미지 컨테이너 로드 전에 높이 auto 설정
-                    imageContainer.find("img.full").on("load", function() {
-                        imageContainer.css("height", "auto");
-                    }).each(function() {
+                    reviewCard.find(".full").each(function() {
+                        const imageUrl = $(this).attr("data-url");
+                        $(this).attr("src", imageUrl);
+
+                        //이미지 로드 이후 이미지 컨테이너 높이 설정
+                        $(this).on("load", function () {
+                            const imageHeight = $(this).data("height");
+                            $(this).closest(".images-container").css("height", imageHeight + "px");
+                        });
+
                         // 이미지가 이미 로드되었는지 확인
                         if(this.complete) $(this).trigger("load");
+
+                        //이미지 로드 안 됐을 경우 높이 설정
+                        if(!this.complete) {
+                            const imageHeight = $(this).data("height");
+                            $(this).closest(".images-container").css("height", imageHeight + "px");
+                        }
                     });
+
+                    reviewCard.find(".thumbnail-container").hide();
                 });
 
                 $(".images-container").on("click", ".full", function () {
-                    const thumbnail = $(this).parent().parent().prev().children(".thumbnail");
-                    $(this).parent().parent().css("display", "none").css("visibility", "hidden");
-                    thumbnail.show();
+                    const reviewCard = $(this).closest(".review-card");
+                    reviewCard.find(".images-container").css("display", "none").css("visibility", "hidden");
+                    reviewCard.find(".thumbnail-container").show();
                 });
             });
         </script>
@@ -164,14 +184,14 @@
                             <p th:text="${review.reviewContent}"></p>
                         </div>
                     </div>
-                    <div th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}">
-                        <div class="thumbnail-container">
-                            <img class="thumbnail" th:src="@{${reviewImages.get(review.id)[0].url}}" alt="리뷰 이미지 썸네일">
+                    <div th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
+                         th:each="reviewImage, stat : ${reviewImages.get(review.id)}">
+                        <div class="thumbnail-container" th:if="${stat.first}">
+                            <img class="thumbnail" th:src="@{${reviewImage.url}}" alt="리뷰 이미지 썸네일">
                         </div>
                         <div class="images-container" style="display: none; visibility: hidden;">
-                            <div th:each="reviewImage : ${reviewImages.get(review.id)}">
-                                <img class="full" th:src="@{${reviewImage.url}}" alt="리뷰 이미지" onclick="toggleImage(this)">
-                            </div>
+                            <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
+                                 th:data-height="${reviewImage.height}" alt="리뷰 이미지">
                         </div>
                     </div>
                     <div>

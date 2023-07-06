@@ -51,6 +51,7 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
+	implementation 'net.coobird:thumbnailator:0.4.17'
 
 
 }
