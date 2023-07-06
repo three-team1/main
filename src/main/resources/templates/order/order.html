@@ -88,6 +88,34 @@
                     "color": "blue"
                 });
             });
+
+            //천단위 꼼마 찍기
+            $(".order-price").each(function() {
+                var element = $(this);
+                var price = element.text();
+                var formattedPrice = Number(price).toLocaleString();
+                element.text(formattedPrice);
+            });
+
+            //토탈 결제금액 내기
+            $(document).ready(function() {
+                var totalPrice = 0;
+                $(".order-price").each(function() {
+                    var price = $(this).text().replace(/,/g, ''); // 콤마 제거 후 숫자로 변환
+                    totalPrice += parseInt(price);
+                });
+
+                $("#order-total-price").text(totalPrice.toLocaleString());
+            });
+
+            $(document).ready(function() {
+                var orderTotalPrice = parseFloat($('#order-total-price').text().replace(/,/g, ''));
+
+                var totalPrice = orderTotalPrice + 3000;
+
+                $('#total-price').text(totalPrice.toLocaleString());
+            });
+
         });
 
     </script>
@@ -138,9 +166,10 @@
         .order-form-top {
             width: 100%;
             margin: 0 auto;
-            background-color: white;
+            background-color: #86cfda;
             padding: 20px;
-            border-bottom: 1px solid black ;
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
         }
 
         .order-form-top p {
@@ -240,20 +269,40 @@
             border-bottom: 1px solid black;
         }
 
+        #order-product-contents-table td {
+            padding: 10px;
+        }
+
+        #order-product-list-title {
+            margin-bottom: 10px;
+        }
+
+
         .total-payment-price {
-            background-color: aqua;
+            background-color: #86cfda;
             color: black;
             border-bottom: 1px solid black;
         }
 
-        #total-payment-price-table th, #total-price {
+        #total-p, #total-price {
             font-size: 20px;
             font-weight: bold;
         }
 
-        #total-payment-price-table td {
-            float: right;
+        #total-p {
+            padding: 10px;
+            width: 80%;
         }
+
+        .total-payment-price-table{
+            width: 100%;
+        }
+
+        .total-payment-price-table td {
+            text-align: right;
+            width: auto;
+        }
+
 
         .payment {
             width: 100%;
@@ -301,19 +350,39 @@
         .final-payment {
             width: 100%;
             margin: 0 auto;
-            background-color: aqua;
+            background-color: #86cfda;
             color: black;
             text-align: center;
             padding: 20px;
             border-bottom: 1px solid black;
         }
 
-       .final-payment p {
+       .final-payment input {
            font-size: 20px;
            font-weight: bold;
+           border: none;
+           background-color: #86cfda;
         }
 
+       #order-image img{
+           width: 100%;
+       }
 
+       .order-price {
+           text-align: right;
+       }
+
+       #order-total-price, #ship-price {
+           text-align: right;
+       }
+
+       #order-payment-table th, td {
+           padding: 10px;
+       }
+
+       #order-payment-title h2 {
+           margin-bottom: 10px;
+       }
     </style>
 <body>
     <header>
@@ -479,14 +548,14 @@
                 <div class="order-product-contents">
                     <table id="order-product-contents-table">
                         <colgroup>
-                            <col style="width:10%">
-                            <col style="width:70%">
-                            <col style="width:20%">
+                            <col style="width:25%">
+                            <col style="width:50%">
+                            <col style="width:auto">
                         </colgroup>
-                        <tr>
-                            <td>상품이미지</td>
-                            <td>상품이름</td>
-                            <td>가격</td>
+                        <tr th:each="order: ${ordersList} ">
+                            <td id="order-image"><img th:src="${order.cart.productImage}"></td>
+                            <td id="order-title" th:text="${order.cart.product.productTitle}"></td>
+                            <td class="order-price" th:text="${order.cart.product.productPrice.longValue()}"></td>
                         </tr>
                     </table>
                 </div>
@@ -507,16 +576,13 @@
                             <tr>
                                 <th>주문상품</th>
                                 <td>
-                                    <span id="order-product-price">500,000</span>
+                                    <span id="order-total-price"></span>
                                 </td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
                                 <td>
-                                    <span class="price">
-                                        +
-                                        <span id="ship-price">3,000</span>
-                                    </span>
+                                    <p id="ship-price">+ 3,000</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -525,18 +591,11 @@
             </div>
             <!--최종 금액-->
             <div class="total-payment-price">
-                <table id="total-payment-price-table">
-                    <colgroup>
-                        <col style="width:765px">
-                    </colgroup>
-                    <tbody>
+                <table class="total-payment-price-table">
                         <tr>
-                            <th>최종 결제 금액</th>
-                            <td>
-                                <span id="total-price">503,000</span>
-                            </td>
+                            <th id="total-p">최종 결제 금액</th>
+                            <td id="total-price"></td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
 
@@ -564,10 +623,11 @@
                 </div>
             </div>
 
-
             <!--최종 결제 통보-->
             <div class="final-payment">
-                <p>결제하기</p>
+                <form action="/payment" method="post" onsubmit="requestSelectPay()">
+                    <input type="submit" value="결제하기" class="selected">
+                </form>
             </div>
         </div>
     </section>
