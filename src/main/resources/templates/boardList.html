@@ -21,11 +21,6 @@
 <style>
 
 
-body {
-
-	color: #D2D1D5;
-}
-
 
 tr:nth-child(even) {
   background-color: #2b2b2b;
@@ -59,22 +54,21 @@ th {
 
 a {
 	text-decoration-line : none;
-	color : beige;
 }
 
 .container {
-	margin-top: 200px;
+	margin-top: 270px;
 }
 
 .table {
-	width: 1000px;
+	width: 1050px;
 	margin: auto;
 	text-align: center;
 	border-collapse: collapse;
 }
 
 .table-responsive {
-	min-height : 600px;
+	min-height : 500px;
 }
 
 .id {
@@ -98,13 +92,15 @@ a {
 	margin: auto;
 	text-align: center;
 	color: lightblue;
+	letter-spacing:5px;
 }
 
 .table-search {
 	text-align: center;
+	margin:auto;
 	margin-bottom: 10px;
-	margin-right: 800px;
 }
+
 
 .table-search button {
 	height: 25px;
@@ -124,16 +120,23 @@ a {
 .pagination {
 	margin: auto;
 	margin-top: 20px;
+	margin-bottom: 30px;
 	width: 200px;
 	text-align:center;
+	border : 1px solid gray;
+}
+
+.pagination a{
+	color:lightgreen;
 }
 
 .selected {
-	color: lightblue;
+	color: gray !important;
 }
 
 .btn-write {
   text-align: center;
+  margin-top:25px;
 }
 
 .btn-write button {
@@ -224,15 +227,19 @@ a {
 	<div class="container">
 
 		<div class="table-header">
-			<h1>커뮤니티</h1>
+			<h1>Community</h1>
 		</div>
 
-		<div class="table-search">
-			<form th:action="@{/board/list}" method="get">
-				<input type="text" name="keyword" placeholder="Search">
-				<button type="submit">검색</button>
-			</form>
-		</div>
+	<div class="table-search">
+		<form th:action="@{/board/list}" method="get">
+		    <select name="searchType">
+		        <option value="title" th:selected="${searchType == 'title'}">제목 및 내용</option>
+		        <option value="writer" th:selected="${searchType == 'writer'}">작성자</option>
+		    </select>
+		    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search">
+		    <button type="submit">검색</button>
+		</form>
+	</div>
 
 
 
@@ -273,12 +280,19 @@ a {
    </a>
   </div>
 
-	<div class="pagination">
-		<th:block th:if="${page.totalPages > 0}" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
-			<a th:href="@{/board/list(page=${i})}" th:text="${i + 1}"
-				th:class="${page.number == i ? 'selected' : ''}">1</a>
-		</th:block>
-	</div>
+<div class="pagination">
+    <th:block th:if="${page.totalPages > 0}">
+        <!-- 이전 페이지로 가는 링크 추가 -->
+        <a th:href="@{/board/list(page=0)}"><<</a>
+
+        <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+            <a th:href="@{/board/list(page=${i})}" th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}">1</a>
+        </th:block>
+
+        <!-- 다음 페이지로 가는 링크 추가 -->
+        <a th:href="@{/board/list(page=${page.totalPages - 1})}">>></a>
+    </th:block>
+</div>
 	
 	<script>
     
@@ -287,6 +301,7 @@ a {
     		$('#cart-count').text(data);
     	});
     });
+    
 	</script>
 
 </body>
