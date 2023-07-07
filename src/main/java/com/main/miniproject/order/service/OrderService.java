@@ -18,8 +18,8 @@ public class OrderService {
     private final OrdersRepository ordersRepository;
 
 
-    public List<Orders> getList(Cart cart) {
-        return ordersRepository.findAllByCart(cart);
-    }
+//    public List<Orders> getList(Cart cart) {
+//        return ordersRepository.findAllByCart(cart);
+//    }
 }
 

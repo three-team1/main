@@ -115,7 +115,7 @@
       text-align: center;
     }
 
-    .order-btn {
+    .order-btn, #orderBtn {
       margin: 30px auto;
       text-align: center;
     }
@@ -259,6 +259,35 @@
       // 페이지 로드 시 상품 개수 값 설정
       updateItemCnt();
 
+      //결제 창으로 넘기기
+      $("#orderBtn").on("click", function (e) {
+        e.preventDefault();
+        let checkedCartIds = [];
+
+        // 체크된 Cart ID 가져오기
+        $("input[name=check]:checked").each(function () {
+          let cartId = $(this).closest("tr").find("input[name='id']").val();
+          checkedCartIds.push(cartId);
+        });
+
+        // 체크된 Cart ID를 쿼리 스트링으로 변환
+        const queryString = checkedCartIds.map(id => `cartList=${id}`).join('&');
+
+        // Ajax를 사용하여 체크된 Cart 데이터 가져오기
+        $.ajax({
+          url: `/viewOrderItem?${queryString}`, // 서버에 요청할 URL 지정(쿼리 스트링 포함)
+          type: "get",
+          success: function () { // 서버에서 받은 체크된 카트 데이터 출력
+            location.href='/viewOrderItem?' + queryString;
+            // 이 데이터를 사용하여 필요한 작업을 수행합니다.
+          },
+          error: function () {
+            console.error("데이터 가져오기 실패");
+          },
+        });
+
+      });
+
     });
 
 
@@ -385,9 +414,9 @@
     </div>
 
     <div class="order-btn">
-      <form action="/createOrder" method="post">
-        <input type="submit" value="주문하기" class="order-go">
-      </form>
+        <button type="button" value="주문하기" class="order-go">
+          <a id="orderBtn" href="#">주문하기</a>
+        </button>
     </div>
   </div>
 </section>

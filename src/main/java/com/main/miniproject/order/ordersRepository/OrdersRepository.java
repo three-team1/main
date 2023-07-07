@@ -15,7 +15,5 @@ import java.util.List;
 @Transactional
 public interface OrdersRepository extends JpaRepository<Orders, Long>{
 
-    Orders findByCart(Cart cart); // 단일 결과만 반환하도록 변경
 
-    List<Orders> findAllByCart(Cart cart);
 }
