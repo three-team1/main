@@ -48,11 +48,7 @@ public class Orders {
 	
 	@Column(name = "order_tel")
 	private String orderTel;
-	
-	@ManyToOne
-	@JoinColumn(name = "cart_id")
-	private Cart cart;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "payment_id")
 	private Payment payment;

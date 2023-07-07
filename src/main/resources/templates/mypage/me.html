@@ -162,8 +162,9 @@
                             <img src="/images/time-man.jpg" width="200px" height="200px">
                             </div>
                         </div>
+<!--                        <ul th:each="product : ${products}">-->
                         <ul th:each="product : ${products}">
-                            <li class="order-detail" th:text="${product.productTitle}">제품명?</li>
+                            <li class="order-detail" th:text="product.productTitle">제품명?</li>
                             <li class="order-detail"></li>
                             <li class="order-detail"></li>
                             <li class="order-detail"></li>
