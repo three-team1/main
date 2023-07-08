@@ -9,4 +9,10 @@ public interface ReviewService {
     Review insertReview(Review review);
 
     Page<Review> getAllReviews(Pageable pageable);
+
+    Page<Review> searchReview(Pageable pageable, String keyword);
+
+    Page<Review> getMyReviews(Pageable pageable, String username);
+
+    Page<Review> searchMyReviews(Pageable pageable, String username, String keyword);
 }

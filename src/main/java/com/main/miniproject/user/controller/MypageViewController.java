@@ -7,6 +7,11 @@ import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
+import com.main.miniproject.review.entity.Review;
+import com.main.miniproject.review.entity.ReviewImage;
+import com.main.miniproject.review.service.ReviewFileService;
+import com.main.miniproject.review.service.ReviewImageService;
+import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +29,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
 public class MypageViewController {
     private UserInfoService userInfoService;
+
+    private ReviewService reviewService;
+
+    private ReviewImageService reviewImageService;
 
     @Autowired
     private BoardService boardService;
@@ -41,8 +54,12 @@ public class MypageViewController {
     private OrdersService ordersService;
 
     @Autowired
-    public MypageViewController(UserInfoService userInfoService) {
+    public MypageViewController(UserInfoService userInfoService,
+                                ReviewService reviewService,
+                                ReviewImageService reviewImageService) {
         this.userInfoService = userInfoService;
+        this.reviewService = reviewService;
+        this.reviewImageService = reviewImageService;
     }
 
     //마이페이지 주문/배송 조회 페이지
@@ -57,7 +74,7 @@ public class MypageViewController {
 //        model.addAttribute("orders", ordersList);
 //        model.addAttribute("orderitems", orderItemList);
 
-        mv.setViewName("/mypage/me.html");
+        mv.setViewName("/mypage/me");
 
         return mv;
     }
@@ -67,7 +84,7 @@ public class MypageViewController {
     public ModelAndView myInfoView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/myInfo.html");
+        mv.setViewName("/mypage/myInfo");
 
         return mv;
     }
@@ -77,7 +94,7 @@ public class MypageViewController {
     public ModelAndView pwChkView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChk.html");
+        mv.setViewName("/mypage/pwChk");
 
         return mv;
     }
@@ -89,7 +106,7 @@ public class MypageViewController {
         ModelAndView mv = new ModelAndView();
 
         mv.addObject("user", user);
-        mv.setViewName("/mypage/myUpdate.html");
+        mv.setViewName("/mypage/myUpdate");
 
         return mv;
     }
@@ -99,11 +116,12 @@ public class MypageViewController {
     public ModelAndView pwChangeView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChange.html");
+        mv.setViewName("/mypage/pwChange");
 
         return mv;
     }
 
+    //내 글 조회
     @GetMapping("/myBoard")
     public String myBoardView(Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
@@ -128,6 +146,61 @@ public class MypageViewController {
         return "mypage/myBoard";
     }
 
+    //내 리뷰 조회
+    @GetMapping("/myReview")
+    public ModelAndView myReviewPage(@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+        ModelAndView mv = new ModelAndView();
 
+        //현재 로그인 사용자의 리뷰 가져오기
+        String username = userDetails.getUsername();
+        Page<Review> reviewPage = reviewService.getMyReviews(pageable, username);
+
+        //각 리뷰의 이미지 List를 담아줄 map 선언
+        Map<Long, List<ReviewImage>> reviewImageMap = new HashMap<>();
+
+        //각 리뷰에 이미지를 담고 map에 저장
+        for (Review review : reviewPage.getContent()) {
+            List<ReviewImage> reviewImages = reviewImageService.reviewImageList(review);
+            reviewImageMap.put(review.getId(), reviewImages);
+        }
+
+        mv.addObject("reviews", reviewPage);
+        mv.addObject("page", reviewPage);
+        mv.addObject("reviewImages", reviewImageMap);
+        mv.setViewName("mypage/myReview");
+
+        return mv;
+    }
+
+    //내 리뷰 검색
+    @GetMapping("/myReview-search")
+    public ModelAndView searchMyReview(@RequestParam String keyword,
+                                       @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
+        ModelAndView mv = new ModelAndView();
+
+        //현재 로그인한 사용자의 리뷰만 가져오는 로직 추가
+        String username = userDetails.getUsername();
+
+
+        Page<Review> reviewPage = reviewService.searchMyReviews(pageable, username, keyword);
+
+        //각 리뷰의 이미지 List를 담아줄 map 선언
+        Map<Long, List<ReviewImage>> reviewImageMap = new HashMap<>();
+
+        for (Review review : reviewPage.getContent()) {
+            List<ReviewImage> reviewImages = reviewImageService.reviewImageList(review);
+            reviewImageMap.put(review.getId(), reviewImages);
+        }
+
+        mv.addObject("reviews", reviewPage);
+        mv.addObject("page", reviewPage);
+        mv.addObject("reviewImages", reviewImageMap);
+        mv.addObject("keyword", keyword);
+        mv.setViewName("mypage/searchMyReview");
+
+        return mv;
+    }
 }
 

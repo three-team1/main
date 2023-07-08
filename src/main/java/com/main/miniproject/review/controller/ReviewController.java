@@ -15,8 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +55,8 @@ public class ReviewController {
 
     //리뷰 목록 페이지(상세 페이지 겸함)
     @GetMapping("/list")
-    public ModelAndView getReviewList(@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC)
-                                      Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getReviewList(@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                      @AuthenticationPrincipal UserDetails userDetails) {
         userDetails.getUsername();
         ModelAndView mv = new ModelAndView();
 
@@ -72,6 +75,39 @@ public class ReviewController {
         mv.addObject("page", reviewPage);
         mv.addObject("reviewImages", reviewImageMap);
         mv.setViewName("review/reviewList");
+
+        return mv;
+    }
+
+    //리뷰 목록 검색
+    @GetMapping("/list-search")
+    public ModelAndView searchReviewList(@RequestParam String keyword,
+                                         @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                         HttpServletRequest request,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
+        userDetails.getUsername();
+        ModelAndView mv = new ModelAndView();
+
+        //검색어 저장
+        HttpSession session = request.getSession();
+        if(keyword != null && !keyword.isEmpty()){
+            session.setAttribute("keyword", keyword);
+        } else {
+            keyword = (String) session.getAttribute("keyword");
+        }
+
+        Page<Review> reviewPage = reviewService.searchReview(pageable, keyword);
+
+        Map<Long, List<ReviewImage>> reviewImageMap = new HashMap<>();
+        for (Review review : reviewPage.getContent()) {
+            List<ReviewImage> reviewImages = reviewImageService.reviewImageList(review);
+            reviewImageMap.put(review.getId(), reviewImages);
+        }
+
+        mv.addObject("reviews", reviewPage.getContent());
+        mv.addObject("page", reviewPage);
+        mv.addObject("reviewImages", reviewImageMap);
+        mv.setViewName("review/searchReviewList");
 
         return mv;
     }

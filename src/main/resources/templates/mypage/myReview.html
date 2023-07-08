@@ -8,12 +8,58 @@
         <style>
             .main-container {
                 margin-top: 172px;
-                min-height: 640px;
-                min-width: 670px;
+                margin-bottom: 10px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 720px;
+                grid-gap: 10px;
+            }
+
+            .main-container > div {
+                border: 1px dotted aqua;
+                border-radius: 5px;
+                padding: 1em;
+            }
+
+            .aside {
+                grid-column: 1;
+                grid-row: 1;
+                margin-left: 10px;
                 display: flex;
-                flex-direction: column;
                 justify-content: center;
                 align-items: center;
+            }
+
+            .section {
+                grid-column: 2 / 5;
+                grid-row: 1;
+            }
+
+            .menu {
+                position: absolute;
+                color: white;
+            }
+
+            .menu-title {
+                border: 1px solid pink;
+                padding: 20px 10px;
+                text-align: center;
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: white;
+                cursor: pointer;
+            }
+
+            #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+                background: rgba(255,192,203, 0.4);
+            }
+
+            .section {
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
 
             .table-search {
@@ -166,9 +212,9 @@
             }
 
             .review-card .thumbnail {
-                width: 100px;
-                height: 100px;
-                cursor: pointer;
+              width: 100px;
+              height: 100px;
+              cursor: pointer;
             }
 
             .images-container {
@@ -237,6 +283,27 @@
     </th:block>
     <th:block layout:fragment="script">
         <script type="text/javascript">
+            function divBtn4() {
+                window.location.href="/mypage/myInfo";
+
+                $.ajax({
+                    url: "/api/mypage/myInfo",
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(user) {
+                        $('#username').val(user.username);
+                        $('#email').val(user.email);
+                        $('#tel').val(user.tel);
+                        $('#my_postcode').val(user.my_postcode);
+                        $('#my_address').val(user.my_address);
+                        $('#my_detailAddress').val(user.my_detailAddress);
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            }
+
             $(function () {
                 $(".review-card").each(function () {
                     const imageCount = $(this).find(".images-container img").length;
@@ -300,7 +367,7 @@
 
                     const keyword = $("input[name='keyword']").val();
                     localStorage.setItem("keyword", keyword);
-                    window.location.href = "/review/list-search?keyword=" + keyword;
+                    window.location.href = "/mypage/myReview-search?keyword=" + keyword;
                 }
 
                 //검색어 유지
@@ -313,71 +380,91 @@
     </th:block>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="main-container">
-        <div class="review-block">
-            <h1>상품 후기</h1>
-            <div class="table-search">
-                <form id="searchForm" th:action="@{/review/list}" method="get">
-                    <input type="text" name="keyword" id="keyword" placeholder="Search">
-                    <button type="submit" id="btnSearch">검색</button>
-                </form>
-            </div>
-            <div th:each="review : ${reviews}">
-                <div class="review-card">
-                    <div class="text-zone">
-                        <div class="top-section">
-                            <div class="rating-and-info">
-                                <div class="starRating">
-                                    <span th:each="star : ${#numbers.sequence(1, 5)}"
-                                          th:class="${star <= review.reviewRating} ? 'goldStar' : 'greyStar'">★</span>
-                                    <span th:text="${review.reviewRating}"></span>
-                                </div>
-                                <div class="userInfo">
-                                    <span class="username" th:text="${review.user.username}"></span>
-                                    <span class="reviewRegdate" th:text="${#temporals.format(review.reviewRegdate, 'yyyy-MM-dd HH:mm:ss')}"></span>
-                                </div>
-                            </div>
-                            <div class="buttons">
-                                <button type="button" id="btnSave" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('수정')">수정</button>
-                                <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('삭제')">삭제</button>
-                            </div>
-                        </div>
-                        <div class="reviewContent more-article">
-                            <p class="more-article__text" th:text="${review.reviewContent}"></p>
-                        </div>
-                        <div class="images-container" style="display: none; visibility: hidden;" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
-                                    th:each="reviewImage : ${reviewImages.get(review.id)}">
-                            <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
-                                 th:data-height="${reviewImage.height}" alt="리뷰 이미지">
-                        </div>
+    <div layout:fragment="content">
+        <div class="main-container">
+            <div class="aside">
+                <div class="menu">
+                    <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+                        <p>내 주문/배송조회</p>
                     </div>
-                    <div class="thumbnail-wrap" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
-                         th:each="reviewImage, stat : ${reviewImages.get(review.id)}">
-                        <div class="thumbnail-container" th:if="${stat.first}">
-                            <img class="thumbnail" th:src="@{${reviewImage.url}}" alt="리뷰 이미지 썸네일">
-                        </div>
+                    <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
+                        <p>내 글/댓글 조회</p>
+                    </div>
+                    <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
+                        <p>내 리뷰 관리</p>
+                    </div>
+                    <div class="menu-title" id="menu-title4" onclick="divBtn4()">
+                        <p>내 정보 관리</p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="pagination">
-            <th:block th:if="${page.totalPages > 0}">
-                <a th:href="@{/review/list(page=0, size=${page.size})}" th:if="${page.number > 0}">[처음]</a>
-                <a th:href="@{/review/list(page=${page.number - 10 > 0 ? page.number - 10 : 0}, size=${page.size})}"
-                   th:if="${page.number > 9}">[이전 10쪽]</a>
-                <th:block th:each="i : ${#numbers.sequence(page.number / 10 * 10,
-                            (page.number / 10 + 1) * 10 < page.totalPages ? (page.number / 10 + 1) * 10 - 1 : page.totalPages - 1)}">
-                    <a th:href="@{/review/list(page=${i}, size=${page.size})}" th:text="${i + 1}"
-                       th:class="${page.number == i ? 'selected' : ''}"></a>
-                </th:block>
-                <a th:href="@{/review/list(page=${page.number + 10 < page.totalPages ? page.number + 10 : page.totalPages - 1}, size=${page.size})}"
-                   th:if="${page.number < page.totalPages - 10}">[다음 10쪽]</a>
-                <a th:href="@{/review/list(page=${page.totalPages - 1}, size=${page.size})}"
-                   th:if="${page.number < page.totalPages - 1}">[마지막]</a>
-            </th:block>
+            <div class="section">
+                <div class="review-block">
+                    <h1>상품 후기</h1>
+                    <div class="table-search">
+                        <form id="searchForm" th:action="@{/mypage/myReview}" method="get">
+                            <input type="text" id="keyword" name="keyword" placeholder="Search">
+                            <button type="submit" id="btnSearch">검색</button>
+                            <a th:href="@{/mypage/myReview}">전체 목록</a>
+                        </form>
+                    </div>
+                    <div th:each="review : ${reviews}">
+                        <div class="review-card">
+                            <div class="text-zone">
+                                <div class="top-section">
+                                    <div class="rating-and-info">
+                                        <div class="starRating">
+                                            <span th:each="star : ${#numbers.sequence(1, 5)}"
+                                                  th:class="${star <= review.reviewRating} ? 'goldStar' : 'greyStar'">★</span>
+                                            <span th:text="${review.reviewRating}"></span>
+                                        </div>
+                                        <div class="userInfo">
+                                            <span class="username" th:text="${review.user.username}"></span>
+                                            <span class="reviewRegdate" th:text="${#temporals.format(review.reviewRegdate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="buttons">
+                                        <button type="button" id="btnSave" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('수정')">수정</button>
+                                        <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('삭제')">삭제</button>
+                                    </div>
+                                </div>
+                                <div class="reviewContent more-article">
+                                    <p class="more-article__text" th:text="${review.reviewContent}"></p>
+                                </div>
+                                <div class="images-container" style="display: none; visibility: hidden;"
+                                       th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
+                                       th:each="reviewImage : ${reviewImages.get(review.id)}">
+                                    <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
+                                                                        th:data-height="${reviewImage.height}" alt="리뷰 이미지">
+                                </div>
+                            </div>
+                            <div class="thumbnail-wrap" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
+                                                        th:each="reviewImage, stat : ${reviewImages.get(review.id)}">
+                                <div class="thumbnail-container" th:if="${stat.first}">
+                                    <img class="thumbnail" th:src="@{${reviewImage.url}}" alt="리뷰 이미지 썸네일">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <th:block th:if="${page.totalPages > 0}">
+                        <a th:href="@{/mypage/myReview(page=0, keyword=${keyword})}">[처음]</a>
+                        <a th:href="@{/mypage/myReview(page=${page.number > 9 ? page.number - 9 : 0}, keyword=${keyword})}"
+                           th:if="${page.number > 0}">[이전 10쪽]</a>
+                        <th:block th:each="i : ${#numbers.sequence(page.number / 10 * 10,
+                                        (page.number / 10 + 1) * 10 < page.totalPages ? (page.number / 10 + 1) * 10 - 1 : page.totalPages - 1)}">
+                            <a th:href="@{/mypage/myReview(page=${i}, keyword=${keyword})}"
+                               th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}"></a>
+                        </th:block>
+                        <a th:href="@{/mypage/myReview(page=${page.number + 10 < page.totalPages ? page.number + 10 : page.totalPages - 1}, keyword=${keyword})}"
+                           th:if="${page.number < page.totalPages - 10}">[다음 10쪽]</a>
+                        <a th:href="@{/mypage/myReview(page=${page.totalPages - 1}, keyword=${keyword})}"
+                           th:if="${page.number < page.totalPages - 1}">[마지막]</a>
+                    </th:block>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

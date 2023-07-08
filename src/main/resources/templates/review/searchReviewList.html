@@ -318,9 +318,10 @@
         <div class="review-block">
             <h1>상품 후기</h1>
             <div class="table-search">
-                <form id="searchForm" th:action="@{/review/list}" method="get">
-                    <input type="text" name="keyword" id="keyword" placeholder="Search">
+                <form id="searchForm" th:action="@{/review/list-search}" method="get">
+                    <input type="text" id="keyword" name="keyword" placeholder="Search">
                     <button type="submit" id="btnSearch">검색</button>
+                    <a th:href="@{/review/list}">전체 목록</a>
                 </form>
             </div>
             <div th:each="review : ${reviews}">
@@ -347,7 +348,7 @@
                             <p class="more-article__text" th:text="${review.reviewContent}"></p>
                         </div>
                         <div class="images-container" style="display: none; visibility: hidden;" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
-                                    th:each="reviewImage : ${reviewImages.get(review.id)}">
+                             th:each="reviewImage : ${reviewImages.get(review.id)}">
                             <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
                                  th:data-height="${reviewImage.height}" alt="리뷰 이미지">
                         </div>
@@ -363,17 +364,17 @@
         </div>
         <div class="pagination">
             <th:block th:if="${page.totalPages > 0}">
-                <a th:href="@{/review/list(page=0, size=${page.size})}" th:if="${page.number > 0}">[처음]</a>
-                <a th:href="@{/review/list(page=${page.number - 10 > 0 ? page.number - 10 : 0}, size=${page.size})}"
-                   th:if="${page.number > 9}">[이전 10쪽]</a>
+                <a th:href="@{/review/list-search(page=0, keyword=${keyword})}">[처음]</a>
+                <a th:href="@{/review/list-search(page=${page.number > 9 ? page.number - 9 : 0}, keyword=${keyword})}"
+                   th:if="${page.number > 0}">[이전 10쪽]</a>
                 <th:block th:each="i : ${#numbers.sequence(page.number / 10 * 10,
-                            (page.number / 10 + 1) * 10 < page.totalPages ? (page.number / 10 + 1) * 10 - 1 : page.totalPages - 1)}">
-                    <a th:href="@{/review/list(page=${i}, size=${page.size})}" th:text="${i + 1}"
-                       th:class="${page.number == i ? 'selected' : ''}"></a>
+                (page.number / 10 + 1) * 10 < page.totalPages ? (page.number / 10 + 1) * 10 - 1 : page.totalPages - 1)}">
+                    <a th:href="@{/review/list-search(page=${i}, keyword=${keyword})}"
+                       th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}"></a>
                 </th:block>
-                <a th:href="@{/review/list(page=${page.number + 10 < page.totalPages ? page.number + 10 : page.totalPages - 1}, size=${page.size})}"
+                <a th:href="@{/review/list-search(page=${page.number + 10 < page.totalPages ? page.number + 10 : page.totalPages - 1}, keyword=${keyword})}"
                    th:if="${page.number < page.totalPages - 10}">[다음 10쪽]</a>
-                <a th:href="@{/review/list(page=${page.totalPages - 1}, size=${page.size})}"
+                <a th:href="@{/review/list-search(page=${page.totalPages - 1}, keyword=${keyword})}"
                    th:if="${page.number < page.totalPages - 1}">[마지막]</a>
             </th:block>
         </div>

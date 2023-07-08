@@ -44,6 +44,21 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Review> searchReview(Pageable pageable, String keyword) {
+        return reviewRepository.findByReviewTitleContainingOrReviewContentContaining(keyword, keyword, pageable);
+    }
+
+    @Override
+    public Page<Review> getMyReviews(Pageable pageable, String username) {
+        return reviewRepository.findByUserUsername(pageable, username);
+    }
+
+    @Override
+    public Page<Review> searchMyReviews(Pageable pageable, String username, String keyword) {
+        return reviewRepository.findByUserUsernameAndKeyword(pageable, username, keyword);
+    }
+
     public User getCurrentUser() {
         // 사용자 인증정보 반환
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

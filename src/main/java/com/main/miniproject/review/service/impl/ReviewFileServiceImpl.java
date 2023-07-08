@@ -59,7 +59,7 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                 String fileName = UUID.randomUUID().toString() + fileExt;
                 String filePath = Paths.get(datePath, fileName).toString();
 
-                //40% 크기 이미지
+                //축소 이미지
                 String smallFileName = UUID.randomUUID().toString() + fileExt;
                 String smallFilePath = Paths.get(resizedDatePath, smallFileName).toString();
 
@@ -68,13 +68,22 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                 int height = 0;
 
                 try {
-                    //원본 이미지 저장
-                    file.transferTo(new File(filePath));
+                    //원본 이미지 가로 길이 확인
+                    File originFile = new File(filePath);
+                    file.transferTo(originFile);
 
-                    //40% 이미지 저장
-                    smallImage = Thumbnails.of(new File(filePath))
-                            .scale(0.4)
-                            .asBufferedImage();
+                    BufferedImage originImage = ImageIO.read(originFile);
+                    int originWidth = originImage.getWidth();
+
+                    //축소 이미지 저장
+                    if (originWidth >= 500) {
+                        smallImage = Thumbnails.of(originFile)
+                                .width(500)
+                                .keepAspectRatio(true)
+                                .asBufferedImage();
+                    } else {
+                        smallImage = originImage;
+                    }
 
                     ImageIO.write(smallImage, fileExt.substring(1), new File(smallFilePath));
 
@@ -87,7 +96,7 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                 //이미지 파일 상대경로로 저장하기
                 String smallFileURL = "/review/resized" + File.separator + today + File.separator + smallFileName;
 
-                //40% 이미지 객체
+                //축소 이미지 객체
                 if (smallImage != null && height != 0) {
                     ReviewImage smallReviewImage = ReviewImage.builder()
                             .review(review)
