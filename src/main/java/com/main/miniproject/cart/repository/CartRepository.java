@@ -22,8 +22,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.user = :user")
-    void clearCartByUser(@Param("user") User user);    
-    
-    
-    
+    void clearCartByUser(@Param("user") User user);
+
+    Cart findFirstByUser(User user);
 }
