@@ -111,12 +111,13 @@
                 width: 430px;
                 overflow: hidden;
                 position: relative;
-                line-height: 1.4rem;
+                line-height: 25px;
             }
 
             .more-article__text {
                 width: 100%;
                 text-overflow: ellipsis;
+                text-align: left;
                 overflow: hidden;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
@@ -128,19 +129,15 @@
                 -webkit-line-clamp: unset;
             }
 
-            .more-article.hasMore .more-article__text:before {
-                content: "더보기";
+            .more-toggle {
                 float: right;
                 display: flex;
                 align-items: flex-end;
                 height: 100%;
                 shape-outside: inset(calc(100% - 10px) 0 0 0);
                 color: white;
+                font-size: 14px;
                 cursor: pointer;
-            }
-
-            .more-article.expanded .more-article__text:before {
-                content: "숨기기";
             }
 
             .thumbnail-wrap, .thumbnail-container {
@@ -211,7 +208,7 @@
                 justify-content: center;
                 text-align: center;
                 margin-top: 10px;
-                width: 350px;
+                width: 500px;
             }
 
             .selected {
@@ -280,14 +277,29 @@
                 $(".more-article").each(function () {
                     const lineHeight = parseFloat($(this).css("line-height"));
                     const checkHeight = lineHeight * 2;
+                    const moreToggle = $(this).find('.more-toggle');
 
-                    if ($(this).height() > checkHeight) {
+                    //텍스트 전체 내용의 높이 담아줄 변수
+                    const actualHeight = $(this).find('.more-article__text')[0].scrollHeight;
+
+                    if (actualHeight > checkHeight) {
                         $(this).addClass('hasMore');
+                    } else {
+                        moreToggle.hide(); //2줄 이하의 경우 '더보기' 숨김
                     }
                 });
 
-                $(".hasMore").on("click", function () {
-                    $(this).toggleClass("expanded");
+                $(".more-toggle").on("click", function () {
+                    const moreArticle = $(this).parent();
+                    moreArticle.toggleClass("expanded");
+                    const isExpanded = moreArticle.hasClass("expanded");
+
+                    $(this).text(isExpanded ? "숨기기" : "더보기");
+                    if (isExpanded) {
+                        $(this).show(); // '숨기기' 상태일 때 항상 '더보기'
+                    } else if (!moreArticle.hasClass('hasMore')) {
+                        $(this).hide(); // 2줄 이하의 경우 다시 '더보기' 숨김
+                    }
                 });
             });
 
@@ -309,6 +321,28 @@
                     $("input[name='keyword']").val(storedKeyword);
                 }
             });
+
+            //리뷰 삭제
+            function deleteReview(button) {
+                const id = $(button).attr("data-id");
+                const reviewCard = $(button).closest('.review-card');
+
+                $.ajax({
+                    url: "/api/review/myReview/" + id,
+                    type: "DELETE",
+                    success: function (result) {
+                        console.log(result)
+                        if (result.status === "success") {
+                            window.location.reload();
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (request, msg, error) {
+                        alert(error + " 오류 발생");
+                    }
+                });
+            }
         </script>
     </th:block>
 </head>
@@ -341,11 +375,12 @@
                             </div>
                             <div class="buttons">
                                 <button type="button" id="btnSave" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('수정')">수정</button>
-                                <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('삭제')">삭제</button>
+                                <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" th:attr="data-id=${review.id}" onclick="deleteReview(this)">삭제</button>
                             </div>
                         </div>
                         <div class="reviewContent more-article">
                             <p class="more-article__text" th:text="${review.reviewContent}"></p>
+                            <span class="more-toggle">더보기</span>
                         </div>
                         <div class="images-container" style="display: none; visibility: hidden;" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
                              th:each="reviewImage : ${reviewImages.get(review.id)}">

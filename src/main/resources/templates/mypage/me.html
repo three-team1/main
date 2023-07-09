@@ -8,10 +8,11 @@
         <style>
             .main-container {
                 margin-top: 172px;
+                margin-bottom: 10px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: 620px;
                 grid-gap: 10px;
+                min-height: 620px;
             }
 
             .main-container > div {
@@ -26,7 +27,8 @@
                 margin-left: 10px;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
+                position: relative;
             }
 
             .section {
@@ -35,8 +37,9 @@
             }
 
             .menu {
-                position: absolute;
+                position: relative;
                 color: white;
+                margin-top: 130px;
             }
 
             .menu-title {

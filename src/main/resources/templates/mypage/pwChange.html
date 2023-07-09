@@ -8,10 +8,11 @@
         <style>
             .main-container {
                 margin-top: 172px;
+                margin-bottom: 10px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: 620px;
                 grid-gap: 10px;
+                min-height: 620px;
             }
 
             .main-container > div {
@@ -26,7 +27,8 @@
                 margin-left: 10px;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
+                position: relative;
             }
 
             .section {
@@ -35,8 +37,9 @@
             }
 
             .menu {
-                position: absolute;
+                position: relative;
                 color: white;
+                margin-top: 130px;
             }
 
             .menu-title {
@@ -124,7 +127,9 @@
                 text-decoration: none;
             }
 
-            h1 {
+            h2 {
+                margin-top: 70px;
+                margin-bottom: 20px;
                 color: white;
             }
     </style>
@@ -241,7 +246,7 @@
             </div>
         </div>
         <div class="section">
-            <h1>비밀번호 수정</h1>
+            <h2>비밀번호 수정</h2>
             <form id="pwChangeForm" action="/api/mypage/myInfo" method="post">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
