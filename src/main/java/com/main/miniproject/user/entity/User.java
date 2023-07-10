@@ -95,8 +95,4 @@ public class User{
                 .build();
         return myInfoDTO;
     }
-
-    public void updatePassword(String confirmPassword) {
-        this.password = confirmPassword;
-    }
 }

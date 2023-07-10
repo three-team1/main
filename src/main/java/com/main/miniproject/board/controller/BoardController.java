@@ -140,7 +140,6 @@ public class BoardController {
 		Board board = boardService.getBoard(id);
 		List<BoardImage> boardImageList = boardImageService.boardImageList(board);
 
-		
 		model.addAttribute("userDetail",userDetail); 
 		model.addAttribute("images",boardImageList);
 		model.addAttribute("board",board);

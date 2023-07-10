@@ -7,10 +7,20 @@
 <head>
 <th:block layout:fragment="css">
   <style>
-    .low-stock {
-      color: red;
-      font-weight: bold;
-    }
+	  .low-stock {
+		  color: red;
+		  font-weight: bold;
+	  }
+
+
+	  .btn-container {
+		  display: flex;
+		  justify-content: space-between;
+		  margin-bottom: 10px;
+	  }
+
+
+
 
 
 
@@ -24,23 +34,34 @@
 	<script th:inline="javascript">
 
 
-        $(document).ready(function(){
-            $("#searchBtn").on("click",function(e) {
-                e.preventDefault();
-                page(0);
-            });
-        });
 
-        function page(page){
-            var searchSellStatus = $("#searchSellStatus").val();
-            var searchBy = $("#searchBy").val();
-            var searchQuery = $("#searchQuery").val();
 
-            location.href="/admin/items/" + page
-            + "?searchSellStatus=" + searchSellStatus
-            + "&searchBy=" + searchBy
-            + "&searchQuery=" + searchQuery;
-        }
+		$(document).ready(function(){
+
+			// 페이지 링크 클릭 이벤트 처리
+			$(".page-link").on("click", function(e) {
+				e.preventDefault();
+				var page = $(this).data("page");
+				setPageAndSubmitForm(page);
+			});
+
+			// 검색 버튼 클릭 이벤트 처리
+			$("#searchBtn").on("click", function(e) {
+				e.preventDefault();
+				var page = 0;
+				setPageAndSubmitForm(page);
+			});
+
+			// 페이지 번호와 검색어를 설정하고 검색 폼 제출하는 함수
+			function setPageAndSubmitForm(page) {
+				$("#keyword").val($("#searchKeyword").val());
+				$("#page").val(page);
+				$("#searchForm").submit();
+			}
+		});
+
+
+
 
         $(document).ready(function(){
 			$('#newproductBtn').on("click", function(e) {
@@ -105,30 +126,43 @@
 					console.log(idList);
 				});
 
-				for(let i = 0; i < idList.length; i++){
-					$.ajax({
-						url: '/admin/items',
-						type: 'DELETE',
-						data: {
-							id: idList[i]
-						},
-						success: (obj) => {
-							alert("삭제 완료되었습니다.")
-							console.log(obj);
 
-						},
-						error: (error) => {
-							alert("삭제 실패했습니다.")
-							console.log(error);
-						}
-					});
-				}
-
-				location.replace("/admin/items")
-
-				console.log(idList);
+				$.ajax({
+					url: '/admin/items',
+					type: 'POST',
+					// list를 처리하기 위해 for문 대신 json방식 사용
+					contentType: 'application/json',
+					data: JSON.stringify(idList),
+					success: function(data) {
+						alert("삭제 완료되었습니다.")
+						window.location.href="/admin/items"
+					},
+					error: function() {
+						alert("삭제 실패했습니다.")
+					}
+				});
 
 
+				// for(let i = 0; i < idList.length; i++){
+				// 	$.ajax({
+				// 		url: '/admin/items',
+				// 		type: 'post',
+				// 		data: {
+				// 			id: idList[i]
+				// 		},
+				// 		success: (obj) => {
+				// 			alert("삭제 완료되었습니다.")
+				// 			console.log(obj);
+				// 			location.href='/admin/items'
+				// 		},
+				// 		error: (error) => {
+				// 			alert("삭제 실패했습니다.")
+				// 			console.log(error);
+				// 		}
+				// 	});
+				// }
+
+				// location.replace("/admin/items")
 
 			});
 		});
@@ -140,31 +174,29 @@
 <body>
 <div layout:fragment="content">
 <div class="main-content">
-	<form th:action="@{'/admin/items/' + ${items.number}}" role="form"
-		method="get" th:object="${items}">
 
-		<button id="newproductBtn" type="button" class="btn btn-primary">새 상품 등록</button>
-
-
+	<div class="btn-container">
 		<button id="deleteproductBtn" type="button" class="btn btn-primary">선택 삭제</button>
-
-
+		<button id="newproductBtn" type="button" class="btn btn-primary">새 상품 등록</button>
+	</div>
 		<table class="table">
 			<thead>
 				<tr>
 					<td> <input type="checkbox" id="allcheck" > </td>
 					<td>제품상태</td>
 					<td>상품번호</td>
+					<td>상품 타입</td>
 					<td>상품명</td>
 					<td>재고수량</td>
 					<td>조회 및 수정</td>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="product, status: ${items.getContent()}">
-					<td> <input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}"> </td>
+				<tr th:each="product, status: ${productPage}">
+					<td> <input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}" > </td>
 					<td th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
 					<td th:text="${product.id}"></td>
+					<td th:text="${product.productType}"></td>
 					<td th:text="${product.productTitle}"></td>
 					<td th:text="${product.productQuantity}"
 						th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''"></td>
@@ -178,80 +210,70 @@
 			</tbody>
 		</table>
 
-
-		<!-- 페이지 기능 구현(이전 페이지, 페이지 번호, 다음 페이지) -->
-		<div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-            <ul class="pagination justify-content-center">
-
-				<!-- 맨 앞페이지로 가는 버튼 -->
-				<li class="page-item" th:classappend="${items.first}?'disabled'">
-					<a th:onclick="'javascript:page(0)'" aria-label="First"class="page-link">
-						<span aria-hidden="true">첫 페이지</span>
-					</a>
-				</li>
-
-				<!-- 첫 번째 페이지이면 이전버튼 사용못하게 설정(disabled) -->
-                <li class="page-item" th:classappend="${items.first}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${items.number - 1} + ')'" aria-label='Previous' class="page-link">
-                        <span aria-hidden='true'>이전</span>
-                    </a>
-                </li>
-
-                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
-                </li>
-
-					<!-- 마지막 페이지이면 다음버튼 사용못하게 설정(disabled) -->
-                <li class="page-item" th:classappend="${items.last}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${items.number + 1} + ')'" aria-label='Next' class="page-link">
-                        <span aria-hidden='true'>다음</span>
-                    </a>
-                </li>
-                <!-- 맨 뒷 페이지로 가는 버튼 -->
-				<li class="page-item" th:classappend="${items.last}?'disabled'">
-					<a th:onclick="'javascript:page(' + ${items.totalPages - 1} + ')'" aria-label='Last' class="page-link">
-
-						<span aria-hidden="true">마지막 페이지</span>
-					</a>
-				</li>
-
-
-
-
-			</ul>
-        </div>
-
-
-		<!-- 검색 기능 구현 -->
-		    <div class="form-inline justify-content-center" th:object="${itemSearchDto}">
-          <!--  <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
-                <option value="all">전체기간</option>
-                <option value="1d">1일</option>
-                <option value="1w">1주</option>
-                <option value="1m">1개월</option>
-                <option value="6m">6개월</option>
-            </select>  -->
-            <select th:field="*{searchSellStatus}" class="form-control" style="width:auto;">
-                <option value="">판매상태(전체)</option>
-                <option value="SELL">판매</option>
-                <option value="SOLD_OUT">품절</option>
-            </select>
-            <select th:field="*{searchBy}" class="form-control" style="width:auto;">
-                <option value="itemNm">상품명</option>
-                <option value="createdBy">등록자</option>
-            </select>
-            <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
-            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-        </div>
-    </form>
-
-	</div>
-
-
+	<!--검색 기능-->
+	<!--form으로 묶으면 enter를 눌렀을 때 type이 submit인 버튼이 작동할 수 있다.-->
+	<form th:action="@{'/admin/items/'}" method="get"  class="form-inline">
+		<div class="form-group">
+			<select th:field="*{productSearch.productSellStatus}" class="form-control">
+				<option value="">판매 상태(전체)</option>
+				<option value="SELL">판매</option>
+				<option value="SOLD_OUT">품절</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<select th:field="*{productSearch.productType}" class="form-control">
+				<option value="">상품 타입(전체)</option>
+				<option value="초월계">초월계</option>
+				<option value="자연계">자연계</option>
+				<option value="속성계">속성계</option>
+				<option value="초인계">초인계</option>
+			</select>
+		</div>
+		<div class="form-group">
+		<input type="text" id="searchKeyword" class="form-control"  th:field="*{keyword}" placeholder="상품명을 입력해주세요">
+		</div>
+	    <button type="submit" id="searchBtn" class="btn btn-primary">검색</button>
 	</form>
-	</div>
-</div>
 
+	<!--페이징 시작-->
+	<!-- href="javascript:void(0)"를 사용하여 클릭 시 페이지 이동을 방지하고 JavaScript 코드만 실행되도록 할 수 있다.-->
+		<div th:if="${!productPage.isEmpty()}">
+			<ul class="pagination justify-content-center">
+				<li th:classappend="${!productPage.hasPrevious} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="0">
+						첫 페이지
+					</a>
+				</li>
+				<li th:classappend="${!productPage.hasPrevious} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${productPage.number-1}">
+						이전
+					</a>
+				</li>
+				<li th:each="page: ${#numbers.sequence(0, productPage.totalPages-1)}"
+					th:classappend="${page == productPage.number} ? 'active'" class="page-item">
+					<a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+				</li>
+				<li  th:classappend="${!productPage.hasNext} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${productPage.number+1}">
+						다음
+					</a>
+				</li>
+				<li  th:classappend="${!productPage.hasNext} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${productPage.totalPages-1}">
+						마지막 페이지
+					</a>
+				</li>
+			</ul>
+		</div>
+	<!--페이징 끝-->
+
+	<form th:action="@{/admin/items}" method="get" id="searchForm">
+		<input type="hidden" id="keyword" name="keyword" th:value="${keyword}">
+		<input type="hidden" id="page" name="page" th:value="${productPage.number}">
+	</form>
+
+	</div>
+	</div>
 
 </body>
 

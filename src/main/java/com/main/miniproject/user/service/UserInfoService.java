@@ -11,6 +11,4 @@ public interface UserInfoService {
     void updateMyInfo(User user, HttpSession session);
 
     boolean checkPassword(String username, String checkPassword);
-
-    boolean changePassword(String username, String password, String newPassword, String confirmPassword);
 }

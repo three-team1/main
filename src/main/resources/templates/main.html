@@ -70,7 +70,7 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-				<img th:if="${userDetail.user.provider == 'kakao' || userDetail.user.provider == 'google'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
+				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
 				<a style="color:pink" href="/mypage/me">마이페이지</a>
 			</div>
 
@@ -400,6 +400,7 @@
 				<p>우리은행 : 1002 - 032 - 538269</p>
 				<p>하나은행 : 231 - 910094 - 22507</p>
 				<p>농협 : 312-0159-2763-11</p>
+				<p>신한은행 : </p>
 			</div>
 
 

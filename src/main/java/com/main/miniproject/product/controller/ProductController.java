@@ -2,11 +2,9 @@ package com.main.miniproject.product.controller;
 
 
 import com.main.miniproject.product.dto.ProductFormDto;
-import com.main.miniproject.product.dto.ProductSearchDto;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.entity.ProductImage;
-import com.main.miniproject.product.repository.ProductImageRepository;
-import com.main.miniproject.product.repository.ProductRepository;
+import com.main.miniproject.product.service.FileService;
 import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.product.service.RealTimeSearchService;
@@ -18,24 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -52,6 +43,9 @@ public class ProductController {
 	@Autowired
 	private final ProductImageService productImageService;
 
+	@Autowired
+	private final FileService fileService;
+
 
 
 	@GetMapping("/admin/item/new")
@@ -64,15 +58,17 @@ public class ProductController {
 
 	//상품 등록
 	@PostMapping("/admin/item/new")
-	public String itemNew(@Valid ProductFormDto productFormDto,
-						  Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
+	public String itemNew(Product product, @RequestParam("itemImgFile") MultipartFile[] multipartFiles)  {
+		System.out.println(product);
 
+		System.out.println(multipartFiles);
+		productService.saveProduct(product);
 
-		try {
-			productService.saveProduct(productFormDto, itemImgFileList);
-		} catch (IOException e) {
-			model.addAttribute("errorMessage", "상품 등록 중 오류 발생.");
-			return "item/itemForm";
+		List<ProductImage> productImages = fileService.saveFiles(product, multipartFiles);
+
+		for(ProductImage productImage : productImages){
+
+			productImageService.saveProductImg(productImage);
 		}
 
 		return "redirect:/admin/items";
@@ -102,26 +98,45 @@ public class ProductController {
 	}
 
 	//상품 정보 수정
+//	@PostMapping("/admin/item/{itemId}")
+//	public String itemUpdate(@Valid ProductFormDto productFormDto, Product product, @PathVariable("itemId") Long id,
+//							 Model model, @RequestParam("itemImgFile") MultipartFile[] files,
+//							 @RequestParam("method") String method) {
+//
+//
+//		//itemService에 있는 updateItem 메소드 실행.
+//		//진행 중 오류 발생 시 item/itemForm으로 되돌아감.
+//		try {
+//			List<ProductImage> productImages = fileService.saveFiles(product, files);
+//
+//			System.out.println("=======================여기영기"+product);
+//
+//			for(ProductImage productImage : productImages){
+//				productImageService.saveProductImg(productImage);
+//				System.out.println("=======================여기" + productImage);
+//			}
+//
+//			productService.updateProduct(productFormDto, files);
+//
+//
+//		} catch (IOException e) {
+//			model.addAttribute("errorMessage", "상품 수정 중에 오류가 발생했습니다.");
+//			return "/item/itemForm";
+//		}
+//
+//		return "redirect:/admin/item/{itemId}";
+//	}
+
 	@PostMapping("/admin/item/{itemId}")
-	public String itemUpdate(@Valid ProductFormDto productFormDto, @PathVariable("itemId") Long id,
-							 Model model, @RequestParam("itemImgFile")List<MultipartFile> itemImgFileList) {
-
-
-		//상품은 이미지 없이 텍스트만 있어서는 안된다. 첫 번째 상품 이미지 필수 입력.
-		if(itemImgFileList.get(0).isEmpty() && productFormDto.getId() == null) {
-			model.addAttribute("errorMessage", "첫 번째 상품 이미지는 필수입니다.");
+	public String itemUpdate(@Valid ProductFormDto productFormDto,Model model, @PathVariable("itemId") Long id,
+							 MultipartFile files){
+		try{
+			productService.updateProduct(productFormDto);
+//			productImageService.updateItemImg(id, files);
+		}catch (Exception e){
+			model.addAttribute("errorMessage", "상품 정보 수정 중 오류가 발생했습니다.");
 			return "/item/itemForm";
-		}
 
-
-		//itemService에 있는 updateItem 메소드 실행.
-		//진행 중 오류 발생 시 item/itemForm으로 되돌아감.
-		try {
-			productService.updateProduct(productFormDto, itemImgFileList);
-
-		} catch (IOException e) {
-			model.addAttribute("errorMessage", "상품 수정 중에 오류가 발생했습니다.");
-			return "/item/itemForm";
 		}
 
 		return "redirect:/admin/item/{itemId}";
@@ -129,32 +144,64 @@ public class ProductController {
 
 
 
-	//상품관리 탭에서 상품목록 가져오기
-	@GetMapping({"/admin/items", "/admin/items/{page}"})	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
-	public String itemList(ProductSearchDto productSearchDto, Model model,
-						   //페이지 정보를 들고 올 수도 있고 페이지 정보가 없을 수도 있다.
-						   @PathVariable("page") Optional<Integer> page) {
-		//시작페이지는 페이지가 있으면 get()한 페이지 들고 오고 아니면 0으로 하겠다. 한 페이지에 상품은 3개씩
-		Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
-		Page<Product> items = productService.getAdminProductPage(productSearchDto, pageable);
 
-		model.addAttribute("items", items);
-		model.addAttribute("itemSearchDto", productSearchDto);
-		model.addAttribute("maxPage", 5);
-		model.addAttribute("totalPages", items.getTotalPages());
+	//상품 이미지 삭제
+	@PostMapping("/admin/itemImageDel")
+	public ResponseEntity<String> deleteImage(@RequestBody Long id){
+//		try{
+//			productImageService.deleteItemImg(id);
+//
+//			return ResponseEntity.ok().build();
+//		}catch (Exception e){
+//			return ResponseEntity.badRequest().body("이미지 삭제 중 오류가 발생했습니다.");
+//		}
+		productImageService.deleteItemImg(id);
 
-		return "/item/itemList";
+		return ResponseEntity.ok("이미지가 삭제되었습니다.");
+
+	}
+
+
+
+
+	//상품관리 탭에서 상품목록 가져오기( +페이징 기능, 검색 기능 )
+	@GetMapping("/admin/items")	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
+	public String itemList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+						   @RequestParam(value = "keyword", defaultValue = "") String keyword, Product product) {
+
+		Page<Product> productPage = productService.getList(page, keyword);
+
+		model.addAttribute("productPage", productPage);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("productSearch", product);
+
+		System.out.println("==========productPage=============" + productPage);
+		System.out.println("==========keyword=========="+keyword);
+
+		return "item/itemList";
 	}
 
 
 	//상품 삭제하기
-	@DeleteMapping("/admin/items")
-	public void deleteProduct(Long id){
+//	@PostMapping("/admin/items")
+//	public String deleteProduct(Long id){
+//
+//		productService.deleteProduct(id);
+//
+//		return "redirect:/admin/items";
+//	}
 
-		productImageService.deleteItemImg(id);
-		productService.deleteProduct(id);
+	//상품 삭제하기
+	@PostMapping("/admin/items")
+	public ResponseEntity<String> deleteProduct(@RequestBody List<Long> idList) {
+		// 리스트 데이터 처리 로직
+		for (Long s : idList) {
 
+			productService.deleteProduct(s);
+		}
+		return ResponseEntity.ok("Data processed successfully.");
 	}
+
 
 	@GetMapping("/product/productList")
 	public String searchList(@AuthenticationPrincipal UserDetail userDetail,Model model) {

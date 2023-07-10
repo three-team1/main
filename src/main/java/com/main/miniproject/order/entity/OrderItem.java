@@ -11,14 +11,12 @@ import javax.persistence.ManyToOne;
 import com.main.miniproject.product.entity.Product;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
 public class OrderItem {
 

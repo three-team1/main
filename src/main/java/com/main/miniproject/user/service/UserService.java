@@ -1,10 +1,12 @@
 package com.main.miniproject.user.service;
 
-import com.main.miniproject.user.dto.UserDtoAdmin;
 import com.main.miniproject.user.dto.UserFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,9 +16,13 @@ import org.springframework.stereotype.Service;
 import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
+import org.thymeleaf.util.StringUtils;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -45,10 +51,110 @@ public class UserService implements UserDetailsService{
 
     }
 
-    //memberRepositoryCustom, memberRepositoryCustomImpl에서 작성한 쿼리문 출력하기
-    public Page<User> getAdminMemberPage(UserDtoAdmin userDtoAdmin, Pageable pageable){
-        return userRepository.getAdminMemberPage(userDtoAdmin, pageable);
+
+    //페이징 처리
+    //page는 현재페이지. 숫자는 현재 페이지에 나타낼 레코드의 갯수
+    public Page<User> getList(int page, String keyword, String category) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("role"));
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        Specification<User> userSpecification = search(keyword, category);
+        return userRepository.findAll(userSpecification, pageable);
+
+
     }
+
+    //키워드 검색
+//    private Specification<User> search(String keyword){
+//        return new Specification<User>() {
+//            @Override
+//            public Predicate toPredicate(Root<User> userRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//                query.distinct(true);   //중복을 제거
+//
+//
+//                return criteriaBuilder.or(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
+//                        criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
+//                        criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
+//            }
+//        };
+//    }
+
+    private Specification<User> search(String category, String keyword){
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> userRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                query.distinct(true);
+
+                List<Predicate> predicates = new ArrayList<>();
+
+
+                if(!StringUtils.isEmpty(category)) {
+                    switch (category) {
+                        case "username":
+                            predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
+                            break;
+                        case "email":
+                            predicates.add(criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"));
+                            break;
+                        case "tel":
+                            predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
+                            break;
+                    }
+                }else{
+                    predicates.add(criteriaBuilder.or(
+                                    criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
+                                    criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
+                                    criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
+                            ));
+                }
+
+
+
+//                if(!StringUtils.isEmpty(keyword)){
+//                    if(StringUtils.equals("username", category)){
+//                        predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
+//                    }else if(StringUtils.equals("email", category)){
+//                        predicates.add(criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"));
+//                    }else if(StringUtils.equals("tel", category)){
+//                        predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
+//                    }
+//                }else{
+//                    predicates.add(criteriaBuilder.or(
+//                                    criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
+//                                    criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
+//                                    criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
+//                            ));
+//                }
+
+
+//                if(StringUtils.isNotBlank(keyword)){
+//                    switch (category){
+//                        case "username":
+//                            predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
+//                            break;
+//                        case "email":
+//                            predicates.add(criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"));
+//                            break;
+//                        case "tel":
+//                            predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
+//                            break;
+//                        default:
+//                            predicates.add(criteriaBuilder.or(
+//                                    criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
+//                                    criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
+//                                    criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
+//                            ));
+//                            break;
+//                    }
+//                }
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            }
+        };
+    }
+
+
 
     //회원 상세 정보 조회
     public User getUserDetail(Long memberId){

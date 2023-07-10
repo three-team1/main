@@ -2,11 +2,13 @@ package com.main.miniproject.product.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.main.miniproject.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,67 +22,95 @@ import com.main.miniproject.product.repository.ProductImageRepository;
 @Transactional
 public class ProductImageService {
 
-//    @Value(value = "${itemImgLocation}")
-    private String itemImgLocation;
     private final ProductImageRepository productImageRepository;
+
+    private final ProductRepository productRepository;
     private final FileService fileService;
 
     @Autowired
-    public ProductImageService(ProductImageRepository productImageRepository, FileService fileService) {
+    public ProductImageService(ProductImageRepository productImageRepository, ProductRepository productRepository, FileService fileService) {
         this.productImageRepository = productImageRepository;
+        this.productRepository = productRepository;
         this.fileService = fileService;
     }
 
-    public List<ProductImage> getAllProductImages() {
-
-        return productImageRepository.findAll();
-    }
 
     public List<ProductImage> getProductImagesByProduct(Product product) {
 
     	return productImageRepository.findByProduct(product);
     }
-    public void saveProductImg(ProductImage productImage, MultipartFile productImgFile) throws IOException {
-        String oriImgName = productImgFile.getOriginalFilename();
-        String imgName = "";
-        String imgUrl = "";
-
-        //원래 경로가 값이 비어있는지 타임리프 유틸을 이용해서 확인.
-        if(!StringUtils.isEmpty(oriImgName)) {
-            imgName = fileService.uploadFile(itemImgLocation, oriImgName, productImgFile.getBytes());
-            imgUrl = "/images/item/" + imgName;
-        }
-        //아이템 이미지 저장
-        productImage.updateProductImage(oriImgName, imgName, imgUrl);
+    public void saveProductImg(ProductImage productImage) {
         productImageRepository.save(productImage);
+
     }
 
     //이미지 업데이트(수정)
-    public void updateItemImg(Long productImgIds, MultipartFile productImgFile) throws IOException {
-        if(!productImgFile.isEmpty()) {
-            ProductImage productImage = productImageRepository.findById(productImgIds).orElseThrow(EntityNotFoundException::new);
+    public ProductImage updateItemImg(Long productImgIds, MultipartFile files) throws IOException {
 
-            if(!StringUtils.isEmpty(productImage.getName())) {
-                //itemImgLocation은 application properties 에서 설정한 경로.
-                //경로폴더에 있는 itemImg를 삭제
-                fileService.deleteFile(itemImgLocation + "/" + productImage.getName());
-            }
+        ProductImage  productImage = productImageRepository.findById(productImgIds).orElseThrow(EntityNotFoundException::new);
+
+        System.out.println("================1111111" + productImage);
+
+//        if (!files.isEmpty()) {
+////            productImage = productImageRepository.findById(productImgIds).orElseThrow(EntityNotFoundException::new);
+//
+//            //기존 파일 삭제
+//            if (!StringUtils.isEmpty(productImage.getName())) {
+//                //itemImgLocation은 application properties 에서 설정한 경로.
+//                //경로폴더에 있는 itemImg를 삭제
+//                System.out.println(productImage.getName());
+//                fileService.deleteFile("C:/miniproject/images/" + productImage.getName());
+//            }
+//
+//            productImageRepository.deleteById(productImgIds);
+
             //새로 수정 등록하기
-            String oriName = productImgFile.getOriginalFilename();
-            String imgName = fileService.uploadFile(itemImgLocation, oriName, productImgFile.getBytes());
-            //이 프로젝트 안에서의 경로
-            String imgUrl = "/images/item/" + imgName;
+            String fileOrigin = files.getOriginalFilename();
+            String fileExt = fileOrigin.substring(fileOrigin.lastIndexOf("."));
+            String fileName = UUID.randomUUID().toString() + fileExt;
+            String imgUrl = "/images/item/" + fileName;
 
-            productImage.updateProductImage(oriName, imgName, imgUrl);
+            productImage.setOriginName(fileOrigin);
+            productImage.setName(fileName);
+            productImage.setUrl(imgUrl);
 
-
-        }
+//        }
+        System.out.println("=====================22222222222" + productImage);
+        return productImageRepository.save(productImage);
 
 
     }
 
-    public void deleteItemImg(Long productImgIds){
-        productImageRepository.deleteById(productImgIds);
+    public void deleteItemImg(Long id){
+
+        //productService 의 delete 메소드 처럼  for문으로 돌리면 전체 다 삭제된다.
+        // 해당 이미지 id 받아와서 하나만 삭제될 수 있게
+
+        List<ProductImage> productImages = productImageRepository.findByProduct(getProductById(id));
+
+        for(ProductImage productImage : productImages){
+
+            try {
+                // DB에서 삭제되면 로컬저장폴더에서도 삭제
+                fileService.deleteFile("C:/miniproject/images/" + productImage.getName());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("삭제할 이미지가 존재하지 않습니다.");
+            }
+
+            productImageRepository.deleteById(id);
+
+        }
+
+
+
+
+    }
+
+    private Product getProductById(Long id) {
+        return productRepository.findById(id).get();
     }
 
 

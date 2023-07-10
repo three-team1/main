@@ -1,25 +1,23 @@
 package com.main.miniproject.order.service;
 
-import com.main.miniproject.cart.entity.Cart;
-import com.main.miniproject.order.entity.Orders;
-import com.main.miniproject.user.entity.User;
+import com.main.miniproject.order.entity.OrderItem;
+import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
 import org.springframework.stereotype.Service;
 
 import com.main.miniproject.order.ordersRepository.OrdersRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrdersRepository ordersRepository;
+    public OrdersRepository orderRepository;
 
 
-//    public List<Orders> getList(Cart cart) {
-//        return ordersRepository.findAllByCart(cart);
-//    }
+
+
+
+
 }
 

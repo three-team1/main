@@ -50,7 +50,7 @@
             }
 
             #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
-                background: rgba(255,192,203, 0.4);
+                background: pink;
             }
 
             .section {
@@ -68,7 +68,7 @@
             }
 
             th, td {
-                border: none;
+                border: 1px solid pink;
                 padding: 10px 10px;
                 text-align: left;
                 font-size: 1rem;
@@ -87,7 +87,6 @@
             .input-pw {
                 width: 350px;
                 height: 35px;
-                padding-left: 10px;
                 font-size: 1rem;
                 color: white;
                 background: rgba(255,192,203, 0.4);
@@ -105,8 +104,8 @@
                 height: 35px;
                 font-size: 1rem;
                 color: white;
-                background: rgba(255,192,203, 0.4);
-                border: 1px solid pink;
+                background: pink;
+                border: none;
                 border-radius: 5px;
                 outline: none;
                 cursor: pointer;
@@ -190,7 +189,7 @@
         </div>
         <div class="section">
             <h1>비밀번호 확인</h1>
-            <form id="pwChkForm" action="/mypage/pwChk" method="get">
+            <form id="pwChkForm" action="/mypage/pwChk" method="post">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
                         <th class="myInfo-th">현재 비밀번호</th>
