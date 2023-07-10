@@ -32,14 +32,20 @@ public class OrderController {
 	private final OrderItemRepository orderItemRepository;
 
 	@GetMapping("/viewOrderItem")
-	public String viewOrderPage(@RequestParam("cartList") List<Long> cartIds, Model model) {
+	public String viewOrderPage(@RequestParam(value = "cartList", required = false) List<Long> cartIds, Model model) {
 		List<Cart> ordersList = new ArrayList<Cart>();
+
+		if (cartIds == null || cartIds.isEmpty()) {
+			// 'cartList' 파라미터가 없을 때 처리할 로직 구현
+
+			return "redirect:/";
+		}
 
 		for (Long id : cartIds) {
 			Cart cart = cartRepository.findById(id).get();
 			ordersList.add(cart);
 		}
-		model.addAttribute("cartList", ordersList);
+		model.addAttribute("cart", ordersList);
 
 		return "order/order";
 	}
