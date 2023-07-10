@@ -3,10 +3,12 @@ package com.main.miniproject.user.controller;
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
+import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,10 @@ public class MypageViewController {
 
     @Autowired
     private OrdersService ordersService;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService) {
@@ -132,6 +138,7 @@ public class MypageViewController {
 
         return "mypage/myBoard";
     }
+
 
 
 }
