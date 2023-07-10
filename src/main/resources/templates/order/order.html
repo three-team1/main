@@ -13,7 +13,9 @@
     <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
     <script>
         //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
         function execDaumPostcode() {
@@ -147,6 +149,7 @@
 
         });
 
+
         // 필수 입력 값 체크하기
         function checkForm() {
             let name = document.getElementById("order-name").value;
@@ -187,6 +190,7 @@
         $('.cart').each(function() {
             productId.push($(this).data('product-id'));
             quantity.push($(this).data('quantity-id'));
+
         });
 
         function requestSelectPay() {
@@ -352,7 +356,8 @@
         }
 
         .order-form-table th {
-            padding: 16px 10px 12px 0;
+            padding: 16px 0px 12px 0;
+            font-size: 12px;
         }
 
         .order-form {
@@ -525,11 +530,13 @@
            background-color: #86cfda;
         }
 
+
        .orderImage img{
            width: 100%;
        }
 
        .orderPrice {
+
            text-align: right;
        }
 
@@ -714,12 +721,15 @@
                             <col style="width:50%">
                             <col style="width:auto">
                         </colgroup>
+
                         <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
+
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
                             <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
+
                         </tr>
                     </table>
                 </div>
@@ -740,7 +750,9 @@
                             <tr>
                                 <th>주문상품</th>
                                 <td>
+
                                     <span id="order-total-price" th:text="0"></span>
+
                                 </td>
                             </tr>
                             <tr>
