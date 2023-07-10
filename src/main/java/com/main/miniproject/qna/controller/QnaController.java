@@ -35,19 +35,26 @@ public class QnaController {
     private CommentService commentService;
 
     @GetMapping("/qna/list")
-    public String qnaList(Model model, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
+    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
         int pageSize = 10; // 페이지당 게시글 수
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
-        Page<QNA> qnaPage = qnaService.paging(pageable);
+        Page<QNA> qnaPage;
 
-        List<QNA> qnaList = qnaService.getList(pageable);
+        if(keyword != null) {
+            qnaPage = qnaService.searchQNA(pageable, keyword);
+        } else {
+            qnaPage = qnaService.getList(pageable);
+        }
 
-        model.addAttribute("qnaList", qnaList);
+
+        model.addAttribute("qnaList", qnaPage);
 
         // 페이징 정보
         int totalPages = qnaPage.getTotalPages(); // 총 페이지 수
         long totalItems = qnaPage.getTotalElements(); // 총 아이템 수
 
+
+        model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
