@@ -14,6 +14,8 @@ import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
+import com.main.miniproject.user.service.UserService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,8 @@ import java.util.Map;
 @RequestMapping("/mypage")
 public class MypageViewController {
     private UserInfoService userInfoService;
+
+    private UserService userService;
 
     private ReviewService reviewService;
 
@@ -55,9 +60,11 @@ public class MypageViewController {
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService,
+                                UserService userService,
                                 ReviewService reviewService,
                                 ReviewImageService reviewImageService) {
         this.userInfoService = userInfoService;
+        this.userService = userService;
         this.reviewService = reviewService;
         this.reviewImageService = reviewImageService;
     }
@@ -79,12 +86,17 @@ public class MypageViewController {
         return mv;
     }
 
-    //마이페이지 내 정보 관리 페이지
+    //마이페이지 내 정보 관리 페이지 + 일반 로그인 회원, 소셜 로그인 회원 구분
     @GetMapping("/myInfo")
     public ModelAndView myInfoView() {
         ModelAndView mv = new ModelAndView();
+        User user = userService.getCurrentUser();
 
-        mv.setViewName("/mypage/myInfo");
+        if (user.getProvider() == null) {
+            mv.setViewName("/mypage/myInfo");
+        } else {
+            mv.setViewName("/mypage/myInfoOAuth");
+        }
 
         return mv;
     }
@@ -99,14 +111,19 @@ public class MypageViewController {
         return mv;
     }
 
-    //내 정보 수정 페이지
+    //내 정보 수정 페이지 + 일반 로그인 회원, 소셜 로그인 회원 구분
     @GetMapping("/myUpdate")
     public ModelAndView myUpdateView(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userInfoService.getMyInfo(userDetails.getUsername());
         ModelAndView mv = new ModelAndView();
 
         mv.addObject("user", user);
-        mv.setViewName("/mypage/myUpdate");
+
+        if (user.getProvider() == null) {
+            mv.setViewName("/mypage/myUpdate");
+        } else {
+            mv.setViewName("/mypage/myUpdateOAuth");
+        }
 
         return mv;
     }
@@ -168,7 +185,7 @@ public class MypageViewController {
         mv.addObject("reviews", reviewPage);
         mv.addObject("page", reviewPage);
         mv.addObject("reviewImages", reviewImageMap);
-        mv.setViewName("mypage/myReview");
+        mv.setViewName("/mypage/myReview");
 
         return mv;
     }
@@ -198,7 +215,7 @@ public class MypageViewController {
         mv.addObject("page", reviewPage);
         mv.addObject("reviewImages", reviewImageMap);
         mv.addObject("keyword", keyword);
-        mv.setViewName("mypage/searchMyReview");
+        mv.setViewName("/mypage/searchMyReview");
 
         return mv;
     }

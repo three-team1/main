@@ -443,7 +443,7 @@
                         <form id="searchForm" th:action="@{/mypage/myReview-search}" method="get">
                             <input type="text" id="keyword" name="keyword" placeholder="Search">
                             <button type="submit" id="btnSearch">검색</button>
-                            <a th:href="@{/mypage/myReview}">전체 목록</a>
+                            <a th:href="@{/mypage/myReview}">내 목록</a>
                         </form>
                     </div>
                     <div th:each="review : ${reviews}">

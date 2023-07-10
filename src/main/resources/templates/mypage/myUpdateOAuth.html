@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+  <th:block layout:fragment="css">
+    <style>
+      .main-container {
+        margin-top: 172px;
+        margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 10px;
+        min-height: 620px;
+      }
+
+      .main-container > div {
+        border: 1px dotted aqua;
+        border-radius: 5px;
+        padding: 1em;
+      }
+
+      .aside {
+        grid-column: 1;
+        grid-row: 1;
+        margin-left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+      }
+
+      .section {
+        grid-column: 2 / 5;
+        grid-row: 1;
+      }
+
+      .menu {
+        position: relative;
+        color: white;
+        margin-top: 130px;
+      }
+
+      .menu-title {
+        border: 1px solid pink;
+        padding: 20px 10px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+        background: rgba(255,192,203, 0.4);
+      }
+
+      .section {
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .myInfo-tb {
+        border-collapse: collapse;
+        min-width: 510px;
+        min-height: 360px;
+      }
+
+      th, td {
+        border: 1px solid pink;
+        padding: 10px 10px;
+        text-align: left;
+        font-size: 1rem;
+        color: white;
+      }
+
+      .myInfo-th {
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .myInfo-td {
+        min-width: 360px;
+      }
+      .input-noUpdate {
+        width: 350px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: transparent;
+        border: none;
+        outline: none;
+      }
+
+      .input-updateDetail {
+        width: 350px;
+        height: 35px;
+        padding-left: 10px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      #my_postcode {
+        margin-right: 20px;
+        width: 80px;
+      }
+
+      #search_postcode {
+        display: inline-block;
+        width: 150px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: 1px solid pink;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .buttons {
+        text-align: center;
+      }
+
+      #btnSave, #btnCancel {
+        display: inline-block;
+        width: 70px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: 1px solid pink;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      a:link {
+        color: white;
+        text-decoration: none;
+      }
+
+      h2 {
+        margin-top: 70px;
+        margin-bottom: 20px;
+        color: white;
+      }
+    </style>
+  </th:block>
+  <th:block layout:fragment="script">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+      <script>
+      function sample6_execDaumPostcode() {
+        new daum.Postcode({
+          oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+            var addr = ''; // 주소 변수
+            var extraAddr = ''; // 참고항목 변수
+
+            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+              addr = data.roadAddress;
+            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+              addr = data.jibunAddress;
+            }
+
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('my_postcode').value = data.zonecode;
+            document.getElementById("my_address").value = addr;
+            // 커서를 상세주소 필드로 이동한다.
+            document.getElementById("my_detailAddress").focus();
+          }
+        }).open();
+      }
+    </script>
+    <script th:inline="javascript">
+      $(function () {
+        $("#btnSave").on("click", () => {
+          var data = {
+            username: $("#username").val(),
+            email: $("#email").val(),
+            tel: $("#tel").val(),
+            my_postcode: $("#my_postcode").val(),
+            my_address: $("#my_address").val(),
+            my_detailAddress: $("#my_detailAddress").val()
+          };
+
+          $.ajax({
+            url: "/api/mypage/myInfo",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function(result) {
+              alert("정보가 성공적으로 수정되었습니다.");
+              window.location.replace("/mypage/myInfo");
+            },
+            error: function(err){
+              console.log(err);
+            }
+          });
+        });
+
+        $("#btnCancel").on("click", () => {
+          $.ajax({
+            url: "/mypage/myInfo",
+            type: "GET",
+            success: function () {
+              window.location.href="/mypage/myInfo";
+            },
+            error: function () {
+              console.log(err);
+            }
+          });
+        });
+      });
+    </script>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="main-container">
+    <div class="aside">
+      <div class="menu">
+        <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+          <p>내 주문/배송조회</p>
+        </div>
+        <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
+          <p>내 글/댓글 조회</p>
+        </div>
+        <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
+          <p>내 리뷰 관리</p>
+        </div>
+        <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
+          <p>내 정보 관리</p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h2>내 정보 수정</h2>
+      <form id="updateForm" action="/mypage/myUpdate" method="post">
+        <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+        <table class="myInfo-tb">
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">아이디</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-noUpdate" id="username" name="username" th:value="${user.username}" readonly>
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">우편번호</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-updateDetail" id="my_postcode" name="my_postcode" th:value="${user.my_postcode}">
+              <input type="button" id="search_postcode" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">주소</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-updateDetail" id="my_address" name="my_address" th:value="${user.my_address}">
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">상세주소</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-updateDetail" id="my_detailAddress" name="my_detailAddress" th:value="${user.my_detailAddress}">
+            </td>
+          </tr>
+        </table>
+        <br>
+        <div class="buttons">
+          <button type="button" id="btnSave">확인</button>
+          <button type="button" id="btnCancel">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
