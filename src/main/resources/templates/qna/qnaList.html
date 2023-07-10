@@ -101,8 +101,8 @@
     .insert-btn button {
       background-color: #86cfda;
       border: 1px solid black;
-      padding: 5px;
-      margin-bottom: 10px;
+      padding: 5px 10px 5px 10px;
+      margin-bottom: 20px;
     }
 
     .paging {
@@ -115,6 +115,22 @@
       margin: 2px 10px 2px 10px;
       text-decoration: none;
       color: #86cfda;
+    }
+
+    .qna-search form {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .qna-search input, button {
+      padding: 5px 10px 5px 10px;
+      border-radius: 0;
+      border: 1px solid black;
+    }
+    
+    .qna-search input {
+      outline: none;
+      cursor: pointer;
     }
 
     </style>
@@ -207,25 +223,28 @@
 
       <div class="paging">
         <th:block>
-          <a th:href="@{/qna/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">이전</a>
+          <a th:href="@{/qna/list(page=${currentPage - 1}, keyword=${keyword})}" th:if="${currentPage > 0}">이전</a>
         </th:block>
         <th:block th:each="pageNumber : ${pageNumbers}">
         <span th:class="${pageNumber == currentPage ? 'active' : ''}">
-            <a th:href="@{/qna/list(page=${pageNumber})}"
+            <a th:href="@{/qna/list(page=${pageNumber}, keyword=${keyword})}"
                th:text="${pageNumber + 1}"
                th:style="${pageNumber == currentPage ? 'color: red;' : 'color: #86cfda;'}"
             ></a>
         </span>
         </th:block>
         <th:block>
-          <a th:href="@{/qna/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">다음</a>
+          <a th:href="@{/qna/list(page=${currentPage + 1}, keyword=${keyword})}" th:if="${currentPage < totalPages - 1}">다음</a>
         </th:block>
       </div>
 
 
-
-
-
+      <div class="qna-search">
+        <form th:action="@{/qna/list}" method="get">
+          <input type="text" name="keyword" placeholder="Search">
+          <button type="submit">검색</button>
+        </form>
+      </div>
 
       <div class="insert-btn">
         <a href="/qna/insert"><button>글쓰기</button></a>
