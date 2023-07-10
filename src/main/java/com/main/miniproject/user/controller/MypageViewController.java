@@ -2,8 +2,6 @@ package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.service.BoardService;
-<<<<<<< HEAD
-=======
 import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
@@ -11,7 +9,6 @@ import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.user.entity.Role;
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/mypage")
 public class MypageViewController {
@@ -38,8 +37,6 @@ public class MypageViewController {
     private BoardService boardService;
 
     @Autowired
-<<<<<<< HEAD
-=======
     private CommentService commentService;
 
     @Autowired
@@ -50,19 +47,12 @@ public class MypageViewController {
 
 
     @Autowired
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
     public MypageViewController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
     }
 
     //마이페이지 주문/배송 조회 페이지
     @GetMapping("/me")
-<<<<<<< HEAD
-    public ModelAndView mypageView() {
-        ModelAndView mv = new ModelAndView();
-
-        mv.setViewName("/mypage/me.html");
-=======
     public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
 
@@ -70,7 +60,6 @@ public class MypageViewController {
 
 
         List<Orders> ordersList = ordersService.getOrdersList(user);
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
 
         List<Orders> prodList = ordersService.getProductsList(user.getId());
 
@@ -133,6 +122,9 @@ public class MypageViewController {
                               @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Board> boardPage;
+        List<Comment> commentList = commentService.getMypagecomments(userDetails.getUsername());
+
+
         User user = userInfoService.getMyInfo(userDetails.getUsername());
         if(keyword != null) {
             boardPage = boardService.searchBoard(pageable, keyword);
@@ -142,14 +134,12 @@ public class MypageViewController {
 
         model.addAttribute("boards", boardPage);
         model.addAttribute("page", boardPage);
+        model.addAttribute("comments",commentList);
 
-        return "mypage/myboard";
+        return "mypage/myBoard";
     }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
 }
 

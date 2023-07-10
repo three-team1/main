@@ -1,7 +1,6 @@
 package com.main.miniproject.product.dto;
 
 import com.main.miniproject.product.entity.Product;
-import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.entity.ProductSellStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,6 @@ public class ProductFormDto {
 
     //아이디 정보를 받아오려고 함
     private List<Long> productImgIds = new ArrayList<>();
-
 
     //modelmapper: dto객체와 entity객체의 변환을 도움.
     //서로 다른 클래스의 값을 필드의 이름과 자료형이 같으면 getter, setter를 통해 값을 복사해서 객체를 반환.

@@ -41,4 +41,9 @@ public class ProductImage {
 	@Column(name = "product_img_ori_name")
 	private String originName;
 
+	public void updateProductImage(String originName, String name, String url) {
+		this.originName = originName;
+		this.name = name;
+		this.url = url;
+	}
 }

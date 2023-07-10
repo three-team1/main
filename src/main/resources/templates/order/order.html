@@ -3,6 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <title>Insert title here</title>
     <link href="/css/main.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,62 +13,72 @@
     <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<<<<<<< HEAD
-=======
 
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
     <script>
         //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
         function execDaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+            new daum.Postcode(
+                {
+                    oncomplete : function(data) {
 
-                    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
-                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                    var roadAddr = data.roadAddress; // 도로명 주소 변수
-                    var extraRoadAddr = ''; // 참고 항목 변수
+                        let addr = '';
 
-                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraRoadAddr += data.bname;
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            addr = data.jibunAddress;
+                        }
+
+                        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                        if (data.userSelectedType === 'R') {
+                            var extraAddr = ''; // 참고항목 변수
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if (data.bname !== ''
+                                && /[동|로|가]$/g
+                                    .test(data.bname)) {
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if (data.buildingName !== ''
+                                && data.apartment === 'Y') {
+                                extraAddr += (extraAddr !== '' ? ', '
+                                    + data.buildingName
+                                    : data.buildingName);
+                            }
+                            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                            if (extraAddr !== '') {
+                                extraAddr = ' ('
+                                    + extraAddr
+                                    + ')';
+                            }
+                            // 조합된 참고항목을 해당 필드에 넣는다.
+                            document
+                                .getElementById("jibunAddress").value = extraAddr;
+
+                        } else {
+                            document
+                                .getElementById("jibunAddress").value = '';
+                        }
+
+                        // 변경된 입력 필드에 주소 정보를 채움
+                        document.getElementById('postcode').value = data.zonecode;
+
+                        document.getElementById('roadAddress').value = addr;
+
+                        document.getElementById('detailAddress').focus();
                     }
-                    // 건물명이 있고, 공동주택일 경우 추가한다.
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                    if(extraRoadAddr !== ''){
-                        extraRoadAddr = ' (' + extraRoadAddr + ')';
-                    }
-
-                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById('postcode').value = data.zonecode;
-                    document.getElementById("roadAddress").value = roadAddr;
-                    document.getElementById("jibunAddress").value = data.jibunAddress;
-
-                    // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
-                    if(data.autoRoadAddress) {
-                        var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
-                        guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
-                        guideTextBox.style.display = 'block';
-
-                    } else if(data.autoJibunAddress) {
-                        var expJibunAddr = data.autoJibunAddress;
-                        guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
-                        guideTextBox.style.display = 'block';
-                    } else {
-                        guideTextBox.innerHTML = '';
-                        guideTextBox.style.display = 'none';
-                    }
-                }
-            }).open();
+                }).open();
         }
-
         $(document).ready(function() {
+
+            $.get("/api/cart/count", function(data) {
+                $('#cart-count').text(data);
+            });
+
             $("#order-email2").change(function() {
                 if ($(this).val() === "etc") {
                     $(".emailAddress-etc").show();
@@ -80,9 +91,7 @@
 
             // 초기에는 숨김 상태로 설정
             $(".emailAddress-etc").hide();
-        });
 
-        $(document).ready(function() {
             var paymentMethod = $("#payment-method");
             var label = $("label[for='payment-method']");
 
@@ -91,9 +100,6 @@
                 paymentMethod.prop("checked", true); // 라디오 버튼 선택
                 label.css({
                     "border": "1px solid blue",
-<<<<<<< HEAD
-                    "color": "blue"
-=======
                     "color": "blue"});
             });
 
@@ -273,10 +279,9 @@
 
                             });
                         });
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                 });
             });
-        });
+        }
 
     </script>
     <style>
@@ -326,9 +331,10 @@
         .order-form-top {
             width: 100%;
             margin: 0 auto;
-            background-color: white;
+            background-color: #86cfda;
             padding: 20px;
-            border-bottom: 1px solid black ;
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
         }
 
         .order-form-top p {
@@ -429,20 +435,40 @@
             border-bottom: 1px solid black;
         }
 
+        #order-product-contents-table td {
+            padding: 10px;
+        }
+
+        #order-product-list-title {
+            margin-bottom: 10px;
+        }
+
+
         .total-payment-price {
-            background-color: aqua;
+            background-color: #86cfda;
             color: black;
             border-bottom: 1px solid black;
         }
 
-        #total-payment-price-table th, #total-price {
+        #total-p, #total-price {
             font-size: 20px;
             font-weight: bold;
         }
 
-        #total-payment-price-table td {
-            float: right;
+        #total-p {
+            padding: 10px;
+            width: 80%;
         }
+
+        .total-payment-price-table{
+            width: 100%;
+        }
+
+        .total-payment-price-table td {
+            text-align: right;
+            width: auto;
+        }
+
 
         .payment {
             width: 100%;
@@ -490,21 +516,20 @@
         .final-payment {
             width: 100%;
             margin: 0 auto;
-            background-color: aqua;
+            background-color: #86cfda;
             color: black;
             text-align: center;
             padding: 20px;
             border-bottom: 1px solid black;
         }
 
-       .final-payment p {
+       .final-payment input {
            font-size: 20px;
            font-weight: bold;
+           border: none;
+           background-color: #86cfda;
         }
 
-<<<<<<< HEAD
-
-=======
 
        .orderImage img{
            width: 100%;
@@ -526,8 +551,8 @@
        #order-payment-title h2 {
            margin-bottom: 10px;
        }
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
     </style>
+
 <body>
     <header>
         <div class="nav-bar-container">
@@ -692,16 +717,10 @@
                 <div class="order-product-contents">
                     <table id="order-product-contents-table">
                         <colgroup>
-                            <col style="width:10%">
-                            <col style="width:70%">
-                            <col style="width:20%">
+                            <col style="width:25%">
+                            <col style="width:50%">
+                            <col style="width:auto">
                         </colgroup>
-<<<<<<< HEAD
-                        <tr>
-                            <td>상품이미지</td>
-                            <td>상품이름</td>
-                            <td>가격</td>
-=======
 
                         <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
 
@@ -711,7 +730,6 @@
                             <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                         </tr>
                     </table>
                 </div>
@@ -732,22 +750,15 @@
                             <tr>
                                 <th>주문상품</th>
                                 <td>
-<<<<<<< HEAD
-                                    <span id="order-product-price">500,000</span>
-=======
 
                                     <span id="order-total-price" th:text="0"></span>
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                                 </td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
                                 <td>
-                                    <span class="price">
-                                        +
-                                        <span id="ship-price">3,000</span>
-                                    </span>
+                                    <p id="ship-price">+ 3,000</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -756,18 +767,11 @@
             </div>
             <!--최종 금액-->
             <div class="total-payment-price">
-                <table id="total-payment-price-table">
-                    <colgroup>
-                        <col style="width:765px">
-                    </colgroup>
-                    <tbody>
+                <table class="total-payment-price-table">
                         <tr>
-                            <th>최종 결제 금액</th>
-                            <td>
-                                <span id="total-price">503,000</span>
-                            </td>
+                            <th id="total-p">최종 결제 금액</th>
+                            <td id="total-price"></td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
 
@@ -795,10 +799,11 @@
                 </div>
             </div>
 
-
             <!--최종 결제 통보-->
             <div class="final-payment">
-                <p>결제하기</p>
+                <form>
+                    <a href="#" onclick="checkForm()" value="결제하기" class="selected">결제하기</a>
+                </form>
             </div>
         </div>
     </section>

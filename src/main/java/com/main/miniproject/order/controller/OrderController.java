@@ -1,9 +1,5 @@
 package com.main.miniproject.order.controller;
 
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-=======
 import com.main.miniproject.cart.entity.Cart;
 import com.main.miniproject.cart.repository.CartRepository;
 
@@ -26,19 +22,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping
 public class OrderController {
 
-	
-	@GetMapping("/order")
-	public String getOrder() {
-		
-		return "/order/order";
-	}
-<<<<<<< HEAD
-=======
+	private final OrderService orderService;
 
->>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
+	private final UserRepository userRepository;
+
+	private final CartRepository cartRepository;
+
+	private final OrderItemRepository orderItemRepository;
+
+	@GetMapping("/viewOrderItem")
+	public String viewOrderPage(@RequestParam(value = "cartList", required = false) List<Long> cartIds, Model model) {
+		List<Cart> ordersList = new ArrayList<Cart>();
+
+		if (cartIds == null || cartIds.isEmpty()) {
+			// 'cartList' 파라미터가 없을 때 처리할 로직 구현
+
+			return "redirect:/";
+		}
+
+		for (Long id : cartIds) {
+			Cart cart = cartRepository.findById(id).get();
+			ordersList.add(cart);
+		}
+		model.addAttribute("cart", ordersList);
+
+		return "order/order";
+	}
+
 }

@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		
 		registry.addResourceHandler("/board/images/**").addResourceLocations("file:/C:/board/images/");
-		registry.addResourceHandler("/miniproject/images/**").addResourceLocations("file:/C:/miniproject/images/");
+		registry.addResourceHandler("/review/images/**").addResourceLocations("file:/C:/review/images/");
 	}
 	
 }
