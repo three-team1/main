@@ -207,7 +207,7 @@
 
       <div class="paging">
         <th:block>
-          <a th:href="@{/qna/list(page=0)}">처음</a>
+          <a th:href="@{/qna/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">이전</a>
         </th:block>
         <th:block th:each="pageNumber : ${pageNumbers}">
         <span th:class="${pageNumber == currentPage ? 'active' : ''}">
@@ -218,9 +218,12 @@
         </span>
         </th:block>
         <th:block>
-          <a th:href="@{/qna/list(page=${totalPages - 1})}">마지막</a>
+          <a th:href="@{/qna/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">다음</a>
         </th:block>
       </div>
+
+
+
 
 
 
