@@ -1,0 +1,273 @@
+
+
+<!--@@@@@@@@@@@@@@KCP 결제 예제 코드@@@@@@@@@@@@@@-->
+
+<!--<div class="final-payment">-->
+<!--	<form action="/payment" method="post" onsubmit="requestSelectPay()">-->
+<!--		<input type="submit" value="결제하기" class="selected">-->
+<!--	</form>-->
+<!--</div>-->
+<!--	-->
+<!--	-->
+<!--	<script>-->
+<!--	-->
+<!--/* 		$('.cart').each(function() {-->
+<!--		  const productId = $(this).data('product-id');-->
+<!--		  const quantity = $(this).data('quantity-id');-->
+<!--		  -->
+<!--		  console.log('Product ID:', productId);-->
+<!--		  console.log('Quantity:', quantity);-->
+<!--		}); */-->
+<!--		-->
+<!--		-->
+<!--		let productId = [];-->
+<!--		let quantity = [];-->
+<!--		$('.cart').each(function() {-->
+<!--		    productId.push($(this).data('product-id'));-->
+<!--		    quantity.push($(this).data('quantity-id'));-->
+<!--		});-->
+<!--		-->
+<!--		console.log(productId);-->
+<!--	-->
+<!--		const IMP = window.IMP;-->
+<!--		IMP.init("imp04710710");-->
+<!--		-->
+<!--		//-->
+<!--		// //전체 상품 결제-->
+<!--		//-->
+<!--		//-->
+<!--		// 		async function checkProductQuantity(productId, orderQuantity) {-->
+<!--		// 		    try {-->
+<!--		// 		        await $.ajax({-->
+<!--		// 		            url: `/api/product/${productId}/validateQuantity`,-->
+<!--		// 		            data: { orderQuantity: orderQuantity }-->
+<!--		// 		        });-->
+<!--		// 		        return true;-->
+<!--		// 		    } catch (error) {-->
+<!--		// 		        alert(error.responseText);-->
+<!--		// 		        return false;-->
+<!--		// 		    }-->
+<!--		// 		}-->
+<!--		//-->
+<!--		// async function requestPay() {-->
+<!--		//-->
+<!--		//-->
+<!--		// 	   	if (!confirm("전체 상품을 주문하시겠습니까?")) {-->
+<!--		// 	        return;-->
+<!--		// 	    } else {-->
+<!--		// 	    	$('.th1-checkbox').trigger('click');-->
+<!--		// 	    }-->
+<!--		//-->
+<!--		//-->
+<!--		//-->
+<!--		// 	  $.get("/api/cart/user", function(user) {-->
+<!--		//-->
+<!--		// 	    $.get("/api/cart", async function(cart) {-->
+<!--		//-->
+<!--		// 	      let name = "";-->
+<!--		// 	      let amount = 0;-->
+<!--		// 	      for (let item of cart) {-->
+<!--		// 	        name += item.product.productTitle + ", ";-->
+<!--		// 	        amount += item.product.productPrice * item.cartQuantity;-->
+<!--		//-->
+<!--		// 	        let isQuantitySufficient = await checkProductQuantity(item.product.id, item.cartQuantity);-->
+<!--		// 	        if (!isQuantitySufficient) {-->
+<!--		// 	            return; // 재고가 부족하면 결제를 중단합니다.-->
+<!--		// 	        }-->
+<!--		//-->
+<!--		// 	      }-->
+<!--		//-->
+<!--		// 	      // Initiate payment request-->
+<!--		// 	      IMP.request_pay(-->
+<!--		// 	        {-->
+<!--		// 	          pg: "kcp.T0000",-->
+<!--		// 	          pay_method: "card",-->
+<!--		// 	          merchant_uid: 'merchant_' + new Date().getTime(),-->
+<!--		// 	          name: name,-->
+<!--		// 	          amount: amount,-->
+<!--		// 	          company : '포션이었다...',-->
+<!--		// 	          buyer_email: user.email,-->
+<!--		// 	          buyer_name: user.username,-->
+<!--		// 	          buyer_tel: user.tel,-->
+<!--		// 	          buyer_addr: user.my_address,-->
+<!--		// 	          buyer_postcode: user.my_postcode,-->
+<!--		//-->
+<!--        //-->
+<!--		//-->
+<!--		// 	        }, function (rsp) {-->
+<!--		//-->
+<!--		// 	        	console.log(rsp);-->
+<!--		//-->
+<!--		// 	        	let paymentDTO = {-->
+<!--		// 	        			  pg: rsp.pg,-->
+<!--		// 	        			  pay_method: rsp.pay_method,-->
+<!--		// 	        			  imp_uid:rsp.imp_uid,-->
+<!--		// 	        			  merchant_uid: rsp.merchant_uid,-->
+<!--		// 	        			  name: rsp.name,-->
+<!--		// 	        			  amount: rsp.paid_amount,-->
+<!--		// 	        			  buyer_tel: rsp.buyer_tel,-->
+<!--		// 	        			  buyer_addr: rsp.buyer_addr,-->
+<!--		// 	        			  buyer_postcode: rsp.buyer_postcode,-->
+<!--		// 	        			  buyer_detailAddr: user.my_detailAddress,-->
+<!-- 		// 	        			  productId:productId,-->
+<!--		// 	        			  quantity:quantity-->
+<!--		// 	        			};-->
+<!--		//-->
+<!--		// 	        	$.ajax({-->
+<!--		// 	        		type: 'POST',-->
+<!--		// 	        		url:'/verifyIamport/' + rsp.imp_uid-->
+<!--		// 	        	}).done(function(result) {-->
+<!--		//-->
+<!--		// 	        		console.log(result);-->
+<!--		//-->
+<!--		// 	        		if(rsp.paid_amount === result.response.amount) {-->
+<!--		// 	        			alert("결제가 완료되었습니다.");-->
+<!--		//-->
+<!--		// 	        			$.ajax({-->
+<!--		// 	                        type: 'POST',-->
+<!--		// 	                        url: '/api/payment',  // your API endpoint to process payment-->
+<!--		// 	                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO-->
+<!--		// 	                        contentType: 'application/json'-->
+<!--		// 	                    }).done(function(result) {-->
+<!--		// 	                        // handle result-->
+<!--		// 	                        console.log(result);-->
+<!--		// 	                        window.location.href = "/";-->
+<!--		//-->
+<!--		// 	                    }).fail(function(error) {-->
+<!--		// 	                        // handle error-->
+<!--		// 	                        console.log(error);-->
+<!--		// 	                    });-->
+<!--	    //-->
+<!--		// 	        		} else {-->
+<!--		// 	        			$('.th1-checkbox').trigger('click');-->
+<!--		// 	        			alert("결제 실패");-->
+<!--		// 	        		}-->
+<!--		//-->
+<!--		//-->
+<!--		// 	        	});-->
+<!--		// 	        });-->
+<!--		// 	    });-->
+<!--		// 	  });-->
+<!--		// 	}-->
+<!--		//-->
+<!--		-->
+<!--		-->
+<!--		// 선택된 상품만 결제-->
+<!--		-->
+<!--		function requestSelectPay() {-->
+<!--			  var selectedItems = []; // 선택된 상품들을 담을 배열-->
+<!--			  -->
+<!--			  // 선택된 체크박스들을 확인하고 선택된 상품들을 배열에 추가-->
+<!--			  $('input[type="checkbox"][name="check"]:checked').each(function() {-->
+<!--			    var productId = $(this).closest('.cart').data('product-id');-->
+<!--			    var quantity = $(this).closest('.cart').data('quantity-id');-->
+<!--			    -->
+<!--			    selectedItems.push({-->
+<!--			      productId: productId,-->
+<!--			      quantity: quantity-->
+<!--			    });-->
+<!--			  });-->
+<!--			  -->
+<!--			  console.log('선택된 아이템',selectedItems);-->
+
+<!--			  -->
+<!--			  // 선택된 상품들이 있는지 확인-->
+<!--			  if (selectedItems.length === 0) {-->
+<!--			    alert("주문할 상품을 선택해주세요.");-->
+<!--			    return;-->
+<!--			  }-->
+<!--			 -->
+<!--			  $.get("/api/cart/user", function(user) {-->
+<!--				  $.get("/api/cart", function(cart) {-->
+<!--				    let name = "";-->
+<!--				    let amount = 0;-->
+<!--				    for (let selectedItem of selectedItems) {-->
+<!--				      for (let item of cart) {-->
+<!--				        if (item.product.id == selectedItem.productId) {-->
+<!--				        	console.log("Selected product found in cart", item);-->
+<!--				          name += item.product.productTitle + ", ";-->
+<!--				          amount += item.product.productPrice * item.cartQuantity;-->
+<!--				          break;-->
+<!--				        }-->
+<!--				      }-->
+<!--				    }-->
+<!--				      -->
+<!--				      // Initiate payment request-->
+<!--				      IMP.request_pay(-->
+<!--				        {-->
+<!--				          pg: "kcp.T0000",-->
+<!--				          pay_method: "card",-->
+<!--				          merchant_uid: 'merchant_' + new Date().getTime(),-->
+<!--				          name: name,-->
+<!--				          amount: amount,-->
+<!--				          company : '포션이었다...',-->
+<!--				          buyer_email: user.email,-->
+<!--				          buyer_name: user.username,-->
+<!--				          buyer_tel: user.tel,-->
+<!--				          buyer_addr: user.my_address,-->
+<!--				          buyer_postcode: user.my_postcode,-->
+<!--				          -->
+
+<!--				          -->
+<!--				        }, function (rsp) {-->
+<!--				        	-->
+<!--				        	console.log(rsp);-->
+<!--				        	-->
+<!--				        	let paymentDTO = {-->
+<!--				        			  pg: rsp.pg,-->
+<!--				        			  pay_method: rsp.pay_method,-->
+<!--				        			  imp_uid:rsp.imp_uid,-->
+<!--				        			  merchant_uid: rsp.merchant_uid,-->
+<!--				        			  name: rsp.name,-->
+<!--				        			  amount: rsp.paid_amount,-->
+<!--				        			  buyer_tel: rsp.buyer_tel,-->
+<!--				        			  buyer_addr: rsp.buyer_addr,-->
+<!--				        			  buyer_postcode: rsp.buyer_postcode,-->
+<!--				        			  buyer_detailAddr: user.my_detailAddress,-->
+<!--	 			        			  productId: productId,-->
+<!--				        			  quantity: quantity-->
+<!--				        			};-->
+<!--				        	-->
+<!--				        	$.ajax({-->
+<!--				        		type: 'POST',-->
+<!--				        		url:'/verifyIamport/' + rsp.imp_uid-->
+<!--				        	}).done(function(result) {-->
+<!--				        		-->
+<!--				        		console.log(result);-->
+<!--				        		-->
+<!--				        		if(rsp.paid_amount === result.response.amount) {-->
+<!--				        			alert("결제가 완료되었습니다.");-->
+<!--				        			-->
+<!--				        			$.ajax({-->
+<!--				                        type: 'POST',-->
+<!--				                        url: '/api/payment',  // your API endpoint to process payment-->
+<!--				                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO-->
+<!--				                        contentType: 'application/json'-->
+<!--				                    }).done(function(result) {-->
+<!--				                        // handle result-->
+<!--				                        console.log(result);-->
+<!--				                        window.location.href = "/";-->
+<!--				                        -->
+<!--				                    }).fail(function(error) {-->
+<!--				                        // handle error-->
+<!--				                        console.log(error);-->
+<!--				                    });-->
+<!--		        			-->
+<!--				        		} else {-->
+<!--				        			alert("결제 실패");-->
+<!--				        		}-->
+<!--				        		-->
+<!--				        		-->
+<!--				        	});-->
+<!--				        });-->
+<!--				    });-->
+<!--				  });	  -->
+<!--			}-->
+<!--		-->
+<!--	    $(document).ready(function() {-->
+<!--	    	$.get("/api/cart/count", function(data) {-->
+<!--	    		$('#cart-count').text(data);-->
+<!--	    	});-->
+<!--	    });-->
+
+<!--	</script>-->

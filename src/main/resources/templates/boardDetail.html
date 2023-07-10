@@ -338,14 +338,14 @@
 		
 		<div class="comment-section">
 		    <h3>댓글</h3>
-
+	
 		    <!-- 댓글 작성 폼 -->
 		    <form id="commentForm" th:action="'/board/comment/' + ${board.id}" method="post" class="comment-form">
 		    	<input type="hidden" id="boardId" th:value="${board.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
 		        <input name="commentContent" placeholder="댓글을 입력하세요.">
 		        <button type="submit">작성</button>
 		    </form>
-
+		
 		    <!-- 댓글 목록 -->
 		    <div class="comment-list-box">
 		    
