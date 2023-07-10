@@ -7,6 +7,7 @@ import com.main.miniproject.qna.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -34,25 +35,35 @@ public class QnaController {
     private CommentService commentService;
 
     @GetMapping("/qna/list")
-    public String qnaList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<QNA> qnaPage = qnaService.paging(pageable);
+    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
+        int pageSize = 10; // 페이지당 게시글 수
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<QNA> qnaPage;
 
-        List<QNA> qnaList = qnaService.getList(pageable);
+        if(keyword != null) {
+            qnaPage = qnaService.searchQNA(pageable, keyword);
+        } else {
+            qnaPage = qnaService.getList(pageable);
+        }
 
-        model.addAttribute("qnaList", qnaList);
+
+        model.addAttribute("qnaList", qnaPage);
 
         // 페이징 정보
-        int currentPage = qnaPage.getNumber(); // 현재 페이지 번호
         int totalPages = qnaPage.getTotalPages(); // 총 페이지 수
         long totalItems = qnaPage.getTotalElements(); // 총 아이템 수
 
+
+        model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
 
         // 페이지 목록
-        int startPage = Math.max(0, currentPage - 4); // 시작 페이지 계산 (현재 페이지를 중심으로 5개의 페이지 목록)
-        int endPage = Math.min(totalPages - 1, currentPage + 4); // 끝 페이지 계산 (현재 페이지를 중심으로 5개의 페이지 목록)
+        int maxPageNumbers = 5; // 페이지 목록에 표시할 최대 페이지 수
+        int startPage = Math.max(0, Math.min(currentPage - maxPageNumbers / 2, totalPages - maxPageNumbers)); // 시작 페이지 계산
+        int endPage = Math.min(startPage + maxPageNumbers - 1, totalPages - 1); // 끝 페이지 계산
+
         List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
                 .boxed()
                 .collect(Collectors.toList());
@@ -61,6 +72,10 @@ public class QnaController {
 
         return "/qna/qnaList";
     }
+
+
+
+
 
     @GetMapping("/qna/insert")
     public String qnaGetInsert() {

@@ -1,12 +1,6 @@
 package com.main.miniproject.order.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.main.miniproject.product.entity.Product;
 
@@ -17,6 +11,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+<<<<<<< HEAD
+=======
+@Table(name = "order_item")
+@Builder
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
 @Data
 public class OrderItem {
 

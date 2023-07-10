@@ -12,6 +12,12 @@
     <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<<<<<<< HEAD
+=======
+
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
     <script>
         //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
         function execDaumPostcode() {
@@ -85,7 +91,189 @@
                 paymentMethod.prop("checked", true); // 라디오 버튼 선택
                 label.css({
                     "border": "1px solid blue",
+<<<<<<< HEAD
                     "color": "blue"
+=======
+                    "color": "blue"});
+            });
+
+            // 천 단위 콤마찍는 로직
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").concat(" 원");
+            }
+
+            //숫자를 제외한 변수들을 제거하는 정규식
+            function parsePriceString(priceString) {
+                // Remove all non-numeric characters except for digits
+                const numericString = priceString.replace(/[^\d]/g, '');
+                return parseInt(numericString, 10);
+            }
+
+
+            // 상품 단일 가격 콤마 찍기
+            $(".orderPrice").each(function() {
+                let price = $(this).text();
+                $(this).text(numberWithCommas(price));
+            });
+
+            // 각 상품 가격 * 수량 계산 하기
+            $(".orderTotalPrice").each(function() {
+                const totalPrice = parsePriceString($(this).siblings("td.orderPrice").text(), 10)
+                    * parsePriceString($(this).siblings("td.orderQuantity").text(), 10);
+
+                console.log($(this).siblings("td.orderPrice").text());
+
+                $(this).text(numberWithCommas(totalPrice));
+            });
+
+            // 결제 총 금액 계산하기
+            function payMoney() {
+                let payPrice = 0;
+                $(".orderTotalPrice").each(function() {
+                    let payPriceStr = $(this).text();
+                    payPrice = payPrice + parsePriceString(payPriceStr);
+                });
+
+                let totalPayPrice = payPrice + 3000;
+
+                $("#order-total-price").text(numberWithCommas(payPrice));
+                $("#total-price").text(numberWithCommas(totalPayPrice));
+            }
+            payMoney();
+
+        });
+
+
+        // 필수 입력 값 체크하기
+        function checkForm() {
+            let name = document.getElementById("order-name").value;
+            let postcode = document.getElementById("postcode").value;
+            let addr1 = document.getElementById("roadAddress").value;
+            let addr2 = document.getElementById("jibunAddress").value;
+            let addr3 = document.getElementById("detailAddress").value;
+            let tel1 = document.getElementById("order-tel-2").value;
+            let tel2 = document.getElementById("order-tel-3").value;
+            let email1 = document.getElementById("order-email1").value;
+            let email2 = document.getElementById("order-email2").value;
+
+            if (name == "") {
+                alert("받는 사람을 입력해주세요.");
+                name.focus();
+                return false;
+            } else if (postcode == "" || addr1 == "" || addr2 == "" || addr3 == "") {
+                alert("주소를 입력해주세요.")
+                postcode.focus();
+                return false;
+            } else if (tel1 == "" || tel2 == "") {
+                alert("전화번호를 입력해주세요.");
+                tel1.focus();
+                return false;
+            } else if (email1 == "" || email2 == "") {
+                alert("이메일을 확인해주세요.");
+                email1.focus();
+                return false;
+            }
+            return requestSelectPay();
+        }
+
+        const IMP = window.IMP;
+        IMP.init("imp04710710");
+
+        let productId = [];
+        let quantity = [];
+        $('.cart').each(function() {
+            productId.push($(this).data('product-id'));
+            quantity.push($(this).data('quantity-id'));
+
+        });
+
+        function requestSelectPay() {
+
+            $.get("/api/cart/user", function(user) {
+                $.get("/api/cart", function(cart) {
+
+                    function parsePriceString(priceString) {
+                        // Remove all non-numeric characters except for digits
+                        const numericString = priceString.replace(/[^\d]/g, '');
+                        return parseInt(numericString, 10);
+                    }
+
+                    let name = "";
+                    $(".orderTitle").each(function () {
+                        name += $(this).text();
+                    });
+
+                    let amount = parsePriceString($("#total-price").text());
+
+                    // Initiate payment request
+                    IMP.request_pay(
+                        {
+                            pg: "kcp.T0000",
+                            pay_method: "card",
+                            merchant_uid: 'merchant_' + new Date().getTime(),
+                            name: name,
+                            amount: amount,
+                            company : '포션이었다...',
+                            buyer_email: user.email,
+                            buyer_name: user.username,
+                            buyer_tel: user.tel,
+                            buyer_addr: user.my_address,
+                            buyer_postcode: user.my_postcode,
+
+
+
+                        }, function (rsp) {
+
+                            console.log(rsp);
+
+                            let paymentDTO = {
+                                pg: rsp.pg,
+                                pay_method: rsp.pay_method,
+                                imp_uid:rsp.imp_uid,
+                                merchant_uid: rsp.merchant_uid,
+                                name: rsp.name,
+                                amount: rsp.amount,
+                                buyer_tel: rsp.buyer_tel,
+                                buyer_addr: rsp.buyer_addr,
+                                buyer_postcode: rsp.buyer_postcode,
+                                buyer_detailAddr: user.my_detailAddress,
+                                productId: productId,
+                                quantity: quantity
+                            };
+
+                            $.ajax({
+                                type: 'POST',
+                                url:'/verifyIamport/' + rsp.imp_uid
+                            }).done(function(result) {
+
+                                console.log(result);
+
+                                if(rsp.paid_amount === result.response.amount) {
+                                    alert("결제가 완료되었습니다.");
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/api/payment',  // your API endpoint to process payment
+                                        data: JSON.stringify(paymentDTO),  // sending the paymentDTO
+                                        contentType: 'application/json'
+                                    }).done(function(result) {
+                                        // handle result
+                                        console.log(result);
+                                        window.location.href = "/";
+
+                                    }).fail(function(error) {
+                                        // handle error
+                                        console.log(error);
+                                    });
+
+                                } else {
+                                    alert("결제 실패");
+                                }
+
+
+                            });
+                        });
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                 });
             });
         });
@@ -162,7 +350,8 @@
         }
 
         .order-form-table th {
-            padding: 16px 10px 12px 0;
+            padding: 16px 0px 12px 0;
+            font-size: 12px;
         }
 
         .order-form {
@@ -313,7 +502,31 @@
            font-weight: bold;
         }
 
+<<<<<<< HEAD
 
+=======
+
+       .orderImage img{
+           width: 100%;
+       }
+
+       .orderPrice {
+
+           text-align: right;
+       }
+
+       #order-total-price, #ship-price {
+           text-align: right;
+       }
+
+       #order-payment-table th, td {
+           padding: 10px;
+       }
+
+       #order-payment-title h2 {
+           margin-bottom: 10px;
+       }
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
     </style>
 <body>
     <header>
@@ -483,10 +696,22 @@
                             <col style="width:70%">
                             <col style="width:20%">
                         </colgroup>
+<<<<<<< HEAD
                         <tr>
                             <td>상품이미지</td>
                             <td>상품이름</td>
                             <td>가격</td>
+=======
+
+                        <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
+
+                            <td class="orderImage"><img th:src="${cart.productImage}"></td>
+                            <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
+                            <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
+                            <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
+                            <td class="orderTotalPrice" th:text="0"></td>
+
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                         </tr>
                     </table>
                 </div>
@@ -507,7 +732,13 @@
                             <tr>
                                 <th>주문상품</th>
                                 <td>
+<<<<<<< HEAD
                                     <span id="order-product-price">500,000</span>
+=======
+
+                                    <span id="order-total-price" th:text="0"></span>
+
+>>>>>>> a94bc4aec060891bb0a0be307e4e4e6a2d9a41f9
                                 </td>
                             </tr>
                             <tr>

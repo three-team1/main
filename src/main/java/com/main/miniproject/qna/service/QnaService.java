@@ -41,16 +41,10 @@ public class QnaService {
         qnaRepository.save(qna);
     }
 
-    public List<QNA> getList(Pageable pageable) {
+    public Page<QNA> getList(Pageable pageable) {
         Page<QNA> qnaList = qnaRepository.findAll(pageable);
-        List<QNA> qnaQNAList = new ArrayList<>();
 
-
-        for (QNA qna : qnaList) {
-            qnaQNAList.add(qna);
-        }
-
-        return qnaQNAList;
+        return qnaList;
     }
 
 
@@ -110,4 +104,7 @@ public class QnaService {
     }
 
 
+    public Page<QNA> searchQNA(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaTitleContainingOrQnaContentContaining(keyword, keyword, pageable);
+    }
 }
