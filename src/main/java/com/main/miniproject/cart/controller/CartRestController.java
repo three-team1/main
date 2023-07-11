@@ -83,9 +83,14 @@ public class CartRestController {
     @GetMapping("/api/cart/count")
     public ResponseEntity<Integer> getCartItemCount(@AuthenticationPrincipal UserDetail userDetail) {
        
+        if(userDetail == null || userDetail.getUser()== null) {
+            System.out.println("비 로그인 상태");
+            return ResponseEntity.ok(0); // 비로그인 상태일 때는 바로 0을 리턴합니다.
+        }
 
         User user = userDetail.getUser();   	
         int count = cartService.countCart(user);
+        
         
         System.out.println("상품종류개수 : " + count);
         return ResponseEntity.ok(count);

@@ -1,14 +1,13 @@
 package com.main.miniproject.review.service;
 
+import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ReviewService {
 
-    Review insertReview(Review review);
+    ReviewDTO insertReview(ReviewDTO reviewDTO);
 
     Page<Review> getAllReviews(Pageable pageable);
 

@@ -3,19 +3,18 @@ package com.main.miniproject.user.controller;
 import com.main.miniproject.board.entity.Board;
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
-import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
-import com.main.miniproject.review.service.ReviewFileService;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
-import lombok.Getter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +30,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +55,9 @@ public class MypageViewController {
     private OrdersService ordersService;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     public MypageViewController(UserInfoService userInfoService,
                                 UserService userService,
                                 ReviewService reviewService,
@@ -71,20 +70,25 @@ public class MypageViewController {
 
     //마이페이지 주문/배송 조회 페이지
     @GetMapping("/me")
-    public ModelAndView mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView();
+    public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-//        List<Orders> ordersList = ordersService.getOrdersList(user.getId());
-//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user);
 
-//        model.addAttribute("orders", ordersList);
-//        model.addAttribute("orderitems", orderItemList);
 
-        mv.setViewName("/mypage/me");
+        List<Orders> ordersList = ordersService.getOrdersList(user);
 
-        return mv;
+        List<Orders> prodList = ordersService.getProductsList(user.getId());
+
+        model.addAttribute("orders", ordersList);
+        model.addAttribute("products", prodList);
+
+        return "mypage/me";
     }
+    /*List<Orders> orders = orderService.getOrdersByUserId(userDetail.getId())
+
+    model.addAttribute "orders",orders*/
+
 
     //마이페이지 내 정보 관리 페이지 + 일반 로그인 회원, 소셜 로그인 회원 구분
     @GetMapping("/myInfo")
@@ -92,7 +96,7 @@ public class MypageViewController {
         ModelAndView mv = new ModelAndView();
         User user = userService.getCurrentUser();
 
-        if (user.getProvider() == null) {
+        if (user.getProvider().equalsIgnoreCase("LOCAL")) {
             mv.setViewName("/mypage/myInfo");
         } else {
             mv.setViewName("/mypage/myInfoOAuth");
@@ -119,7 +123,7 @@ public class MypageViewController {
 
         mv.addObject("user", user);
 
-        if (user.getProvider() == null) {
+        if (user.getProvider().equalsIgnoreCase("LOCAL")) {
             mv.setViewName("/mypage/myUpdate");
         } else {
             mv.setViewName("/mypage/myUpdateOAuth");
@@ -138,7 +142,6 @@ public class MypageViewController {
         return mv;
     }
 
-    //내 글 조회
     @GetMapping("/myBoard")
     public String myBoardView(Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
@@ -219,5 +222,6 @@ public class MypageViewController {
 
         return mv;
     }
+
 }
 

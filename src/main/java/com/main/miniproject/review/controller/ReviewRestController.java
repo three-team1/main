@@ -1,6 +1,7 @@
 package com.main.miniproject.review.controller;
 
 import com.main.miniproject.order.entity.OrderItem;
+import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewFileService;
@@ -9,6 +10,7 @@ import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserDetail;
 import com.main.miniproject.user.service.UserInfoService;
+import com.main.miniproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,17 +38,17 @@ public class ReviewRestController {
 
     private ReviewFileService reviewFileService;
 
-    private UserInfoService userInfoService;
+    private UserService userService;
 
     @Autowired
     public ReviewRestController(ReviewService reviewService,
                                 ReviewImageService reviewImageService,
                                 ReviewFileService reviewFileService,
-                                UserInfoService userInfoService) {
+                                UserService userService) {
         this.reviewService = reviewService;
         this.reviewImageService = reviewImageService;
         this.reviewFileService = reviewFileService;
-        this.userInfoService = userInfoService;
+        this.userService = userService;
     }
 
     //리뷰 작성
@@ -57,25 +59,21 @@ public class ReviewRestController {
                                                             RedirectAttributes redirectAttributes,
                                                             @AuthenticationPrincipal UserDetails userDetails) {
 
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
 
         //임시 데이터
         OrderItem orderItem = OrderItem.builder().id(1L).build();
+        String productTitle = "product title";
 
-        Review review = Review.builder()
-                .reviewContent(reviewContent)
-                .reviewRating(Integer.parseInt(reviewRating))
-                .reviewRegdate(LocalDateTime.now())
-                .user(user)
-                .orderItem(orderItem)
-                .build();
+        ReviewDTO reviewDTO = new ReviewDTO(productTitle, reviewRating, reviewContent, user, orderItem);
 
-        reviewService.insertReview(review);
+        ReviewDTO savedReviewDTO = reviewService.insertReview(reviewDTO);
+        Review savedReview = savedReviewDTO.DTOToEntity();
 
         List<ReviewImage> reviewImages = new ArrayList<>();
 
         if(files != null && files.length > 0) {
-            reviewImages = reviewFileService.saveFiles(review, files);
+            reviewImages = reviewFileService.saveFiles(savedReview, files);
 
             for(ReviewImage reviewImage : reviewImages) {
                 reviewImageService.saveReviewImage(reviewImage);
@@ -111,12 +109,4 @@ public class ReviewRestController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        return userDetail.getUser();
-    }
-
 }

@@ -382,7 +382,7 @@
                             <span class="more-toggle">더보기</span>
                         </div>
                         <div class="images-container" style="display: none; visibility: hidden;" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
-                                    th:each="reviewImage : ${reviewImages.get(review.id)}">
+                             th:each="reviewImage : ${reviewImages.get(review.id)}">
                             <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
                                  th:data-height="${reviewImage.height}" alt="리뷰 이미지">
                         </div>

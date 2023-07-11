@@ -1,5 +1,6 @@
 package com.main.miniproject.review.service.impl;
 
+import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.repository.ReviewImageRepository;
@@ -10,7 +11,6 @@ import com.main.miniproject.user.service.UserDetail;
 import com.main.miniproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,37 +41,52 @@ public class ReviewServiceImpl implements ReviewService {
         this.userService = userService;
     }
 
+    //리뷰 작성
     @Transactional
     @Override
-    public Review insertReview(Review review) {
-        User user = getCurrentUser();
+    public ReviewDTO insertReview(ReviewDTO reviewDTO) {
+        Review review = reviewDTO.DTOToEntity();
+        Review savedReview = reviewRepository.save(review);
 
-        review.setUser(user);
+        ReviewDTO savedReviewDTO = ReviewDTO.builder()
+                .id(savedReview.getId())
+                .reviewTitle(savedReview.getReviewTitle())
+                .reviewContent(savedReview.getReviewContent())
+                .reviewRegdate(savedReview.getReviewRegdate())
+                .reviewRating(savedReview.getReviewRating())
+                .userId(savedReview.getUser().getId())
+                .orderItemId(savedReview.getOrderItem().getId())
+                .build();
 
-        return reviewRepository.save(review);
+        return savedReviewDTO;
     }
 
+    //리뷰 전체 목록 조회
     @Override
     public Page<Review> getAllReviews(Pageable pageable) {
 
         return reviewRepository.findAll(pageable);
     }
 
+    //전체 리뷰 검색
     @Override
     public Page<Review> searchReview(Pageable pageable, String keyword) {
         return reviewRepository.findByReviewTitleContainingOrReviewContentContaining(keyword, keyword, pageable);
     }
 
+    //내 리뷰 목록 조회
     @Override
     public Page<Review> getMyReviews(Pageable pageable, String username) {
         return reviewRepository.findByUserUsername(pageable, username);
     }
 
+    //내 리뷰 검색
     @Override
     public Page<Review> searchMyReviews(Pageable pageable, String username, String keyword) {
         return reviewRepository.findByUserUsernameAndKeyword(pageable, username, keyword);
     }
 
+    //리뷰 삭제
     @Transactional
     @Override
     public void deleteReview(Long id) {
@@ -99,11 +114,4 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(id);
     }
 
-
-    public User getCurrentUser() {
-        // 사용자 인증정보 반환
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        return userDetail.getUser();
-    }
 }

@@ -13,5 +13,4 @@ public interface UserInfoService {
     boolean checkPassword(String username, String checkPassword);
 
     boolean changePassword(String username, String password, String newPassword, String confirmPassword);
-
 }

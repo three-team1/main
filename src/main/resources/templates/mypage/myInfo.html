@@ -123,27 +123,6 @@
     </th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            function divBtn4() {
-                window.location.href="/mypage/myInfo";
-
-                $.ajax({
-                    url: "/api/mypage/myInfo",
-                    type: "GET",
-                    contentType: "application/json",
-                    success: function(user) {
-                        $('#username').val(user.username);
-                        $('#email').val(user.email);
-                        $('#tel').val(user.tel);
-                        $('#my_postcode').val(user.my_postcode);
-                        $('#my_address').val(user.my_address);
-                        $('#my_detailAddress').val(user.my_detailAddress);
-                    },
-                    error: function(err){
-                        console.log(err);
-                    }
-                });
-            }
-
             $(function () {
                 $("#btnPwChange").on("click", () => {
                     $.ajax({
@@ -158,18 +137,18 @@
                     });
                 });
 
-               $("#btnUpdate").on("click", () => {
-                   $.ajax({
-                       url: "/mypage/pwChk",
-                       type: "GET",
-                       success: function () {
-                           window.location.href="/mypage/pwChk";
-                       },
-                       error: function () {
-                           console.log(err);
-                       }
-                   });
-               });
+                $("#btnUpdate").on("click", () => {
+                    $.ajax({
+                        url: "/mypage/pwChk",
+                        type: "GET",
+                        success: function () {
+                            window.location.href="/mypage/pwChk";
+                        },
+                        error: function () {
+                            console.log(err);
+                        }
+                    });
+                });
             });
         </script>
     </th:block>
@@ -188,7 +167,7 @@
                 <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
                     <p>내 리뷰 관리</p>
                 </div>
-                <div class="menu-title" id="menu-title4" onclick="divBtn4()">
+                <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
                     <p>내 정보 관리</p>
                 </div>
             </div>

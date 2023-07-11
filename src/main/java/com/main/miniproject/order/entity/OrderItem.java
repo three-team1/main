@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "orderitems")
-@Data
+@Table(name = "order_item")
 @Builder
+@Data
 public class OrderItem {
 
 	@Id
@@ -32,6 +32,8 @@ public class OrderItem {
 	
 	@Column(name = "order_quantity")
 	private int orderQuantity;
-	
+
+	@Column(name = "reviewed")
+	private boolean reviewed = false;
 	
 }

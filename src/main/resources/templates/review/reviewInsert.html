@@ -167,8 +167,8 @@
                             }
                         },
                         error: function (err) {
-                        console.error('Error', err);
-                        alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
+                            console.error('Error', err);
+                            alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
                         }
                     });
                 });
@@ -176,18 +176,18 @@
         </script>
         <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
-            console.log("페이지 로드");
-            document.querySelectorAll('#starRating .star').forEach(star => {
-                console.log("별 이벤트 리스너 추가");
-                star.addEventListener("click", event => {
-                    console.log("별 클릭");
-                    document.querySelectorAll('#starRating .star').forEach(s => {
-                        s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
+                console.log("페이지 로드");
+                document.querySelectorAll('#starRating .star').forEach(star => {
+                    console.log("별 이벤트 리스너 추가");
+                    star.addEventListener("click", event => {
+                        console.log("별 클릭");
+                        document.querySelectorAll('#starRating .star').forEach(s => {
+                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
+                        });
+                        document.getElementById("reviewRating").value = event.target.dataset.value;
                     });
-                    document.getElementById("reviewRating").value = event.target.dataset.value;
                 });
             });
-        });
         </script>
     </th:block>
 </head>
