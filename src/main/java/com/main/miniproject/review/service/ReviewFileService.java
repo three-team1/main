@@ -7,5 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReviewFileService {
-    List<ReviewImage> saveFiles(Review review, MultipartFile[] files);
+    List<ReviewImage> saveFiles(Review review, List<MultipartFile> files);
 }

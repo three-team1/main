@@ -8,10 +8,11 @@
         <style>
             .main-container {
                 margin-top: 172px;
+                margin-bottom: 10px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: 620px;
                 grid-gap: 10px;
+                min-height: 620px;
             }
 
             .main-container > div {
@@ -26,7 +27,8 @@
                 margin-left: 10px;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
+                position: relative;
             }
 
             .section {
@@ -35,8 +37,9 @@
             }
 
             .menu {
-                position: absolute;
+                position: relative;
                 color: white;
+                margin-top: 130px;
             }
 
             .menu-title {
@@ -117,7 +120,9 @@
                 text-decoration: none;
             }
 
-            h1 {
+            h2 {
+                margin-top: 70px;
+                margin-bottom: 20px;
                 color: white;
             }
         </style>
@@ -180,7 +185,7 @@
                 <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
                     <p>내 글/댓글 조회</p>
                 </div>
-                <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+                <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
                     <p>내 리뷰 관리</p>
                 </div>
                 <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
@@ -189,7 +194,7 @@
             </div>
         </div>
         <div class="section">
-            <h1>비밀번호 확인</h1>
+            <h2>비밀번호 확인</h2>
             <form id="pwChkForm" action="/mypage/pwChk" method="get">
                 <table class="myInfo-tb">
                     <tr class="myInfo-tr">
