@@ -182,14 +182,14 @@
         const IMP = window.IMP;
         IMP.init("imp04710710");
 
-        let productId = [];
-        let quantity = [];
-        $('.cart').each(function() {
-            productId.push($(this).data('product-id'));
-            quantity.push($(this).data('quantity-id'));
-        });
-
         function requestSelectPay() {
+
+            let productId = [];
+            let quantity = [];
+            $('.orderList').each(function() {
+                productId.push(parseInt($(this).find(".orderProductId").text()));
+                quantity.push(parseInt($(this).find(".orderQuantity").text()));
+            });
 
             $.get("/api/cart/user", function(user) {
                 $.get("/api/cart", function(cart) {
@@ -200,12 +200,23 @@
                         return parseInt(numericString, 10);
                     }
 
+
                     let name = "";
                     $(".orderTitle").each(function () {
                         name += $(this).text();
                     });
-
+                    let userName = document.getElementById("order-name").value;
                     let amount = parsePriceString($("#total-price").text());
+                    let postcode = document.getElementById("postcode").value;
+                    let addr1 = document.getElementById("roadAddress").value;
+                    let addr3 = document.getElementById("detailAddress").value;
+                    let tel1 = document.getElementById("order-tel-1").value;
+                    let tel2 = document.getElementById("order-tel-2").value;
+                    let tel3 = document.getElementById("order-tel-3").value;
+                    let email1 = document.getElementById("order-email1").value;
+                    let email2 = document.getElementById("order-email2").value;
+                    let email = email1 + "@" + email2;
+                    let tel = ""+ tel1 + tel2 + tel3;
 
                     // Initiate payment request
                     IMP.request_pay(
@@ -216,17 +227,15 @@
                             name: name,
                             amount: amount,
                             company : '포션이었다...',
-                            buyer_email: user.email,
-                            buyer_name: user.username,
-                            buyer_tel: user.tel,
-                            buyer_addr: user.my_address,
-                            buyer_postcode: user.my_postcode,
+                            buyer_email: email,
+                            buyer_name: userName,
+                            buyer_tel: tel,
+                            buyer_addr: addr1,
+                            buyer_postcode: postcode,
 
 
 
                         }, function (rsp) {
-
-                            console.log(rsp);
 
                             let paymentDTO = {
                                 pg: rsp.pg,
@@ -234,11 +243,11 @@
                                 imp_uid:rsp.imp_uid,
                                 merchant_uid: rsp.merchant_uid,
                                 name: rsp.name,
-                                amount: rsp.amount,
+                                amount: amount,
                                 buyer_tel: rsp.buyer_tel,
                                 buyer_addr: rsp.buyer_addr,
                                 buyer_postcode: rsp.buyer_postcode,
-                                buyer_detailAddr: user.my_detailAddress,
+                                buyer_detailAddr: addr3,
                                 productId: productId,
                                 quantity: quantity
                             };
@@ -247,8 +256,6 @@
                                 type: 'POST',
                                 url:'/verifyIamport/' + rsp.imp_uid
                             }).done(function(result) {
-
-                                console.log(result);
 
                                 if(rsp.paid_amount === result.response.amount) {
                                     alert("결제가 완료되었습니다.");
@@ -714,12 +721,13 @@
                             <col style="width:50%">
                             <col style="width:auto">
                         </colgroup>
-                        <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
+                        <tr class="orderList" th:each="cart: ${cart}">
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
                             <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
+                            <td class="orderProductId" style="display: none" th:text="${cart.product.id}"></td>
                         </tr>
                     </table>
                 </div>
