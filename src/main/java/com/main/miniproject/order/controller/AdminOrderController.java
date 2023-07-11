@@ -53,17 +53,17 @@ public class AdminOrderController {
     //주문관리 탭에서 목록 가져오기( +페이징 기능, 검색 기능 )
     @GetMapping("/admin/orders")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "keyword", defaultValue = "")String keyword, OrdersFormDto ordersFormDto) {
+                       @RequestParam(value = "keyword", defaultValue = "")String keyword, Long longKeyword,
+                       @RequestParam(value = "category", defaultValue = "") String category) {
 
         List<Orders> orders = ordersRepository.findAll();
 
-        Page<Orders> ordersPage = adminOrderService.getList(page, keyword);
+        Page<Orders> ordersPage = adminOrderService.getList(page, keyword, longKeyword, category);
 
         model.addAttribute("ordersPage", ordersPage);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("ordersFormDto", orders);
-
-        System.out.println("===========ordersFormDto==============="+ordersPage);
+        model.addAttribute("category", category);
+        model.addAttribute("orders", orders);
 
 
         return "order/orderList";

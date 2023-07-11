@@ -2,16 +2,15 @@ package com.main.miniproject.product.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Subgraph;
 import javax.persistence.criteria.*;
 
 import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.product.entity.ProductSellStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +30,7 @@ import com.main.miniproject.product.repository.ProductImageRepository;
 import com.main.miniproject.product.repository.ProductRepository;
 
 import lombok.extern.log4j.Log4j2;
+import org.thymeleaf.util.StringUtils;
 
 @Service
 @Log4j2
@@ -185,49 +185,51 @@ public class ProductService {
 		sorts.add(Sort.Order.asc("productQuantity"));
 		Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
 		Specification<Product> productSpecification = search(keyword);
+
 		return productRepository.findAll(productSpecification, pageable);
 	}
 
 
+
+
 	//키워드 검색
-	private Specification<Product> search(String keyword){
-		return new Specification<>() {
+	private Specification<Product> search(String keyword) {
+		return new Specification<Product>() {
 
 			@Override
 			public Predicate toPredicate(Root<Product> productRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				query.distinct(true);   //중복을 제거
 
-				return criteriaBuilder.or(criteriaBuilder.like(productRoot.get("productTitle"), "%" + keyword + "%"));
+				return criteriaBuilder.or(
+						criteriaBuilder.like(productRoot.get("productTitle"), "%" + keyword + "%"),
+						criteriaBuilder.like(productRoot.get("productType"), "%" + keyword + "%"));
+
 			}
 		};
 	}
 
+			public List<ProductDTO> searchProducts(String searchKeyword) {
+
+				List<Product> productList = productRepository.findByProductTitleContaining(searchKeyword);
+
+				List<ProductDTO> productDTOList = new ArrayList<>();
+
+				for (Product product : productList) {
+
+					ProductDTO productDTO = ProductDTO.builder()
+							.productId(product.getId())
+							.productTitle(product.getProductTitle())
+							.productContent(product.getProductContent())
+							.productPrice(product.getProductPrice())
+							.productQuantity(product.getProductQuantity())
+							.productType(product.getProductType())
+							.build();
+
+					productDTOList.add(productDTO);
+
+				}
 
 
-
-	public List<ProductDTO> searchProducts(String searchKeyword) {
-
-		List<Product> productList = productRepository.findByProductTitleContaining(searchKeyword);
-
-		List<ProductDTO> productDTOList = new ArrayList<>();
-
-		for(Product product : productList) {
-
-			ProductDTO productDTO = ProductDTO.builder()
-					.productId(product.getId())
-					.productTitle(product.getProductTitle())
-					.productContent(product.getProductContent())
-					.productPrice(product.getProductPrice())
-					.productQuantity(product.getProductQuantity())
-					.productType(product.getProductType())
-					.build();
-
-			productDTOList.add(productDTO);
-
+				return productDTOList;
+			}
 		}
-
-
-		return productDTOList;
-	}
-
-}

@@ -4,6 +4,7 @@ package com.main.miniproject.product.controller;
 import com.main.miniproject.product.dto.ProductFormDto;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.product.entity.ProductSellStatus;
 import com.main.miniproject.product.service.FileService;
 import com.main.miniproject.product.service.ProductImageService;
 import com.main.miniproject.product.service.ProductService;
@@ -167,16 +168,17 @@ public class ProductController {
 	//상품관리 탭에서 상품목록 가져오기( +페이징 기능, 검색 기능 )
 	@GetMapping("/admin/items")	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
 	public String itemList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-						   @RequestParam(value = "keyword", defaultValue = "") String keyword, Product product) {
+						   @RequestParam(value = "keyword", defaultValue = "") String keyword,
+						   @RequestParam(value = "category1", defaultValue = "") String category,
+						   Product product) {
 
 		Page<Product> productPage = productService.getList(page, keyword);
 
 		model.addAttribute("productPage", productPage);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("category", category);
+//		model.addAttribute("category2", category2);
 		model.addAttribute("productSearch", product);
-
-		System.out.println("==========productPage=============" + productPage);
-		System.out.println("==========keyword=========="+keyword);
 
 		return "item/itemList";
 	}

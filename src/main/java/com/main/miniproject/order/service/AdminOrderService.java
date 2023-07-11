@@ -51,31 +51,59 @@ public class AdminOrderService {
 
 
     //페이징 처리 후 주문 목록 조회
-    public Page<Orders> getList(int page, String keyword) {
-//        List<Sort.Order> sorts = new ArrayList<>();
-//        sorts.add(Sort.Order.desc("orderDate"));
-        Pageable pageable = PageRequest.of(page, 3);
-        Specification<Orders> ordersSpecification = search(keyword);
+    public Page<Orders> getList(int page, String keyword, Long longKeyword, String category) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("orderDate"));
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        Specification<Orders> ordersSpecification = search(keyword, longKeyword, category);
         return adminOrderRepository.findAll(ordersSpecification, pageable);
+
     }
 
 
     //검색 기능
-    private Specification<Orders> search(String keyword) {
+    private Specification<Orders> search(String keyword, Long longKeyword, String category) {
         return new Specification<>() {
             @Override
             public Predicate toPredicate(Root<Orders> ordersRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 query.distinct(true);   //중복을 제거
 
-//                Join<Orders, User> userJoin = ordersRoot.join("user");
+                //id는 Long타입, orderTel은 String 타입. 각각 검색 기능 구현
+                List<Predicate> predicates = new ArrayList<>();
+//                List<Predicate> stringPredicate = new ArrayList<>();
 
-                return criteriaBuilder.or(
-//                        criteriaBuilder.like(userJoin.get("username"), "%" + keyword + "%"),
-                        criteriaBuilder.like(ordersRoot.get("orderTel"), "%" + keyword + "%"));
+                if(!StringUtils.isEmpty(keyword)){
+                    switch (category){
+                        case "id":
+                            predicates.add(criteriaBuilder.equal(ordersRoot.get("id"), longKeyword));
+                            break;
+                        case "orderTel":
+                            predicates.add(criteriaBuilder.like(ordersRoot.get("orderTel"), "%" + keyword + "%"));
+                            break;
+                        default:
+                            predicates.add(criteriaBuilder.or(
+                                    criteriaBuilder.equal(ordersRoot.get("id"), longKeyword),
+                                    criteriaBuilder.like(ordersRoot.get("orderTel"), "%" + keyword + "%")
+                            ));
+                            break;
+                    }
+                }else{
+                    predicates.add(criteriaBuilder.or(
+                            criteriaBuilder.equal(ordersRoot.get("id"), longKeyword),
+                            criteriaBuilder.like(ordersRoot.get("orderTel"), "%" + keyword + "%")
+                    ));
+                }
+                System.out.println("===============keyword================="+keyword);
+                System.out.println("==============category================="+category);
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 
             }
         };
     }
+
+
+
 
 
 

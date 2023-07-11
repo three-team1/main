@@ -31,17 +31,12 @@ public class MemberAdminController {
     @GetMapping("/admin/members")
     public String memberList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                              @RequestParam(value = "keyword", defaultValue = "") String keyword,
-                             @RequestParam(value = "category", defaultValue = "") String category,
-                             User user) {
+                             @RequestParam(value = "category", defaultValue = "") String category) {
         Page<User> userPage = userService.getList(page, keyword, category);
 
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
-        model.addAttribute("userSearch", user);
-
-        System.out.println("========userpage 검색을 제대로 못하고 전체 페이지 다 불러온다===========" + userPage);
-        System.out.println(keyword + "-==================" + category);
 
         return "member/memberList";
     }

@@ -3,16 +3,69 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block layout:fragment="css">
+        <style>
+            #gifContainer {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+            }
 
+            #gifContainer img {
+                width: 200px;
+                height: auto;
+                animation: fadeOut 1s ease-in-out;
+            }
+
+            @keyframes fadeOut {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+
+
+        </style>
+
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+
+            // 클릭 이벤트 처리
+            var adminLink = document.querySelector('a[href="/admin"]');
+            adminLink.addEventListener('click', function(event) {
+                event.preventDefault(); // 링크 클릭 시 페이지 이동을 막음
+
+                var gifContainer = document.getElementById('gifContainer');
+                gifContainer.style.display = 'block'; // GIF 컨테이너를 보이도록 변경
+
+                setTimeout(function() {
+                    gifContainer.style.display = 'none'; // 일정 시간 후에 GIF 컨테이너를 숨김 처리
+                }, 2000); // 2초(2000ms) 후에 숨김 처리
+            });
+        </script>
+
+    </th:block>
+</head>
 <body>
 <aside th:fragment="sidemenu">
     <div class="sideMenu-bar">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="menuImage" th:href="@{https://i.namu.wiki/i/EPh9vePbkxSqmVpHT9SOQGOyFtQBaXRRu0_To28biiz_QtuQniFWztaHeSCq9Yka1oj2L5FMOn1HL9xZi9HndxKfSmXpWiOhG2y5YiVDYMedtCZhpTJEMNpDmb7Jub6wBl_ZVALH2RY4P1iVDYkXVQ.webp}">
+                    <a class="menuImage">
                         <img th:src="@{https://i.namu.wiki/i/EPh9vePbkxSqmVpHT9SOQGOyFtQBaXRRu0_To28biiz_QtuQniFWztaHeSCq9Yka1oj2L5FMOn1HL9xZi9HndxKfSmXpWiOhG2y5YiVDYMedtCZhpTJEMNpDmb7Jub6wBl_ZVALH2RY4P1iVDYkXVQ.webp}" alt="디멘터 이미지">
                     </a>
                 </li>
+                <div id="gifContainer" style="display: none;">
+                    <img src="../../static/videos/디멘터.gif" alt="GIF 이미지">
+                </div>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin Home</a>
                 </li>
@@ -29,6 +82,8 @@
 
     </div>
 </aside>
+
+
 
 </body>
 </html>

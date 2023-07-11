@@ -60,27 +60,15 @@ public class UserService implements UserDetailsService{
         sorts.add(Sort.Order.asc("id"));
         Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
         Specification<User> userSpecification = search(keyword, category);
+
+
         return userRepository.findAll(userSpecification, pageable);
 
 
     }
 
     //키워드 검색
-//    private Specification<User> search(String keyword){
-//        return new Specification<User>() {
-//            @Override
-//            public Predicate toPredicate(Root<User> userRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-//                query.distinct(true);   //중복을 제거
-//
-//
-//                return criteriaBuilder.or(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
-//                        criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
-//                        criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
-//            }
-//        };
-//    }
-
-    private Specification<User> search(String category, String keyword){
+    private Specification<User> search(String keyword, String category){
         return new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> userRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -89,7 +77,7 @@ public class UserService implements UserDetailsService{
                 List<Predicate> predicates = new ArrayList<>();
 
 
-                if(!StringUtils.isEmpty(category)) {
+                if(!StringUtils.isEmpty(keyword)) {
                     switch (category) {
                         case "username":
                             predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
@@ -100,54 +88,24 @@ public class UserService implements UserDetailsService{
                         case "tel":
                             predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
                             break;
-                    }
-                }else{
-                    predicates.add(criteriaBuilder.or(
+                        default:
+                            predicates.add(criteriaBuilder.or(
                                     criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
                                     criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
                                     criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
                             ));
+                            break;
+                    }
+                }else{
+                    predicates.add(criteriaBuilder.or(
+                            criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
+                            criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
+                            criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
+                    ));
                 }
 
-
-
-//                if(!StringUtils.isEmpty(keyword)){
-//                    if(StringUtils.equals("username", category)){
-//                        predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
-//                    }else if(StringUtils.equals("email", category)){
-//                        predicates.add(criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"));
-//                    }else if(StringUtils.equals("tel", category)){
-//                        predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
-//                    }
-//                }else{
-//                    predicates.add(criteriaBuilder.or(
-//                                    criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
-//                                    criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
-//                                    criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
-//                            ));
-//                }
-
-
-//                if(StringUtils.isNotBlank(keyword)){
-//                    switch (category){
-//                        case "username":
-//                            predicates.add(criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"));
-//                            break;
-//                        case "email":
-//                            predicates.add(criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"));
-//                            break;
-//                        case "tel":
-//                            predicates.add(criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%"));
-//                            break;
-//                        default:
-//                            predicates.add(criteriaBuilder.or(
-//                                    criteriaBuilder.like(userRoot.get("username"), "%" + keyword + "%"),
-//                                    criteriaBuilder.like(userRoot.get("email"), "%" + keyword + "%"),
-//                                    criteriaBuilder.like(userRoot.get("tel"), "%" + keyword + "%")
-//                            ));
-//                            break;
-//                    }
-//                }
+                System.out.println("===============keyword================="+keyword);
+                System.out.println("==============category================="+category);
 
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }

@@ -1,5 +1,6 @@
 package com.main.miniproject.product.repository;
 
+import com.main.miniproject.product.entity.ProductSellStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 
     List<Product> findByProductTitleContaining (String searchKeyword);
 
-    Page<Product> findAll(Specification<Product> productSpecification, Pageable pageable);
 
+    Page<Product> findAll(Specification<Product> productSpecification, Pageable pageable);
 
 }

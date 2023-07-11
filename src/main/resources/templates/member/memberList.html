@@ -30,7 +30,6 @@
 
 		$(document).ready(function() {
 
-
 			// 페이지 링크 클릭 이벤트 처리
 			$(".page-link").on("click", function (e) {
 				e.preventDefault();
@@ -48,15 +47,41 @@
 
 			//검색어와 페이지 설정 후 검색 폼 제출(가장 밑에 searchForm에 input 태그로 있음)
 			function setPageAndSubmitForm(page) {
-				$("#category").val();
-				$("#keyword").val($("#searchKeyword").val());
 				$("#page").val(page);
+
+				//카테고리 설정이 있을 경우에만 설정
+				// 페이지가 변경되어도 검색어 그대로 유지.
+				var category = $("#searchCategory").val().trim();
+				if(category === ""){
+					$("#category").removeAttr("name");
+				}else{
+					$("#category").val(category);
+					$("#category").attr("name", "category");
+				}
+
+				// 검색어 입력값이 있을 경우에만 설정.
+				// 페이지가 변경되어도 검색어 그대로 유지.
+				// 검색어 필드 값이 빈칸인 경우 전체 데이터 요청
+				var keyword = $("#searchKeyword").val().trim();
+				if (keyword === "") {
+					// 검색어 필드를 제거하여 서버에서 빈 검색어로 처리되도록 함
+					$("#keyword").removeAttr("name");
+				} else {
+					// 검색어 필드를 제거하여 서버에서 빈 검색어로 처리되도록 함
+					$("#keyword").val(keyword);
+					//.attr("name", "keyword")은 선택한 요소의 "name" 속성을 "keyword"로 설정하는 역할.
+					// 이렇게 설정된 "name" 속성은 폼 데이터를 서버로 제출할 때 사용.
+					$("#keyword").attr("name", "keyword");
+
+				}
+
 				$("#searchForm").submit();
 			}
+
 		});
 
 
-        
+
     </script>
 </th:block>
 </head>
@@ -108,11 +133,12 @@
 		<!--검색 기능-->
 		<form th:action="@{'/admin/members/'}" method="get">
 			<div class="form-inline justify-content-center">
-				<select th:field="*{category}" class="form-control" style="width:auto;">
-					<option value="">이름+이메일+연락처(전체)</option>
-					<option value="username">이름</option>
-					<option value="email">이메일</option>
-					<option value="tel">연락처</option>
+				<select id="searchCategory" name="category" class="form-control" style="width:auto;">
+					<option value="" th:selected="${searchCondition == 'all' ||
+            searchCondition == '' || searchCondition == null}">전체</option>
+					<option value="username" th:selected="${category == 'username'}">이름</option>
+					<option value="email" th:selected="${category == 'email'}">이메일</option>
+					<option value="tel" th:selected="${category == 'tel'}">연락처</option>
 				</select>
 				<input type="text" id="searchKeyword" class="form-control"  th:field="*{keyword}" placeholder="검색어를 입력해주세요" style="width: auto;">
 				<button type="submit" id="searchBtn" class="btn btn-primary">검색</button>
