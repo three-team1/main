@@ -109,5 +109,6 @@ public class QnaService {
 
     public Page<QNA> searchQNAByQnaContent(Pageable pageable, String keyword) {
         return qnaRepository.findByQnaContentContaining(keyword, pageable);
+
     }
 }

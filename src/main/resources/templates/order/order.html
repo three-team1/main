@@ -150,6 +150,7 @@
 
         });
 
+
         // 필수 입력 값 체크하기
         function checkForm() {
             let name = document.getElementById("order-name").value;
@@ -190,6 +191,7 @@
         $('.cart').each(function() {
             productId.push($(this).data('product-id'));
             quantity.push($(this).data('quantity-id'));
+
         });
 
         function requestSelectPay() {
@@ -536,7 +538,9 @@
            width: 100%;
        }
 
+
        .orderPrice, .orderTotalPrice{
+
            text-align: right;
        }
 
@@ -730,11 +734,13 @@
                         </colgroup>
 
                         <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
+
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
                             <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
+
                         </tr>
                     </table>
                 </div>
@@ -750,8 +756,10 @@
                         <tbody>
                             <tr>
                                 <th>주문상품</th>
+
                                 <td id="order-total-price">
                                     <span th:text="0"></span>
+
                                 </td>
                             </tr>
                             <tr>

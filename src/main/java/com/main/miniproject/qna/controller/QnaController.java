@@ -36,9 +36,12 @@ public class QnaController {
 
     @GetMapping("/qna/list")
     public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String category, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
+
+
         int pageSize = 10; // 페이지당 게시글 수
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<QNA> qnaPage;
+
 
         if(keyword != null && category != null) {
             switch (category) {

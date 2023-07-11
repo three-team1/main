@@ -19,7 +19,6 @@
     * {
       padding: 0;
       margin: 0;
-      font-size: 14px;
     }
 
     .cart-cart {
@@ -342,8 +341,12 @@
       <div class="nav-bar-item">
         <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
           장바구니
+
           <span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
+
+
         </a>
+      
       </div>
     </div>
 
@@ -441,6 +444,17 @@
     </div>
   </div>
 </section>
+
+	<script>
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    });
+    
+	</script>
+
 
 </body>
 </html>

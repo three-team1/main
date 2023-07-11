@@ -13,6 +13,10 @@
 
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="css/style.css">
 <link type="image/png" sizes="32x32" rel="icon"
@@ -59,7 +63,7 @@
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
 						<h3 class="mb-4 text-center">Create Account</h3>
-						<form action="/register" method="post" class="signin-form"
+						<form id="registrationForm" action="/register" method="post" class="signin-form"
 							th:object="${user}">
 
 							<div class="form-group">
@@ -180,7 +184,7 @@
 								<button type="submit"
 									class="form-control btn btn-primary submit px-3">Register</button>
 							</div>
-							<span th:if="${errorMessage}" th:text="${errorMessage}"
+							<span id="error"
 								style="color: red;"></span>
 							<div class="form-group d-md-flex">
 								<div class="w-50"></div>
@@ -232,6 +236,43 @@
 	<script src="js/popper.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
+	<script>
+	
+		$("#registrationForm").on("submit",function(e) {
+			e.preventDefault();
+			
+		    var user = {
+		            "username": $("#username").val(),
+		            "password": $("#password-field").val(),
+		            "email": $("#email").val(),
+		            "tel": $("#tel").val(),
+		            "my_postcode": $("#my_postcode").val(),
+		            "my_address": $("#my_address").val(),
+		            "my_extraAddress": $("#my_extraAddress").val(),
+		            "my_detailAddress": $("#my_detailAddress").val()
+		        };
+			
+		    $.ajax({
+		        url: "/register",
+		        type: "POST",
+		        data: JSON.stringify(user),
+		        contentType: "application/json",
+		        success: function(response) {		       	
+		        	window.location.href = 'login.html';
+		        }, 
+		        error : function(err) {
+		            console.log(err);
+		            var response = err.responseText;	
+		            $('#error').text(response);           
+		            alert(response);
+		        } 
+		        	
+		        
+		    });
+		});
+		
+		
+	</script>
 
 </body>
 </html>
