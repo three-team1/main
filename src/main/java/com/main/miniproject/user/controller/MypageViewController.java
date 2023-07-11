@@ -8,12 +8,12 @@ import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
-import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.Role;
+import com.main.miniproject.order.service.OrderItemService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
@@ -55,7 +55,7 @@ public class MypageViewController {
     private CommentService commentService;
 
     @Autowired
-    private OrdersService ordersService;
+    private OrderItemService orderItemService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -79,12 +79,12 @@ public class MypageViewController {
         User user = userInfoService.getMyInfo(userDetails.getUsername());
 
 
-        List<Orders> ordersList = ordersService.getOrdersList(user);
+        List<Orders> ordersList = orderItemService.getOrdersList(user);
 
-        List<Orders> prodList = ordersService.getProductsList(user.getId());
+        List<OrderItem> orderItemList = orderItemService.getProductsList(user.getId());
 
         model.addAttribute("orders", ordersList);
-        model.addAttribute("products", prodList);
+        model.addAttribute("items", orderItemList);
 
         return "mypage/me";
     }

@@ -180,6 +180,10 @@
                             <img src="/images/time-man.jpg" width="200px" height="200px">
                         </div>
                         <ul>
+                            <div th:each="item : ${items}">
+                                <div th:text="${item.product.productTitle}"></div>
+                            </div>
+
                             <li class="order-detail">시간의 능력(수량: 1)</li>
                             <li class="order-detail">금액: 2,000,000(원)</li>
                             <li class="order-detail">지불 방식: 무통장 결제</li>

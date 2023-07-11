@@ -30,4 +30,10 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
 	@Query("SELECT oi FROM OrderItem oi WHERE oi.order.user.id = :userId AND oi.reviewed = false")
 	List<OrderItem> findNotReviewedOrderItemsByUserId(@Param("userId") Long userId);
 
+	//마이페이지 주문 조회
+	@Query("SELECT oi FROM OrderItem oi WHERE oi.order.user.id = :userId")
+	List<OrderItem> findOrderItemsByUserId(@Param("userId") Long userId);
+
+
+
 }
