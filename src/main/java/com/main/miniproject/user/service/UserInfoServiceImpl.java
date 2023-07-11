@@ -1,5 +1,6 @@
 package com.main.miniproject.user.service;
 
+import com.main.miniproject.user.dto.MyInfoDTO;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.repository.UserRepository;
 

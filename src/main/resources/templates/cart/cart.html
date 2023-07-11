@@ -19,7 +19,6 @@
     * {
       padding: 0;
       margin: 0;
-      font-size: 14px;
     }
 
     .cart-cart {
@@ -288,6 +287,24 @@
 
       });
 
+      function updateCartCount() {
+        $.get("/api/cart/count", function(data) {
+          $('#cart-count').text(data);
+        });
+      };
+
+      $.ajax({
+        type: "GET",
+        url: "/api/cart/count",
+        success: function(data) {
+
+          $('#cart-count').text(data);
+        },
+        error: function() {
+          console.log("장바구니 수량을 불러오는데 실패했습니다.");
+        }
+      });
+
     });
 
 
@@ -322,9 +339,14 @@
       </div>
 
       <div class="nav-bar-item">
-        <a href="#"> <span></span> <span></span> <span></span> <span></span>
+        <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
           장바구니
+
+          <span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
+
+
         </a>
+      
       </div>
     </div>
 
@@ -422,6 +444,17 @@
     </div>
   </div>
 </section>
+
+	<script>
+    
+    $(document).ready(function() {
+    	$.get("/api/cart/count", function(data) {
+    		$('#cart-count').text(data);
+    	});
+    });
+    
+	</script>
+
 
 </body>
 </html>

@@ -1,20 +1,22 @@
 package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
+
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
+import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
+import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -110,7 +112,7 @@ public class MypageViewController {
     public ModelAndView pwChkView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChk");
+        mv.setViewName("/mypage/pwChk.html");
 
         return mv;
     }
@@ -137,7 +139,7 @@ public class MypageViewController {
     public ModelAndView pwChangeView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChange");
+        mv.setViewName("/mypage/pwChange.html");
 
         return mv;
     }

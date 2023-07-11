@@ -35,5 +35,5 @@ public class OrderItem {
 
 	@Column(name = "reviewed")			//리뷰 작성 유무
 	private boolean reviewed = false;
-	
+
 }

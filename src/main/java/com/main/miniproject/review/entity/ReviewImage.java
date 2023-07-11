@@ -1,8 +1,16 @@
 package com.main.miniproject.review.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.main.miniproject.review.dto.ReviewImageDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +42,7 @@ public class ReviewImage {
 
 	@Column(name = "review_img_height")
 	private Integer height;
-
+	
 	public ReviewImageDTO EntityToDTO() {
 		ReviewImageDTO reviewImageDTO = ReviewImageDTO.builder()
 				.id(this.id)

@@ -9,6 +9,10 @@ import com.main.miniproject.board.entity.Board;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>{
-	Page<Board> findByUserUsername(String username, Pageable pageable);
+	
+	Page<Board> findByUserUsername(String username,Pageable pageable);
+	
+	Page<Board> findByUserUsernameContaining(String username, Pageable pageable);
+	
 	Page<Board> findByBoardTitleContainingOrBoardContentContaining(String title, String content, Pageable pageable);
 }

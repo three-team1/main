@@ -1,6 +1,5 @@
 package com.main.miniproject.review.repository;
 
-import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.review.entity.Review;
 
 import org.springframework.data.domain.Page;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
