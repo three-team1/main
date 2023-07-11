@@ -729,7 +729,7 @@
                             <col style="width:30%">
                             <col style="width:auto">
                             <col style="width:15%">
-                            <col style="width:2%">
+                            <col style="width:7%">
                             <col style="width:15%">
                         </colgroup>
 
@@ -738,7 +738,7 @@
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
-                            <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
+                            <td class="orderQuantity" th:text="${cart.cartQuantity} + 개"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
 
                         </tr>
