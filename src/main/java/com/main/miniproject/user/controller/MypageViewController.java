@@ -1,6 +1,7 @@
 package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
+
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.repository.CommentRepository;

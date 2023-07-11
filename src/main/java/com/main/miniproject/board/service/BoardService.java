@@ -128,6 +128,10 @@ public class BoardService {
     public Page<Board> searchBoard(Pageable pageable, String keyword){    // 게시글 검색에따른 게시글 출력
         return boardRepository.findByBoardTitleContainingOrBoardContentContaining(keyword, keyword, pageable);
     }
+    
+    public Page<Board> searchBoardUsername(String username, Pageable pageable) {
+    	return boardRepository.findByUserUsernameContaining(username, pageable);
+    }
 
 
     public User getCurrentUser() {											// 사용자 인증정보 반환
