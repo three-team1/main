@@ -35,13 +35,23 @@ public class QnaController {
     private CommentService commentService;
 
     @GetMapping("/qna/list")
-    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
+    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String category, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
         int pageSize = 10; // 페이지당 게시글 수
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<QNA> qnaPage;
 
-        if(keyword != null) {
-            qnaPage = qnaService.searchQNA(pageable, keyword);
+        if(keyword != null && category != null) {
+            switch (category) {
+                case "title":
+                    qnaPage = qnaService.searchQNAByTitle(pageable, keyword);
+                    break;
+                case "content":
+                    qnaPage = qnaService.searchQNAByQnaContent(pageable, keyword);
+                    break;
+                default:
+                    qnaPage = qnaService.getList(pageable);
+                    break;
+            }
         } else {
             qnaPage = qnaService.getList(pageable);
         }
@@ -55,6 +65,7 @@ public class QnaController {
 
 
         model.addAttribute("keyword", keyword);
+        model.addAttribute("category", category);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);

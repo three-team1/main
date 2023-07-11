@@ -135,6 +135,24 @@
 
     </style>
 
+  <script>
+    function updateCartCount() {
+      $.get("/api/cart/count", function(data) {
+        $('#cart-count').text(data);
+      });
+    };
+
+    $.ajax({
+      type: "GET",
+      url: "/api/cart/count",
+      success: function(data) {
+        $('#cart-count').text(data);
+      },
+      error: function() {
+        console.log("장바구니 수량을 불러오는데 실패했습니다.");
+      }
+    });
+  </script>
 <body>
   <header>
     <div class="nav-bar-container">
@@ -166,6 +184,7 @@
         <div class="nav-bar-item">
           <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
             장바구니
+            <span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
           </a>
         </div>
       </div>
@@ -223,18 +242,18 @@
 
       <div class="paging">
         <th:block>
-          <a th:href="@{/qna/list(page=${currentPage - 1}, keyword=${keyword})}" th:if="${currentPage > 0}">이전</a>
+          <a th:href="@{/qna/list(page=${currentPage - 1}, keyword=${keyword}, category=${category})}" th:if="${currentPage > 0}">이전</a>
         </th:block>
         <th:block th:each="pageNumber : ${pageNumbers}">
         <span th:class="${pageNumber == currentPage ? 'active' : ''}">
-            <a th:href="@{/qna/list(page=${pageNumber}, keyword=${keyword})}"
+            <a th:href="@{/qna/list(page=${pageNumber}, keyword=${keyword}, category=${category})}"
                th:text="${pageNumber + 1}"
                th:style="${pageNumber == currentPage ? 'color: red;' : 'color: #86cfda;'}"
             ></a>
         </span>
         </th:block>
         <th:block>
-          <a th:href="@{/qna/list(page=${currentPage + 1}, keyword=${keyword})}" th:if="${currentPage < totalPages - 1}">다음</a>
+          <a th:href="@{/qna/list(page=${currentPage + 1}, keyword=${keyword}, category=${category})}" th:if="${currentPage < totalPages - 1}">다음</a>
         </th:block>
       </div>
 
@@ -242,6 +261,8 @@
       <div class="qna-search">
         <form th:action="@{/qna/list}" method="get">
           <input type="text" name="keyword" placeholder="Search">
+          <input type="radio" name="category" value="title" checked> 제목
+          <input type="radio" name="category" value="content"> 내용
           <button type="submit">검색</button>
         </form>
       </div>
@@ -255,4 +276,6 @@
 
 
 </body>
+
+
 </html>

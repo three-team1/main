@@ -522,11 +522,13 @@
             border-bottom: 1px solid black;
         }
 
-       .final-payment input {
+       .final-payment a {
            font-size: 20px;
            font-weight: bold;
            border: none;
            background-color: #86cfda;
+           color: black;
+           text-decoration: none;
         }
 
 
@@ -534,14 +536,18 @@
            width: 100%;
        }
 
-       .orderPrice {
-
+       .orderPrice, .orderTotalPrice{
            text-align: right;
        }
 
        #order-total-price, #ship-price {
            text-align: right;
        }
+
+        #order-payment-table{
+            width: 100%;
+        }
+
 
        #order-payment-table th, td {
            padding: 10px;
@@ -716,19 +722,19 @@
                 <div class="order-product-contents">
                     <table id="order-product-contents-table">
                         <colgroup>
-                            <col style="width:25%">
-                            <col style="width:50%">
+                            <col style="width:30%">
                             <col style="width:auto">
+                            <col style="width:15%">
+                            <col style="width:2%">
+                            <col style="width:15%">
                         </colgroup>
 
                         <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
-
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
                             <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
-
                         </tr>
                     </table>
                 </div>
@@ -741,23 +747,17 @@
                 </div>
                 <div id="order-payment-contents">
                     <table id="order-payment-table">
-                        <colgroup>
-                            <col style="width:200%">
-                            <col style="width:auto">
-                        </colgroup>
                         <tbody>
                             <tr>
                                 <th>주문상품</th>
-                                <td>
-
-                                    <span id="order-total-price" th:text="0"></span>
-
+                                <td id="order-total-price">
+                                    <span th:text="0"></span>
                                 </td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
-                                <td>
-                                    <p id="ship-price">+ 3,000</p>
+                                <td id="ship-price">
+                                    <p>+ 3,000</p>
                                 </td>
                             </tr>
                         </tbody>
