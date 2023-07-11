@@ -29,4 +29,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
 	//미작성 리뷰 찾기
 	@Query("SELECT oi FROM OrderItem oi WHERE oi.order.user.id = :userId AND oi.reviewed = false")
 	List<OrderItem> findNotReviewedOrderItemsByUserId(@Param("userId") Long userId);
+
 }
