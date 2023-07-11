@@ -39,6 +39,9 @@ public class ReviewImage {
 
 	@Column(name = "review_img_ori_name")
 	private String originName;
+
+	@Column(name = "review_img_height")
+	private Integer height;
 	
 	public ReviewImageDTO EntityToDTO() {
 		ReviewImageDTO reviewImageDTO = ReviewImageDTO.builder()
@@ -47,6 +50,7 @@ public class ReviewImage {
 				.name(this.name)
 				.url(this.url)
 				.originName(this.originName)
+				.height(this.height)
 				.build();
 		return reviewImageDTO;
 	}
