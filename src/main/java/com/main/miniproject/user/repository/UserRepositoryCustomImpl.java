@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;

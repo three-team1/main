@@ -1,12 +1,15 @@
 package com.main.miniproject.user.controller;
 
 import com.main.miniproject.board.entity.Board;
+
 import com.main.miniproject.board.service.BoardService;
 import com.main.miniproject.comment.entity.Comment;
+import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.service.OrdersService;
+import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,26 +44,35 @@ public class MypageViewController {
     private OrdersService ordersService;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+
+    @Autowired
     public MypageViewController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
     }
 
     //마이페이지 주문/배송 조회 페이지
     @GetMapping("/me")
-    public ModelAndView mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView();
+    public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-//        List<Orders> ordersList = ordersService.getOrdersList(user.getId());
-//        List<OrderItem> orderItemList = ordersService.getOrderItemList(user);
 
-//        model.addAttribute("orders", ordersList);
-//        model.addAttribute("orderitems", orderItemList);
 
-        mv.setViewName("/mypage/me.html");
+        List<Orders> ordersList = ordersService.getOrdersList(user);
 
-        return mv;
+        List<Orders> prodList = ordersService.getProductsList(user.getId());
+
+        model.addAttribute("orders", ordersList);
+        model.addAttribute("products", prodList);
+
+        return "mypage/me";
     }
+    /*List<Orders> orders = orderService.getOrdersByUserId(userDetail.getId())
+
+    model.addAttribute "orders",orders*/
+
 
     //마이페이지 내 정보 관리 페이지
     @GetMapping("/myInfo")
@@ -127,6 +139,7 @@ public class MypageViewController {
 
         return "mypage/myBoard";
     }
+
 
 
 }

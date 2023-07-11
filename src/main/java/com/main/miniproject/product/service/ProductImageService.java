@@ -20,7 +20,7 @@ import com.main.miniproject.product.repository.ProductImageRepository;
 @Transactional
 public class ProductImageService {
 
-    @Value(value = "${itemImgLocation}")
+//    @Value(value = "${itemImgLocation}")
     private String itemImgLocation;
     private final ProductImageRepository productImageRepository;
     private final FileService fileService;

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.main.miniproject.product.entity.Product;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order_item")
+@Builder
 @Data
 public class OrderItem {
 

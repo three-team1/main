@@ -2,14 +2,7 @@ package com.main.miniproject.order.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.main.miniproject.cart.entity.Cart;
 import com.main.miniproject.payment.entity.Payment;
@@ -48,11 +41,11 @@ public class Orders {
 	
 	@Column(name = "order_tel")
 	private String orderTel;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cart_id")
 	private Cart cart;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "payment_id")
 	private Payment payment;

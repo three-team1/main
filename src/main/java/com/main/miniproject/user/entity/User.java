@@ -1,14 +1,6 @@
 package com.main.miniproject.user.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import com.main.miniproject.user.dto.MyInfoDTO;
 
@@ -18,6 +10,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 
 @NoArgsConstructor
@@ -76,7 +70,10 @@ public class User{
     
     @Column(name="user_address3")
     private String my_detailAddress;
-    
+
+//    @JoinColumn(name = "order_date")
+//    private LocalDateTime orderDate = LocalDateTime.now();
+//
 
     
     public String getRoleKey() {
@@ -94,5 +91,9 @@ public class User{
                 .my_detailAddress(this.my_detailAddress)
                 .build();
         return myInfoDTO;
+    }
+
+    public void updatePassword(String confirmPassword) {
+        this.password = confirmPassword;
     }
 }

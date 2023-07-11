@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.ui.Model;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/mypage")
@@ -44,10 +45,19 @@ public class MypageRestController {
 
     //내 비밀번호 확인
     @GetMapping("/pwCheck")
-    public boolean checkPassword(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("checkPassword") String checkPassword, Model model) {
+    public boolean checkPassword(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("checkPassword") String checkPassword) {
         String username = userDetails.getUsername();
 
         return userInfoService.checkPassword(username, checkPassword);
     }
 
+    //비밀번호 변경
+    @PostMapping("/myInfo")
+    @Transactional
+    public boolean changePassword(@AuthenticationPrincipal UserDetails userDetails,
+                                  @Valid @RequestBody MyInfoDTO myInfoDTO) {
+        String username = userDetails.getUsername();
+
+        return userInfoService.changePassword(username, myInfoDTO.getPassword(), myInfoDTO.getNewPassword(), myInfoDTO.getConfirmPassword());
+    }
 }
