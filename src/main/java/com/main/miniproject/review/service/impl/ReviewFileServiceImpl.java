@@ -12,11 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,16 +34,16 @@ public class ReviewFileServiceImpl implements ReviewFileService {
 
     @Override
     @Transactional
-    public List<ReviewImage> saveFiles(Review review, MultipartFile[] files) {
+    public List<ReviewImage> saveFiles(Review review, List<MultipartFile> files) {
 
         List<ReviewImage> reviewImages = new ArrayList<>();
 
         //업로드 일자 기준으로 파일 저장 폴더 생성
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
-        String datePath = Paths.get(attachPath, today).toString();
+        String dataPath = Paths.get(attachPath, today).toString();
         String resizedDatePath = Paths.get(resizedPath, today).toString();
 
-        File dir = new File(datePath);
+        File dir = new File(dataPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -51,12 +54,12 @@ public class ReviewFileServiceImpl implements ReviewFileService {
         }
 
         for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
+            if (file != null && !file.isEmpty()) {
                 //원본 이미지
                 String fileOrigin = file.getOriginalFilename();
                 String fileExt = fileOrigin.substring(fileOrigin.lastIndexOf("."));
                 String fileName = UUID.randomUUID().toString() + fileExt;
-                String filePath = Paths.get(datePath, fileName).toString();
+                String filePath = Paths.get(dataPath, fileName).toString();
 
                 //축소 이미지
                 String smallFileName = UUID.randomUUID().toString() + fileExt;
@@ -71,12 +74,12 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                     File originFile = new File(filePath);
                     file.transferTo(originFile);
 
-                    BufferedImage originImage = ImageIO.read(originFile);
+                    BufferedImage originImage = ImageIO.read(new File(filePath));
                     int originWidth = originImage.getWidth();
 
                     //축소 이미지 저장
                     if (originWidth >= 500) {
-                        smallImage = Thumbnails.of(originFile)
+                        smallImage = Thumbnails.of(originImage)
                                 .width(500)
                                 .keepAspectRatio(true)
                                 .asBufferedImage();
@@ -100,7 +103,7 @@ public class ReviewFileServiceImpl implements ReviewFileService {
                     ReviewImage smallReviewImage = ReviewImage.builder()
                             .review(review)
                             .name(smallFileName)
-                            .originName(fileOrigin)
+                            .originName(fileName)
                             .url(smallFileURL)
                             .height(height)
                             .build();

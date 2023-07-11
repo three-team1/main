@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReviewService {
 
-    ReviewDTO insertReview(ReviewDTO reviewDTO);
+    ReviewDTO insertReview(Long userId, Long orderItemId, ReviewDTO reviewDTO);
 
     Page<Review> getAllReviews(Pageable pageable);
 

@@ -22,13 +22,11 @@ public class ReviewDTO {
     private Long userId;
     private Long orderItemId;
 
-    public ReviewDTO(String reviewTitle, String reviewRating, String reviewContent, User user, OrderItem orderItem) {
-        this.reviewTitle = reviewTitle;
+    public ReviewDTO(String reviewContent, Integer reviewRating, Long userId, Long orderItemId) {
         this.reviewContent = reviewContent;
-        this.reviewRegdate = LocalDateTime.now();
-        this.reviewRating = Integer.parseInt(reviewRating);
-        this.userId = user.getId();
-        this.orderItemId = orderItem.getId();
+        this.reviewRating = reviewRating;
+        this.userId = userId;
+        this.orderItemId = orderItemId;
     }
 
     public Review DTOToEntity() {

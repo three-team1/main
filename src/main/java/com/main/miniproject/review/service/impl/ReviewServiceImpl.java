@@ -1,5 +1,7 @@
 package com.main.miniproject.review.service.impl;
 
+import com.main.miniproject.order.entity.OrderItem;
+import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
 import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
@@ -7,13 +9,11 @@ import com.main.miniproject.review.repository.ReviewImageRepository;
 import com.main.miniproject.review.repository.ReviewRepository;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
-import com.main.miniproject.user.service.UserDetail;
 import com.main.miniproject.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,27 +26,45 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ReviewServiceImpl implements ReviewService {
-    public ReviewRepository reviewRepository;
+    private ReviewRepository reviewRepository;
 
-    public ReviewImageRepository reviewImageRepository;
+    private ReviewImageRepository reviewImageRepository;
 
-    public UserService userService;
+    private UserService userService;
+
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository,
                              ReviewImageRepository reviewImageRepository,
-                             UserService userService) {
+                             UserService userService,
+                             OrderItemRepository orderItemRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewImageRepository = reviewImageRepository;
         this.userService = userService;
+        this.orderItemRepository = orderItemRepository;
     }
 
     //리뷰 작성
     @Transactional
     @Override
-    public ReviewDTO insertReview(ReviewDTO reviewDTO) {
+    public ReviewDTO insertReview(Long userId, Long orderItemId, ReviewDTO reviewDTO) {
+        //리뷰 미작성 주문 상품 찾기
+        List<OrderItem> notReviewedOrderItems = orderItemRepository.findNotReviewedOrderItemsByUserId((userId));
+
+        //해당 회원의 주문 상품인지 일치 여부 확인
+        OrderItem orderItem = notReviewedOrderItems.stream()
+                .filter(item -> item.getId().equals(orderItemId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자의 주문 상품 아님"));
+
         Review review = reviewDTO.DTOToEntity();
+        review.setOrderItem(orderItem);
         Review savedReview = reviewRepository.save(review);
+
+        //리뷰 작성 후 OrderItems의 reviewed 변경
+        orderItem.setReviewed(true);
+        orderItemRepository.save(orderItem);
 
         ReviewDTO savedReviewDTO = ReviewDTO.builder()
                 .id(savedReview.getId())

@@ -1,6 +1,6 @@
 package com.main.miniproject.review.controller;
 
-import com.main.miniproject.order.entity.OrderItem;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
@@ -8,22 +8,14 @@ import com.main.miniproject.review.service.ReviewFileService;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.User;
-import com.main.miniproject.user.service.UserDetail;
-import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,26 +45,26 @@ public class ReviewRestController {
 
     //리뷰 작성
     @PostMapping("/myReview")
-    public ResponseEntity<Map<String, String>> insertReview(@RequestPart("reviewRating") String reviewRating,
-                                                            @RequestPart("reviewContent") String reviewContent,
-                                                            @RequestPart(value = "files", required = false) MultipartFile[] files,
-                                                            RedirectAttributes redirectAttributes,
-                                                            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Map<String, String>> insertReview(@RequestPart("jsonBlob") String jsonBlob,
+                                                            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception {
+        //jsonBlob -> JSON 객체로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonBlob, Map.class);
+
+        Integer reviewRating = Integer.parseInt(jsonMap.get("reviewRating").toString());
+        String reviewContent = jsonMap.get("reviewContent").toString();
+        Long orderItemId = Long.parseLong(jsonMap.get("orderItemId").toString());
 
         User user = userService.getCurrentUser();
 
-        //임시 데이터
-        OrderItem orderItem = OrderItem.builder().id(1L).build();
-        String productTitle = "product title";
+        ReviewDTO reviewDTO = new ReviewDTO(reviewContent, reviewRating, user.getId(), orderItemId);
 
-        ReviewDTO reviewDTO = new ReviewDTO(productTitle, reviewRating, reviewContent, user, orderItem);
-
-        ReviewDTO savedReviewDTO = reviewService.insertReview(reviewDTO);
+        ReviewDTO savedReviewDTO = reviewService.insertReview(user.getId(), orderItemId, reviewDTO);
         Review savedReview = savedReviewDTO.DTOToEntity();
 
         List<ReviewImage> reviewImages = new ArrayList<>();
 
-        if(files != null && files.length > 0) {
+        if(files != null && files.size() > 0) {
             reviewImages = reviewFileService.saveFiles(savedReview, files);
 
             for(ReviewImage reviewImage : reviewImages) {
@@ -81,7 +73,7 @@ public class ReviewRestController {
         }
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "리뷰가 작성되었습니다.");
+        response.put("message", "리뷰가 성공적으로 작성되었습니다.");
         response.put("redirect", "/review/list");
         response.put("imageCount", String.valueOf(reviewImages.size()));
         response.put("firstImageUrl", reviewImages.isEmpty() ? "" : reviewImages.get(0).getUrl());

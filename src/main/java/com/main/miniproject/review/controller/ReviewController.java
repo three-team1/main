@@ -1,10 +1,14 @@
 package com.main.miniproject.review.controller;
 
+import com.main.miniproject.order.entity.OrderItem;
+import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
 import com.main.miniproject.review.dto.ReviewDTO;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
+import com.main.miniproject.user.entity.User;
+import com.main.miniproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,22 +35,35 @@ public class ReviewController {
 
     private ReviewImageService reviewImageService;
 
+    private UserService userService;
+
+    private OrderItemRepository orderItemRepository;
+
     @Autowired
     public ReviewController(ReviewService reviewService,
-                            ReviewImageService reviewImageService) {
+                            ReviewImageService reviewImageService,
+                            UserService userService,
+                            OrderItemRepository orderItemRepository) {
         this.reviewService = reviewService;
         this.reviewImageService = reviewImageService;
+        this.userService = userService;
+        this.orderItemRepository = orderItemRepository;
     }
 
     //리뷰 글쓰기 페이지
     @GetMapping("/insert-view")
-    public ModelAndView insertReviewView() {
+    public ModelAndView insertReviewView(@AuthenticationPrincipal UserDetails userDetails) {
         ModelAndView mv = new ModelAndView();
+        User user = userService.getCurrentUser();
 
         //임시 리뷰 제목
         String productTitle = "Sample Product Title";
         mv.addObject("productTitle", productTitle);
 
+        //리뷰 미작성 주문 상품 찾기
+        List<OrderItem> notReviewedOrderItems = orderItemRepository.findNotReviewedOrderItemsByUserId(user.getId());
+
+        mv.addObject("notReviewedOrderItems", notReviewedOrderItems);
         mv.addObject("review", new ReviewDTO());
         mv.setViewName("review/reviewInsert");
 

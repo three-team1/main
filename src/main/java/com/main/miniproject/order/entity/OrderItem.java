@@ -33,7 +33,7 @@ public class OrderItem {
 	@Column(name = "order_quantity")
 	private int orderQuantity;
 
-	@Column(name = "reviewed")
+	@Column(name = "reviewed")			//리뷰 작성 유무
 	private boolean reviewed = false;
 	
 }
