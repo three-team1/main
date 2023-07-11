@@ -144,6 +144,9 @@
   <script>
     //체크박스
     $(document).ready(function () { //문서 준비가 완료되면 함수 내의 코드가 실행된다
+
+      if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true);
+
       $("#checkAll").click(function() { //#checkAll를 클릭했을 때 실행
         if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true); //#checkAll이 체크가 되면, check의 체크박스를 모두 체크하게 설
         else $("input[name=check]").prop("checked", false); //그렇지 않은 경우에는 체크박스의 상태를 선택 해제 상태로 설정
@@ -367,7 +370,7 @@
     <div class="cart-table-container">
       <table class="cart-table">
         <tr id="tr1">
-          <th id="th1"><input type="checkbox" id="checkAll"></th>
+          <th id="th1"><input type="checkbox" id="checkAll" checked></th>
           <th id="th2">이미지</th>
           <th id="th3">상품 정보</th>
           <th id="th4">판매가</th>
