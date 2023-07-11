@@ -173,31 +173,32 @@
             <div class="content">
                 <!--주문 목록 조회-->
                 <h1>최근 주문 내역</h1>
-                <div id="mcmenu1">
-                    <div class="child">
-                        <div class="order-info" th:each="order : ${orders}">test
-                                <div class="order-date" th:text="${order.orderDate}">test</div>
-                            <img src="/images/time-man.jpg" width="200px" height="200px">
+            <div id="mcmenu1">
+                <div class="child" th:each="item : ${items}">
+                    <div class="order-info">
+                        <span th:text="|${#temporals.format(item.order.orderDate, 'yyyy-MM-dd')} 주문|"></span>
+                        <img src="/images/time-man.jpg"  width="200px" height="200px">
+                    </div>
+                            <ul>
+                                <li class="order-detail" th:text="|${item.product.productTitle} (수량: ${item.orderQuantity})|"></li>
+                                <li class="order-detail" th:text="|금액: ${item.order.orderTotalPrice}(원)|"></li>
+                                <li class="order-detail" th:text="|지불 방식: ${item.order.payment.paymentPlan}|"></li>
+                                <li class="order-detail" th:text="|주문 상태: 입금 완료(입금자: ${item.order.user.username})|"></li>
+                                <li class="order-detail">배송 완료</li>
+                                <div class="buttons">
+                                    <button class="re-order">재구매</button>
+                                    <button type="button" class="btnReview">리뷰 등록</button>
+                                </div>
+                            </ul>
                         </div>
-                        <ul>
-                            <div th:each="item : ${items}">
-                                <div th:text="${item.product.productTitle}"></div>
-                            </div>
-
-                            <li class="order-detail">시간의 능력(수량: 1)</li>
-                            <li class="order-detail">금액: 2,000,000(원)</li>
-                            <li class="order-detail">지불 방식: 무통장 결제</li>
-                            <li class="order-detail">주문 상태: 입금 완료(입금자: 홍길동)</li>
-                            <li class="order-detail">배송 완료</li>
-                            <div class="buttons">
-                                <button class="re-order">재구매</button>
-                                <button type="button" class="btnReview">리뷰 등록</button>
-                            </div>
-                        </ul>
                     </div>
                 </div>
-
-                <!--<div class="content">
+            </div>
+        </div>
+</div>
+</body>
+</html>
+<!--<div class="content">
                     <h1>최근 주문 내역</h1>
                     <div id="mcmenu1">
                         <div class="child">
@@ -228,11 +229,3 @@
                                 <span><a href="#">제품 리뷰 남기기</a></span>
                             </ul>
                         </div>-->
-
-
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-</html>

@@ -8,6 +8,10 @@ import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.product.entity.Product;
+import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.product.service.ProductImageService;
+import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
@@ -58,7 +62,9 @@ public class MypageViewController {
     private OrderItemService orderItemService;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private ProductService productService;
+
+
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService,
@@ -83,15 +89,12 @@ public class MypageViewController {
 
         List<OrderItem> orderItemList = orderItemService.getProductsList(user.getId());
 
+
         model.addAttribute("orders", ordersList);
         model.addAttribute("items", orderItemList);
 
         return "mypage/me";
     }
-    /*List<Orders> orders = orderService.getOrdersByUserId(userDetail.getId())
-
-    model.addAttribute "orders",orders*/
-
 
     //마이페이지 내 정보 관리 페이지 + 일반 로그인 회원, 소셜 로그인 회원 구분
     @GetMapping("/myInfo")
