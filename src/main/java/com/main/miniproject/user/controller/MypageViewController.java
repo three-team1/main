@@ -89,9 +89,11 @@ public class MypageViewController {
 
         List<OrderItem> orderItemList = orderItemService.getProductsList(user.getId());
 
+        List<ProductImage> productImageList = orderItemService.getImage(user.getId());
 
         model.addAttribute("orders", ordersList);
         model.addAttribute("items", orderItemList);
+        model.addAttribute("prodimgs", productImageList);
 
         return "mypage/me";
     }

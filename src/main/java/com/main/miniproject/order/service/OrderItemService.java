@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ import java.util.List;
 public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final MypageOrdersRepository mypageOrdersRepository;
+    private final ProductImageRepository productImageRepository;
 
     public List<Orders> getOrdersList(User user) {
         return mypageOrdersRepository.findAllByUser(user);
@@ -29,6 +31,16 @@ public class OrderItemService {
 
     public List<OrderItem> getProductsList(Long userId) {
         return orderItemRepository.findOrderItemsByUserId(userId);
+    }
+    public List<ProductImage> getImage(Long userId) {
+        List<OrderItem> orderItemList = orderItemRepository.findOrderItemsByUserId(userId);
+
+        List<ProductImage> productImageList = new ArrayList<>();
+        for(int i = 0; i < orderItemList.size(); i++){
+            productImageList.add(productImageRepository.findByProduct(orderItemList.get(i).getProduct()).get(0));
+        }
+
+        return productImageList;
     }
 
 

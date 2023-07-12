@@ -173,11 +173,12 @@
             <div class="content">
                 <!--주문 목록 조회-->
                 <h1>최근 주문 내역</h1>
-            <div id="mcmenu1">
-                <div class="child" th:each="item : ${items}">
+            <div id="mcmenu1" th:each="prodimg : ${prodimgs}">
+                <div class="child" th:each="item : ${items}" th:if="${prodimg.product == item.product}">
                     <div class="order-info">
                         <span th:text="|${#temporals.format(item.order.orderDate, 'yyyy-MM-dd')} 주문|"></span>
-                        <img src="/images/time-man.jpg"  width="200px" height="200px">
+<!--                        <img src="/images/time-man.jpg"  width="200px" height="200px">-->
+                        <img th:src="${prodimg.url}" width="200px" height="200px">
                     </div>
                             <ul>
                                 <li class="order-detail" th:text="|${item.product.productTitle} (수량: ${item.orderQuantity})|"></li>
