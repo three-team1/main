@@ -169,19 +169,32 @@ public class ProductController {
 	@GetMapping("/admin/items")	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
 	public String itemList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
 						   @RequestParam(value = "keyword", defaultValue = "") String keyword,
-						   @RequestParam(value = "category1", defaultValue = "") String category,
 						   Product product) {
 
 		Page<Product> productPage = productService.getList(page, keyword);
 
 		model.addAttribute("productPage", productPage);
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("category", category);
-//		model.addAttribute("category2", category2);
 		model.addAttribute("productSearch", product);
 
 		return "item/itemList";
 	}
+
+//	@GetMapping("/admin/items/{page}")	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
+//	public String itemListWithPage(Model model, @PathVariable("page") int page,
+//						   @RequestParam(value = "keyword", defaultValue = "") String keyword,
+//						   @RequestParam(value = "category1", defaultValue = "") String category,
+//						   Product product) {
+//
+//		Page<Product> productPage = productService.getList(page, keyword);
+//
+//		model.addAttribute("productPage", productPage);
+//		model.addAttribute("keyword", keyword);
+//		model.addAttribute("category", category);
+//		model.addAttribute("productSearch", product);
+//
+//		return "item/itemList";
+//	}
 
 
 	//상품 삭제하기
