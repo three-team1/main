@@ -38,13 +38,11 @@
 
       .menu {
         position: relative;
-        display: flex;
         color: white;
         margin-top: 130px;
       }
 
       .menu-title {
-        margin: auto 0;
         border: 1px solid pink;
         padding: 20px 10px;
         text-align: center;
@@ -381,6 +379,11 @@
         if(storedKeyword) {
           $("input[name='keyword']").val(storedKeyword);
         }
+
+        //로그아웃 시 검색어 삭제
+        $(".nav-bar-login a[href='/logout']").on("click", function () {
+          localStorage.removeItem("keyword");
+        });
       });
 
       //리뷰 삭제

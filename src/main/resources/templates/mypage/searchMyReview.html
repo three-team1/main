@@ -400,6 +400,11 @@
         if(storedKeyword) {
           $("input[name='keyword']").val(storedKeyword);
         }
+
+        //로그아웃 시 검색어 삭제
+        $(".nav-bar-login a[href='/logout']").on("click", function () {
+          localStorage.removeItem("keyword");
+        });
       });
 
       //리뷰 삭제
