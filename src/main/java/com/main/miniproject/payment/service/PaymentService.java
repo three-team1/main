@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.main.miniproject.cart.entity.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,18 +65,20 @@ public class PaymentService {
 	        order.setOrderDetailAddress(paymentDTO.getBuyer_detailAddr());
 	        order.setUser(user);
 	        order.setPayment(payment);
+
+			System.out.println(paymentDTO.getAmount());
 	        
 	        order = ordersRepository.save(order); // save order and get saved entity back
 	        
 	        List<Long> productIds = paymentDTO.getProductId();
 	        List<Integer> quantities = paymentDTO.getQuantity();
 
-	        System.out.println("장바구니 수량 개수 : " + quantities);
+	        System.out.println("productId : " + productIds);
 	        
 	        for (int i = 0; i < productIds.size(); i++) {
 	            OrderItem orderItem = new OrderItem();
-	            Product product = productRepository.findById(productIds.get(i)).get();	            
-	            
+	            Product product = productRepository.findById(productIds.get(i)).get();
+
 	            orderItem.setOrder(order);
 	            orderItem.setProduct(product);
 	            orderItem.setOrderQuantity(quantities.get(i));
@@ -84,10 +87,10 @@ public class PaymentService {
 	            productRepository.save(product);
 	            
 	            orderItemRepository.save(orderItem);
+
+				cartRepository.deleteByProductIdAndUser(productIds.get(i), user);
 	        }
-	        
-	        cartRepository.clearCartByUser(user);
-	       
+
 	    }
 	 	
 	 	public void validateGetQuantity(Product product, int orderQuantity) throws Exception {

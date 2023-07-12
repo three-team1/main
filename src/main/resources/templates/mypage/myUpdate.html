@@ -8,10 +8,11 @@
         <style>
             .main-container {
                 margin-top: 172px;
+                margin-bottom: 10px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: 620px;
                 grid-gap: 10px;
+                min-height: 620px;
             }
 
             .main-container > div {
@@ -26,7 +27,8 @@
                 margin-left: 10px;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
+                position: relative;
             }
 
             .section {
@@ -35,8 +37,9 @@
             }
 
             .menu {
-                position: absolute;
+                position: relative;
                 color: white;
+                margin-top: 130px;
             }
 
             .menu-title {
@@ -50,7 +53,7 @@
             }
 
             #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
-                background: pink;
+                background: rgba(255,192,203, 0.4);
             }
 
             .section {
@@ -97,11 +100,30 @@
             .input-updateDetail {
                 width: 350px;
                 height: 35px;
+                padding-left: 10px;
                 font-size: 1rem;
                 color: white;
                 background: rgba(255,192,203, 0.4);
                 border: none;
                 outline: none;
+            }
+
+            #my_postcode {
+                margin-right: 20px;
+                width: 80px;
+            }
+
+            #search_postcode {
+                display: inline-block;
+                width: 150px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: 1px solid pink;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
             }
 
             .buttons {
@@ -114,8 +136,8 @@
                 height: 35px;
                 font-size: 1rem;
                 color: white;
-                background: pink;
-                border: none;
+                background: rgba(255,192,203, 0.4);
+                border: 1px solid pink;
                 border-radius: 5px;
                 outline: none;
                 cursor: pointer;
@@ -126,12 +148,42 @@
                 text-decoration: none;
             }
 
-            h1 {
+            h2 {
+                margin-top: 70px;
+                margin-bottom: 20px;
                 color: white;
             }
         </style>
     </th:block>
     <th:block layout:fragment="script">
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+            function sample6_execDaumPostcode() {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                        // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var addr = ''; // 주소 변수
+                        var extraAddr = ''; // 참고항목 변수
+
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            addr = data.jibunAddress;
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        document.getElementById('my_postcode').value = data.zonecode;
+                        document.getElementById("my_address").value = addr;
+                        // 커서를 상세주소 필드로 이동한다.
+                        document.getElementById("my_detailAddress").focus();
+                    }
+                }).open();
+            }
+        </script>
         <script th:inline="javascript">
             $(function () {
                 $("#btnSave").on("click", () => {
@@ -186,7 +238,7 @@
                 <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
                     <p>내 글/댓글 조회</p>
                 </div>
-                <div class="menu-title" id="menu-title3" onclick="location.href='#'">
+                <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
                     <p>내 리뷰 관리</p>
                 </div>
                 <div class="menu-title" id="menu-title4" onclick="location.href='/mypage/myInfo'">
@@ -195,7 +247,7 @@
             </div>
         </div>
         <div class="section">
-            <h1>내 정보 수정</h1>
+            <h2>내 정보 수정</h2>
             <form id="updateForm" action="/mypage/myUpdate" method="post">
                 <input type="hidden" id="userId" name="userId" th:value="${user.id}">
                 <table class="myInfo-tb">
@@ -221,6 +273,7 @@
                         <th class="myInfo-th">우편번호</th>
                         <td class="myInfo-td">
                             <input type="text" class="input-updateDetail" id="my_postcode" name="my_postcode" th:value="${user.my_postcode}">
+                            <input type="button" id="search_postcode" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
                         </td>
                     </tr>
                     <tr class="myInfo-tr">

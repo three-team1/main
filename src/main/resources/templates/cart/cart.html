@@ -18,25 +18,42 @@
   <style>
     * {
       padding: 0;
-      margin: 0;
     }
+
+	tr:nth-child(even) {
+	  background-color: #2b2b2b;
+	}
+	
+	tr:nth-child(odd) {
+	  background-color: #2b2b2b;
+	}
 
     .cart-cart {
       text-align: center;
       margin-top: 250px;
       margin-bottom: 20px;
-      color: white;
+      font-weight:bold;
     }
 
+    
+	.cart-header p{
+      font-size: 12px;
+      color: red;
+      font-weight:bold;
+    }
+
+
     .cart-cart p {
-      font-size: 20px;
+      font-size: 25px;
+      color: lightgreen;
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
     }
 
     .cart-total-div {
       width: 60%;
       margin: 0 auto;
       padding: 10px;
-      background-color: whitesmoke;
+      background-color:#2b2b2b ;
       margin-bottom: 150px;
     }
 
@@ -52,11 +69,11 @@
     .cart-table {
       color: black;
       text-align: center;
-      border: 1px solid white;
       border-collapse: collapse;
       background-color: white;
       width: 100%;
       margin: 0 auto;
+      color:white;
     }
 
     .cart-table th, td {
@@ -109,7 +126,7 @@
       text-align: center;
     }
 
-    .order-btn {
+    .order-btn, #orderBtn {
       margin: 30px auto;
       text-align: center;
     }
@@ -117,12 +134,12 @@
     .order-btn a {
       text-decoration: none;
       color: black;
-      padding: 5px 40px 5px 40px;
     }
 
     .order-btn .order-go {
       background-color: #86cfda;
       border: 1px solid black;
+      padding: 5px 40px 5px 40px;
     }
 
     #tr-border {
@@ -132,12 +149,42 @@
     
     .images img{
     	width:100px;
+    	height:70px;
+    	border-radius:5px;
     }
+    
+    #payMoney , .totalCost, #itemCost.money{
+    	color: orange;
+    	font-weight:bold;
+    }
+    
+  .cart-product-title {
+    font-size: 16px;
+    background: -webkit-linear-gradient(right, #EE0979, #FF6A00, #FFD300, #08D9D6, #FF2E63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: 0 0%;
+    }
+}
+    
+    
   </style>
 
   <script>
     //체크박스
     $(document).ready(function () { //문서 준비가 완료되면 함수 내의 코드가 실행된다
+
+      if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true);
+
       $("#checkAll").click(function() { //#checkAll를 클릭했을 때 실행
         if($("#checkAll").is(":checked")) $("input[name=check]").prop("checked", true); //#checkAll이 체크가 되면, check의 체크박스를 모두 체크하게 설
         else $("input[name=check]").prop("checked", false); //그렇지 않은 경우에는 체크박스의 상태를 선택 해제 상태로 설정
@@ -252,77 +299,144 @@
       updatePayMoney();
       // 페이지 로드 시 상품 개수 값 설정
       updateItemCnt();
+      //장바구니 카운트
+      updateCartCount();
+
+      //결제 창으로 넘기기
+
+      $("#orderBtn").on("click", function (e) {
+        e.preventDefault();
+        let checkedCartIds = [];
+
+
+
+        // 체크된 Cart ID 가져오기
+        $("input[name=check]:checked").each(function () {
+          let cartId = $(this).closest("tr").find("input[name='id']").val();
+          checkedCartIds.push(cartId);
+        });
+
+        // 체크된 Cart ID를 쿼리 스트링으로 변환
+        const queryString = checkedCartIds.map(id => `cartList=${id}`).join('&');
+
+        // 체크된 상품이 없을 때 경고창 띄우기
+        if (checkedCartIds.length === 0) {
+          alert("상품을 선택하세요.");
+          return;
+        }
+
+        // Ajax를 사용하여 체크된 Cart 데이터 가져오기
+        $.ajax({
+          url: `/viewOrderItem?${queryString}`, // 서버에 요청할 URL 지정(쿼리 스트링 포함)
+          type: "get",
+          success: function () { // 서버에서 받은 체크된 카트 데이터 출력
+            location.href='/viewOrderItem?' + queryString;
+            // 이 데이터를 사용하여 필요한 작업을 수행합니다.
+          },
+          error: function () {
+            console.error("데이터 가져오기 실패");
+          },
+        });
+
+      });
+
+      function updateCartCount() {
+        $.get("/api/cart/count", function(data) {
+          $('#cart-count').text(data);
+        });
+      };
+
+      $.ajax({
+        type: "GET",
+        url: "/api/cart/count",
+        success: function(data) {
+
+          $('#cart-count').text(data);
+        },
+        error: function() {
+          console.log("장바구니 수량을 불러오는데 실패했습니다.");
+        }
+      });
 
     });
+
+
 
   </script>
 
 <body>
 <header>
-  <div class="nav-bar-container">
+		<div class="nav-bar-container">
 
-    <div class="nav-logo">
-      <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
-      </a>
-    </div>
+			<div class="nav-logo">
+				<a href="/"> <img
+					src="icon/Black n White Luxury  Rent Car Logo.png">
+				</a>
 
-    <div class="nav-bar-item-box">
-      <div class="nav-bar-item">
-        <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
-          컬렉션
-        </a>
-      </div>
 
-      <div class="nav-bar-item">
-        <a href="/board/list"> <span></span> <span></span> <span></span>
-          <span></span> 커뮤니티
-        </a>
-      </div>
+			</div>
 
-      <div class="nav-bar-item">
-        <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
-          Q&A
-        </a>
-      </div>
+			<div class="nav-bar-item-box">
+				<div class="nav-bar-item">
+					<a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+						컬렉션
+					</a>
+				</div>
 
-      <div class="nav-bar-item">
-        <a href="#"> <span></span> <span></span> <span></span> <span></span>
-          장바구니
-          <span id="cart-count" class="notification-badge"></span>
-        </a>
-      
-      </div>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/board/list"> <span></span> <span></span> <span></span>
+						<span></span> 커뮤니티
+					</a>
+				</div>
 
-    <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
-      <p>
-        환영합니다! <span class="username" sec:authentication="name"></span>님
-      </p>
-      <a href="/mypage">마이페이지</a>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+						Q&A
+					</a>
+				</div>
 
-    <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-      <a href="/admin">관리자페이지</a>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
+						장바구니
+						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
+					</a>
+				</div>
 
-    <div class="nav-bar-login" sec:authorize="isAuthenticated()">
-      <a href="/logout">로그아웃</a>
-    </div>
+			</div>
 
-    <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
-      <a href="/login"> 로그인 </a>
-    </div>
 
-    <div class="nav-bar-join nav-bar-login"
-         sec:authorize="!isAuthenticated()">
-      <a href="/register"> 회원가입 </a>
-    </div>
-  </div>
-</header>
+			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span class="username" sec:authentication="name"></span>님
+				</p>
+				<img th:if="${userDetail.user.provider == 'kakao' || userDetail.user.provider == 'google'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
+				<a href="/mypage/me">마이페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login"
+				sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+
+		</div>
+
+	</header>
 
 <section>
   <div class="cart-cart">
-    <p>c a r t</p>
+    <p>C a r t</p>
   </div>
 
   <div class="cart-total-div">
@@ -333,7 +447,7 @@
     <div class="cart-table-container">
       <table class="cart-table">
         <tr id="tr1">
-          <th id="th1"><input type="checkbox" id="checkAll"></th>
+          <th id="th1"><input type="checkbox" id="checkAll" checked></th>
           <th id="th2">이미지</th>
           <th id="th3">상품 정보</th>
           <th id="th4">판매가</th>
@@ -344,7 +458,7 @@
         <tr th:each="cart: ${cartList} ">
           <td id="td1"><input type="checkbox" name="check" value="1"></td>
           <td class="images"><img th:src="${cart.productImage}"></td>
-          <td th:text="${cart.product.getProductTitle()}"></td>
+          <td class="cart-product-title" th:text="${cart.product.getProductTitle()}"></td>
           <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
           </td>
           <td>
@@ -361,8 +475,7 @@
               </form>
             </div>
           </td>
-          <td class="totalCost" >
-          </td>
+          <td class="totalCost" ></td>
           <td>
             <a th:href="@{|/deleteCart/${cart.id}|}" th:text="삭제"></a>
           </td>
@@ -371,16 +484,20 @@
           <th></th>
           <th></th>
           <th></th>
-          <th>선택한 상품 개수</th>
+          <th>선택 상품 개수</th>
           <th id="checkCnt"></th>
-          <th>총 금 액</th>
+          <th>총 금액</th>
           <th id="payMoney">0</th>
         </tr>
       </table>
     </div>
 
     <div class="order-btn">
-      <a href="/order" class="order-go">전체상품주문</a>
+
+        <button type="button" value="주문하기" class="order-go">
+          <a id="orderBtn" href="#">주문하기</a>
+        </button>
+
     </div>
   </div>
 </section>

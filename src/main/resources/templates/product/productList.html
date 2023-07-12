@@ -229,7 +229,7 @@
   .product-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     margin: auto;
     gap : 100px;
     padding: 100px;
@@ -550,7 +550,7 @@
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
 				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
-			<a href="/mypage">마이페이지</a>
+			<a href="/mypage/me">마이페이지</a>
 			</div>
 			
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">

@@ -24,20 +24,20 @@
 
 	<style>
 		.board-detail-box {
-			width: 1000px;
+			width: 1200px;
 			margin:auto;
 			margin-top: 300px;
 			text-align: left;
-			color: wheat;
+			color: white;
 			padding: 20px;
-			border: 2px solid beige;
+			border: 1px solid aqua;;
 			border-radius : 5px;
 			
 		}
 
 		.board-detail-box h1 {
 			text-align: center;
-			margin-left: 150px;
+			margin-left: 170px;
 		}
 
 		.board-detail-box span {
@@ -66,7 +66,7 @@
 
 		.board-detail-content-box{
 			margin-top: 20px;
-			border-top: 1px solid lightgrey;
+			border-top: 2px solid aqua;
 			color: aqua;
 		}
 
@@ -95,13 +95,13 @@
 		}	
 		
 		.action-delete-btn {
-			color: blue;
+			color: red;
 		}
 
 
 		.comment-section {
-			width: 1000px;
-			margin: auto;
+			width: 1200px;
+			margin:auto;
 			color: lightblue;
 		}
 
@@ -117,7 +117,6 @@
 		}
 
 		.comment-section button {
-			width: 80px;
 			border-radius: 3px;
 			border: 2px solid lightblue;
 			background-color: black;
@@ -138,21 +137,32 @@
 		}
 		
 		.comment-list {
-			border-top : 1px solid lightsalmon;		
 			margin-top : 40px;
 			padding: 10px;
 		}
 
 		.comment-author {
+			border-top : 2px solid lightsalmon;
 			margin-bottom: 25px;
 			color: burlywood;
 			font-weight: bold;
+			padding:10px;
 			
+		}
+		
+		.comment-content {
+			cursor:pointer;
+			margin-left:10px;
 		}
 
 		.comment-btn{
-			border-bottom: 1px solid lightsalmon;
+			border-bottom: 2px solid lightsalmon;
 		
+		}
+		
+		.comment-reply-btn {
+			border-bottom : 1px solid lightblue;
+			margin-top:10px;
 		}
 		
 		.delete-comment-btn {
@@ -168,6 +178,7 @@
 
 		.reply-list-container {
 			display: flex;
+			padding:10px;
 		}
 
 		.reply-list-img{
@@ -178,42 +189,57 @@
 		.reply-list-container img{
 			width: 15px;
 			margin-left: 20px;
+			margin-top:10px;
 		}
 		
 		.reply-list-box{
-			width: 1000px;
+			width: 1200px;
 			height: 80px;
-			border-bottom: 1px solid gray;
 			padding: 10px;
 		}
 
 		.reply-author{
 			color: burlywood;
 			font-weight: bold;
-			margin-bottom: 20px;
+		}
+		
+		.reply-content{
+			margin-top:15px;
 		}
 
 		.replyCommentForm {
-			margin-left: 55px;
+			margin-left: 60px;
+		}
+		
+		.replyCommentForm h5 {
+			margin-bottom:-5px;
 		}
 
 		.replyCommentForm input{
 			width: 550px;
 			height: 50px;
-			border: 2px solid lightgray;
+			border: 2px solid lightblue;
 			border-radius : 3px;
+		}
+		
+		.delete-comment-reply-btn {
+			width:40px !important;
+			height:20px;
+			font-size:6px;
+			margin-bottom:5px;
+			
 		}
 
 		.submit-reply-btn {
 			width: 80px;
-			height: 50px;
+			height: 54px;
 			border-radius: 3px;
 			border: 2px solid lightblue;
 			background-color: black;
 			color: white;
 			transition: all 0.2s;
 			cursor: pointer;
-			margin-left: 0px;
+			margin-left: -10px;
 		}
 		
 
@@ -275,7 +301,7 @@
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
 				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
-				<a href="/mypage">마이페이지</a>
+				<a href="/mypage/me">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -338,14 +364,14 @@
 		
 		<div class="comment-section">
 		    <h3>댓글</h3>
-
+	
 		    <!-- 댓글 작성 폼 -->
 		    <form id="commentForm" th:action="'/board/comment/' + ${board.id}" method="post" class="comment-form">
 		    	<input type="hidden" id="boardId" th:value="${board.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
 		        <input name="commentContent" placeholder="댓글을 입력하세요.">
 		        <button type="submit">작성</button>
 		    </form>
-
+		
 		    <!-- 댓글 목록 -->
 		    <div class="comment-list-box">
 		    
@@ -355,20 +381,27 @@
 		            <div class="comment-btn">
 					<button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>				
 					</div>
+					
 				
 					<div class="reply-list-container" th:each="reply : ${commentReplys[comment.id]}" >
 						<div class="reply-list-img">
 							<img src="/icon/대댓글아이콘.png">
 						</div>
+						
 						<div class="reply-list-box">					
 							<div class="reply-list" >		                
 								<div class="reply-author" th:text="${reply.user.username}">용이</div>
 								<div class="reply-content" th:text="${reply.commentContent}">뭐해</div>
+								<div class="comment-reply-btn">
+								<button class="delete-comment-reply-btn" th:data-id="${reply.id}">삭제</button>
+								</div>
 							</div>
 						</div>
-					</div>	 
-					           
+						
+					</div>
+					
 			    </div>  
+			    
 		    </div>
 		        
 				<div class="replyCommentForm" style="display: none;">
@@ -406,6 +439,7 @@
     	})
 
     
+    	//댓글 삭제
     
     	$(".delete-comment-btn").on("click", function() {
     		const commentId = $(this).data("id");
@@ -431,6 +465,33 @@
     		
     	});
     	
+    	// 대댓글 삭제
+    	
+    	$(".delete-comment-reply-btn").on("click", function() {
+    		const commentId = $(this).data("id");
+    		
+    		let confirmDelete = confirm("삭제하시겠습니까?");
+    		if(!confirmDelete) {
+    			return;
+    		}
+    		
+    		let commentSelect = $(this).closest(".reply-list-container");
+    		
+    		$.ajax({
+    			url: "/comment/" + commentId,
+    			type : "DELETE",
+    			success : function() { 
+    				commentSelect.remove();
+    			
+    			},
+    			error : function(err) {
+    				console.log(err);
+    			}
+    		});
+    		
+    	});
+    	
+    	
         $(document).ready(function() {
         	$.get("/api/cart/count", function(data) {
         		$('#cart-count').text(data);
@@ -440,7 +501,7 @@
         
         function showReplyForm(element) {
             let replyForm = document.querySelector('.replyCommentForm');
-            replyForm.style.display = 'block';
+           
             
             let commentContentDiv = element; // 해당 태그
             let commentListDiv = commentContentDiv.parentNode; // 해당 부모태그 
@@ -450,6 +511,12 @@
             
             replyForm.querySelector('.parent-comment-id').value = commentId;
             commentListDiv.insertAdjacentElement('afterend', replyForm);
+            
+            if (replyForm.style.display == 'none') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
         }
         
         
@@ -477,6 +544,13 @@
                 }
             });
         }
+       
+       $(".reply-content").keypress(function(e) {
+    	    if(e.which == 13) { // 13은 엔터 키를 의미
+    	        e.preventDefault(); // 브라우저가 표준 제출을 수행하는 것을 방지
+    	        submitReply(); // 대댓글 제출 함수 호출
+    	    }
+    	});
         
  
         
