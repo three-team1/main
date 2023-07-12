@@ -202,8 +202,33 @@
             let productId = [];
             let quantity = [];
             $('.orderList').each(function() {
-                productId.push(parseInt($(this).find(".orderProductId").text()));
-                quantity.push(parseInt($(this).find(".orderQuantity").text()));
+                let id = parseInt($(this).find(".orderProductId").text());
+                let cnt = parseInt($(this).find(".orderQuantity").text());
+
+                productId.push(id);
+                quantity.push(cnt);
+
+                $.ajax({
+                    url: "/api/product/" + id + "/validateQuantity",
+                    data: {
+                        orderQuantity: cnt // 주문 수량 변수로 대체해 주세요.
+                    },
+                    success: function() {
+                        // 정상 처리 작업을 수행합니다.
+                    },
+                    statusCode: {
+                        400: function (response) {
+                            // 오류 메시지를 출력합니다. 여기서는 response에 담긴 메시지를 사용합니다.
+                            alert(response.responseText);
+                            window.location.href = "/cart";
+                        }
+                    },
+                    error: function() {
+                        // API 호출 자체에 실패한 경우에 대한 처리를 수행합니다.
+                        console.log("API call failed.");
+                    }
+                });
+
             });
 
             $.get("/api/cart/user", function(user) {
