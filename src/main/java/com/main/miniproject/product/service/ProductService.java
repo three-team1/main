@@ -2,16 +2,21 @@ package com.main.miniproject.product.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Subgraph;
+import javax.persistence.criteria.*;
 
+import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.product.entity.ProductSellStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,13 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.main.miniproject.product.dto.ProductDTO;
 import com.main.miniproject.product.dto.ProductFormDto;
 import com.main.miniproject.product.dto.ProductImgDto;
-import com.main.miniproject.product.dto.ProductSearchDto;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.entity.ProductImage;
 import com.main.miniproject.product.repository.ProductImageRepository;
 import com.main.miniproject.product.repository.ProductRepository;
 
 import lombok.extern.log4j.Log4j2;
+import org.thymeleaf.util.StringUtils;
 
 @Service
 @Log4j2
@@ -37,14 +42,14 @@ public class ProductService {
 	private final ProductImageRepository productImageRepository;
 	private final ProductImageService productImageService;
 
-
+	private final FileService fileService;
 
 	@Autowired
-	public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, ProductImageService productImageService) {
+	public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, ProductImageService productImageService, FileService fileService) {
 		this.productRepository = productRepository;
 		this.productImageRepository=productImageRepository;
 		this.productImageService=productImageService;
-
+		this.fileService = fileService;
 	}
 
 	public List<Product> getAllProducts() {
@@ -55,22 +60,14 @@ public class ProductService {
 	public Product getProductById (Long productId) {
 
 		return productRepository.findById(productId).get();
+
 	}
 
 	//itemFormDto 값을 넘겨받고, multipart 형식으로 되어 있는 리스트를 받아온다.
-	public Long saveProduct(ProductFormDto productFormDto, List<MultipartFile> itemImgFileList) throws IOException {
+	public Product saveProduct(Product product) {
 
-		Product product = productFormDto.createProduct();		//dto를 entity로 변환. create에서 mapper로 바꿨으니까
-		productRepository.save(product);
+		return productRepository.save(product);
 
-		//그림 저장하기
-		for (int i = 0; i < itemImgFileList.size(); i++) {
-			ProductImage productImage = new ProductImage();
-			productImage.setProduct(product);		//등록하는 이미지와 아이템 순서에 맞게 연결
-
-			productImageService.saveProductImg(productImage, itemImgFileList.get(i));
-		}
-		return product.getId();
 	}
 
 
@@ -102,34 +99,50 @@ public class ProductService {
 	}
 
 	//상품 업데이트(수정)
-	public Long updateProduct(ProductFormDto productFormDto, List<MultipartFile> itemImgFileList) throws IOException {
-		Product product = productRepository.findById(productFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+//	public Long updateProduct(ProductFormDto productFormDto, MultipartFile[] files) throws IOException {
+//		Product product = productRepository.findById(productFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+//
+//		product.updateProduct(productFormDto);
+//
+//
+//		System.out.println("111111111111111111" + product);
+//
+//		//********** dto에서 받아온 것을 db에 저장해야 함.
+//		productRepository.save(product);
+//
+//		List<ProductImage> productImages =productImageRepository.findByProduct(product);
+//		System.out.println("2222222222222222222" + productImages);
+//
+//
+//		//이미지 업데이트
+//		for (int i = 0; i < productImages.size(); i++) {
+////			if(i < files.length){
+////				MultipartFile file = files[i];
+////				ProductImage productImage = productImages.get(i);
+//				productImageService.updateItemImg(productImages.get(i).getId(),files[i] );
+//
+//
+////				updatedProductImages.add(productImage);
+//
+//				System.out.println("33333333333333333333333" + files[i].getOriginalFilename());
+////			}
+//
+//		}
+//
+//		productImageRepository.saveAll(productImages);
+//
+//		//수정한 정보(상품)가 무엇인지 알려줌.
+//		return product.getId();
+//	}
 
+
+	public Long updateProduct(ProductFormDto productFormDto){
+		Product product = productRepository.findById(productFormDto.getId()).orElseThrow(EntityNotFoundException::new);
 		product.updateProduct(productFormDto);
 
-		//********** dto에서 받아온 것을 db에 저장해야 함.
 		productRepository.save(product);
-
-		List<ProductImage> productImgIds =productImageRepository.findByProduct(product);
-
-		productImageRepository.saveAll(productImgIds);
-
-		//업데이트를 위해서는 itemImgIds와 itemImgFileList의 인덱스를 알아야 함.
-		log.info("아이디 번호값 : " + itemImgFileList.size());
-
-
-		for (int i = 0; i < itemImgFileList.size(); i++) {
-//			log.info("아이디 번호값 : " + productImgIds.get(i));
-			log.info("아이디 번호값 : " + itemImgFileList.get(i));
-
-			productImageService.updateItemImg(productImgIds.get(i).getId(), itemImgFileList.get(i));
-			//itemImgFileList 를 못 불러옴..
-
-		}
-
-
-
-		//수정한 정보(상품)가 무엇인지 알려줌.
+		System.out.println("productService==============================="+product);
+		//수정한 정보(상품)가 무엇인지 알려줌
 		return product.getId();
 	}
 
@@ -139,18 +152,19 @@ public class ProductService {
 
 	 public void deleteProduct(Long id){
 
-		Product product = productRepository.findById(id).get();
 
-		List<ProductImage> productImages = productImageRepository.findByProduct(product);
+		List<ProductImage> productImages = productImageRepository.findByProduct(getProductById(id));
 
 		for(ProductImage productImage : productImages){
 
+			System.out.println(productImage);
 			try{
-				Path filePath = Paths.get("C:/miniproject/images" + productImage.getName());
-				Files.deleteIfExists(filePath);
-			}catch (IOException e){
+				// DB에서 삭제되면 로컬저장폴더에서도 삭제
+				fileService.deleteFile("C:/miniproject/images/" + productImage.getName());
+//
+			}catch (Exception e){
 				e.printStackTrace();
-				//적절한 예외 처리 필요
+				System.out.println("삭제할 이미지가 존재하지 않습니다." + id);
 			}
 
 			productImageRepository.delete(productImage);
@@ -164,38 +178,58 @@ public class ProductService {
 
 
 
+	//페이징 처리
+	//page는 현재페이지. 숫자는 현재 페이지에 나타낼 레코드의 갯수
+	public Page<Product> getList(int page, String keyword){
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.asc("productQuantity"));
+		Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+		Specification<Product> productSpecification = search(keyword);
 
-	//ItemRepositoryCustom, ItemRepositoryCustomImpl에서 작성한 쿼리문 출력하기
-	public Page<Product> getAdminProductPage(ProductSearchDto productSearchDto, Pageable pageable){
-		return productRepository.getAdminProductPage(productSearchDto, pageable);
+		return productRepository.findAll(productSpecification, pageable);
 	}
 
 
 
 
-	public List<ProductDTO> searchProducts(String searchKeyword) {
+	//키워드 검색
+	private Specification<Product> search(String keyword) {
+		return new Specification<Product>() {
 
-		List<Product> productList = productRepository.findByProductTitleContaining(searchKeyword);
+			@Override
+			public Predicate toPredicate(Root<Product> productRoot, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				query.distinct(true);   //중복을 제거
 
-		List<ProductDTO> productDTOList = new ArrayList<>();
+				return criteriaBuilder.or(
+						criteriaBuilder.like(productRoot.get("productTitle"), "%" + keyword + "%"),
+						criteriaBuilder.like(productRoot.get("productType"), "%" + keyword + "%"));
 
-		for(Product product : productList) {
+			}
+		};
+	}
 
-			ProductDTO productDTO = ProductDTO.builder()
-					.productId(product.getId())
-					.productTitle(product.getProductTitle())
-					.productContent(product.getProductContent())
-					.productPrice(product.getProductPrice())
-					.productQuantity(product.getProductQuantity())
-					.productType(product.getProductType())
-					.build();
+			public List<ProductDTO> searchProducts(String searchKeyword) {
 
-			productDTOList.add(productDTO);
+				List<Product> productList = productRepository.findByProductTitleContaining(searchKeyword);
 
+				List<ProductDTO> productDTOList = new ArrayList<>();
+
+				for (Product product : productList) {
+
+					ProductDTO productDTO = ProductDTO.builder()
+							.productId(product.getId())
+							.productTitle(product.getProductTitle())
+							.productContent(product.getProductContent())
+							.productPrice(product.getProductPrice())
+							.productQuantity(product.getProductQuantity())
+							.productType(product.getProductType())
+							.build();
+
+					productDTOList.add(productDTO);
+
+				}
+
+
+				return productDTOList;
+			}
 		}
-
-
-		return productDTOList;
-	}
-
-}

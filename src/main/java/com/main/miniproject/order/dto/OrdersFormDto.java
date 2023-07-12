@@ -3,16 +3,17 @@ package com.main.miniproject.order.dto;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.payment.entity.Payment;
 import com.main.miniproject.user.entity.User;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrdersFormDto {
 
     private Long id;

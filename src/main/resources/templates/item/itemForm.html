@@ -58,7 +58,7 @@
                         data: formData,
                         success: () => {
                             alert('상품 등록이 완료되었습니다.');
-                            location.href = '/admin/items/' + id;
+                            window.location.replace('/admin/items/' + id);
                         },
                         error: () => {
                             alert('상품 등록 중 오류가 발생했습니다.');
@@ -85,9 +85,11 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: () => {
+                        success: function(data) {
                             alert('수정 완료되었습니다.');
-                            location.href = '/admin/item/' + id
+                            // 업데이트에 성공하면 해당 부분을 업데이트
+                            var updatedContent = $(data).find("#content").html();
+                            $("#content").html(updatedContent);
                         },
                         error: () => {
                             alert('상품 정보 수정 중 오류가 발생했습니다.');
@@ -96,6 +98,40 @@
                 }
             });
         });
+
+
+
+        $(document).ready(function (){
+
+            $('#imgDeleteBtn').on("click", (e) => {
+                e.preventDefault();
+                // let id = $(this).parent("div").find("input[name='itemImgIds']").val();
+                    // var id = $(this).val().toString();
+
+                // console.log(id);
+
+                const formData = new FormData($("#updateForm")[0]);
+
+                $.ajax({
+                    url: '/admin/itemImageDel',
+                    type: 'post',
+                    enctype: 'multipart/form-data',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: () => {
+                        alert('이미지 삭제 완료되었습니다.');
+                        // location.href = 'redirect:/admin/item/' + id
+                        location.reload();
+                    },
+                    error: () => {
+                        alert('이미지 삭제 중 오류가 발생했습니다.');
+                    }
+                });
+
+            });
+        });
+
 
 
     </script>
@@ -181,6 +217,9 @@
         <input id="id" type="hidden" th:field="*{id}">
 
         <div class="form-group">
+            <div class="form-group-prepend">
+                <span class="form-group-text">판매 상태</span>
+            </div>
             <select th:field="*{productSellStatus}" class="custom-select">
                 <option value="SELL">판매중</option>
                 <option value="SOLD_OUT">품절</option>
@@ -188,11 +227,14 @@
         </div>
 
         <div class="form-group">
+            <div class="form-group-prepend">
+                <span class="form-group-text">상품 타입</span>
+            </div>
             <select th:field="*{productType}" class="custom-select">
-                <option value="초월">초월계</option>
-                <option value="자연">자연계</option>
-                <option value="속성">속성계</option>
-                <option value="초인">초인계</option>
+                <option value="초월계">초월계</option>
+                <option value="자연계">자연계</option>
+                <option value="속성계">속성계</option>
+                <option value="초인계">초인계</option>
             </select>
         </div>
 
@@ -229,13 +271,16 @@
         <p th:if="${#fields.hasErrors('productContent')}" th:errors="*{productContent}" class="fieldError">Incorrect data</p>
 
         <div th:if="${#lists.isEmpty(itemFormDto.productImgDtoList)}">
-        				<!-- #numbers.sequence(start,end)를 이용하여 반복처리. 최대 이미지 등록 갯수는 5개 -->
-            <div class="form-group" th:each="num: ${#numbers.sequence(1,5)}">
+        				<!-- #numbers.sequence(start,end)를 이용하여 반복처리. 최대 이미지 등록 갯수는 3개 -->
+            <div class="form-group" th:each="num: ${#numbers.sequence(1,3)}">
                 <div class="custom-file img-div">
-                		<!-- 나중에 name에 해당되는 itemImgFile을 들고 날라간다. 똑같은 이름이 다섯 번 나타난다. -->
-                    <input type="file" class="custom-file-input" name="itemImgFile">
+                		<!-- 나중에 name에 해당되는 itemImgFile을 들고 날라간다. 똑같은 이름이 세 번 나타난다. -->
+                    <input type="file" class="custom-file-input" name="itemImgFile" >
                     <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>
                 </div>
+<!--                <div class="board-image" th:each="image : ${images}">-->
+<!--                    <img th:src="@{'/board/images/' + ${image.name}}" alt="게시글 이미지" />-->
+<!--                </div>-->
             </div>
         </div>
         <!-- 비어있는 상태가 아니라 뭔가 들고 날라온 경우.(수정을 위함)-->
@@ -244,6 +289,7 @@
                 <div class="custom-file img-div">
                     <input type="file" class="custom-file-input" name="itemImgFile">
                     <input type="hidden" name="itemImgIds" th:value="${productImgDto.id}">
+                    <input type="button" id="imgDeleteBtn" value="x" th:data-delImage="${productImgDto.id}">
                     <label class="custom-file-label" th:text="${not #strings.isEmpty(productImgDto.originName)} ? ${productImgDto.originName} : '상품이미지' + ${status.index+1}"></label>
                 </div>
             </div>
