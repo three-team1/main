@@ -33,6 +33,8 @@ public class ReviewFileServiceImpl implements ReviewFileService {
     @Transactional
     public List<ReviewImage> saveFiles(Review review, List<MultipartFile> files) {
 
+        System.out.println(new File(".").getAbsoluteFile());
+
         List<ReviewImage> reviewImages = new ArrayList<>();
 
         //업로드 일자 기준으로 파일 저장 폴더 생성
