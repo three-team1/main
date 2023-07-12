@@ -18,6 +18,7 @@ import com.main.miniproject.user.entity.Role;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -231,6 +232,7 @@ public class MypageViewController {
 
         return mv;
     }
+
 
 }
 
