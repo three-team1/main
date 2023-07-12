@@ -28,11 +28,11 @@ import com.siot.IamportRestClient.response.Payment;
 public class PaymentRestController {
 	
 	
-	private final IamportClient iamportClient;
+	private IamportClient iamportClient;
 	
-	private final PaymentService paymentService;
+	private PaymentService paymentService;
 	
-	private final ProductRepository productRepository;
+	private ProductRepository productRepository;
 	
 	@Autowired
 	public PaymentRestController(PaymentService paymentService,ProductRepository productRepository) {
