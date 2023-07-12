@@ -3,7 +3,9 @@ package com.main.miniproject.review.service.impl;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewFileService;
+import com.main.miniproject.review.service.ReviewImageService;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,22 +25,24 @@ import java.util.UUID;
 @Service
 public class ReviewFileServiceImpl implements ReviewFileService {
 
-    @Value("./review/images/")
-    String attachPath;
+    @Value("${reviewImgLocation}")
+    String reviewImgPath;
 
-    @Value("./review/resized/")
-    String resizedPath;
+    @Value("${reviewResizedLocation}")
+    String reviewResizedPath;
 
     @Override
     @Transactional
     public List<ReviewImage> saveFiles(Review review, List<MultipartFile> files) {
 
+        System.out.println(new File(".").getAbsoluteFile());
+
         List<ReviewImage> reviewImages = new ArrayList<>();
 
         //업로드 일자 기준으로 파일 저장 폴더 생성
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
-        String dataPath = Paths.get(attachPath, today).toString();
-        String resizedDatePath = Paths.get(resizedPath, today).toString();
+        String dataPath = Paths.get(reviewImgPath, today).toString();
+        String resizedDatePath = Paths.get(reviewResizedPath, today).toString();
 
         File dir = new File(dataPath);
         if (!dir.exists()) {

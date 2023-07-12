@@ -173,7 +173,8 @@
             <div class="content">
                 <!--주문 목록 조회-->
                 <h1>최근 주문 내역</h1>
-<!--            <div id="mcmenu1">-->
+                <button type="button" class="btnReview" th:if="${#lists.isEmpty(notReviewedOrderItems)} == false">리뷰 등록</button>
+        <div class="child" th:each="item : ${items}" th:if="${prodimg.product == item.product}">
             <div id="mcmenu1">
                 <!--최신순 조회 -> 역순으로 조회한다.-->
                 <div class="child" th:each="i : ${#numbers.sequence(items.size() - 1, 0, -1)}"
@@ -192,7 +193,6 @@
                                 <li class="order-detail">배송 완료</li>
                                 <div class="buttons">
                                     <button class="re-order">재구매</button>
-                                    <button type="button" class="btnReview" th:if="${#lists.isEmpty(notReviewedOrderItems)} == false">리뷰 등록</button>
                                 </div>
                             </ul>
                         </div>
