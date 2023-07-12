@@ -17,6 +17,7 @@ public class ReviewImageDTO {
     private String name;
     private String url;
     private String originName;
+    private Integer height;
 
     public ReviewImage DTOToEntity() {
         ReviewImage reviewImage = ReviewImage.builder()
@@ -25,6 +26,7 @@ public class ReviewImageDTO {
                 .name(this.name)
                 .url(this.url)
                 .originName(this.originName)
+                .height(this.height)
                 .build();
 
         return reviewImage;

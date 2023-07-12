@@ -22,6 +22,13 @@ public class ReviewDTO {
     private Long userId;
     private Long orderItemId;
 
+    public ReviewDTO(String reviewContent, Integer reviewRating, Long userId, Long orderItemId) {
+        this.reviewContent = reviewContent;
+        this.reviewRating = reviewRating;
+        this.userId = userId;
+        this.orderItemId = orderItemId;
+    }
+
     public Review DTOToEntity() {
         Review review = Review.builder()
                 .id(this.id)

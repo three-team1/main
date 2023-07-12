@@ -5,6 +5,8 @@ import com.main.miniproject.user.dto.UserFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,6 +77,14 @@ public class UserService implements UserDetailsService{
 
 
         userRepository.save(user);
+    }
+
+    //로그인 유저 확인
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetail userDetail = (UserDetail) auth.getPrincipal();
+        return userRepository.findByUsername(userDetail.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("유저 없음"));
     }
 
 }
