@@ -4,6 +4,8 @@ import com.main.miniproject.comment.entity.Comment;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.qna.entity.QNA;
 import com.main.miniproject.qna.service.QnaService;
+import com.main.miniproject.user.service.UserDetail;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +38,8 @@ public class QnaController {
     private CommentService commentService;
 
     @GetMapping("/qna/list")
-    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String category, @RequestParam(value = "page", defaultValue = "0") int currentPage) {
+    public String qnaList(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String category, @RequestParam(value = "page", defaultValue = "0") int currentPage
+    							,@AuthenticationPrincipal UserDetail userDetail) {
 
 
         int pageSize = 10; // 페이지당 게시글 수
@@ -72,6 +76,7 @@ public class QnaController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
+        model.addAttribute("userDetail",userDetail);
 
         // 페이지 목록
         int maxPageNumbers = 5; // 페이지 목록에 표시할 최대 페이지 수

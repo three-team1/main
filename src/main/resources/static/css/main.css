@@ -61,6 +61,11 @@ div {
   margin: auto;
 }
 
+.nav-bar-item-cart a{
+  line-height: -15px;
+}
+
+
 .nav-bar-item-box {
   display: flex;
   margin: auto;
