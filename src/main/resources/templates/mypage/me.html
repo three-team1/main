@@ -147,6 +147,28 @@
                     window.location.href="/review/insert-view";
                 });
             });
+
+            function addToCart(itemId) {
+                $.ajax({
+                    url: "/insertCart/" + itemId,
+                    type: "post",
+                    success: function (response) {
+                        // Process response from server (e.g., update UI, show a message, etc.)
+                        if(response === "existed"){
+                            console.log(response);
+                            alert("해당 상품이 이미 장바구니에 존재합니다.");
+                        } else {
+                            console.log(response)
+                            alert("해당상품을 장바구니에 담았습니다!");
+                            updateCartCount()
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(xhr, textStatus, errorThrown);
+                    }
+                });
+            }
+
         </script>
     </th:block>
 </head>
@@ -185,13 +207,14 @@
                     </div>
                             <ul>
                                 <li class="order-detail" th:text="|${item.product.productTitle} (수량: ${item.orderQuantity})|"></li>
-                                <li class="order-detail" th:text="|금액: ${item.order.orderTotalPrice}(원)|"></li>
+<!--                                <li class="order-detail" th:text="|금액: ${(item.product.productPrice * item.orderQuantity).longValue()}(원)|"></li>-->
+                                <li class="order-detail" th:text="|금액: ${#numbers.formatInteger((item.product.productPrice * item.orderQuantity).longValue(), 3, 'COMMA')}(원)|"></li>
                                 <li class="order-detail" th:if="${item.order.payment.paymentPlan == 'card'}" th:text="'지불 방식: 신용카드'"></li>
                                 <li class="order-detail" th:unless="${item.order.payment.paymentPlan == 'card'}" th:text="'지불 방식: 기타'"></li>
                                 <li class="order-detail" th:text="|주문 상태: 입금 완료(입금자: ${item.order.user.username})|"></li>
                                 <li class="order-detail">배송 완료</li>
                                 <div class="buttons">
-                                    <button class="re-order">재구매</button>
+                                    <button class="re-order" th:onclick="addToCart([[${item.product.id}]])">재구매</button>
                                 </div>
                             </ul>
                         </div>
