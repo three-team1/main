@@ -27,6 +27,7 @@ public class ReviewDTO {
         this.reviewRating = reviewRating;
         this.userId = userId;
         this.orderItemId = orderItemId;
+        this.reviewRegdate = LocalDateTime.now();
     }
 
     public Review DTOToEntity() {
