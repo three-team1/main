@@ -3,9 +3,7 @@ package com.main.miniproject.review.service.impl;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewFileService;
-import com.main.miniproject.review.service.ReviewImageService;
 import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,6 @@ public class ReviewFileServiceImpl implements ReviewFileService {
     @Override
     @Transactional
     public List<ReviewImage> saveFiles(Review review, List<MultipartFile> files) {
-
-        System.out.println(new File(".").getAbsoluteFile());
 
         List<ReviewImage> reviewImages = new ArrayList<>();
 

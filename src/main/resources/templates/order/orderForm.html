@@ -101,7 +101,7 @@
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">아이디</span>
+                    <span class="input-group-text">주문번호</span>
                 </div>
                 <input type="number" th:field="*{id}" class="form-control" readonly>
             </div>
@@ -109,68 +109,27 @@
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">주문 날짜</span>
+                    <span class="input-group-text">주문 수량</span>
                 </div>
-                <input type="text" th:field="*{orderDate}" class="form-control" readonly>
+                <input id="username" type="text" th:field="*{orderQuantity}" class="form-control" readonly>
             </div>
-            <p th:if="${#fields.hasErrors('orderDate')}" th:errors="*{orderDate}" class="fieldError">Incorrect data</p>
+            <p th:if="${#fields.hasErrors('orderQuantity')}" th:errors="*{orderQuantity}" class="fieldError">Incorrect data</p>
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">주문 가격</span>
+                    <span class="input-group-text">상품</span>
                 </div>
-                <input type="number" th:field="*{orderTotalPrice}" class="form-control" readonly>
+                <input type="text" th:field="*{product.productTitle}" class="form-control" readonly>
             </div>
-            <p th:if="${#fields.hasErrors('orderTotalPrice')}" th:errors="*{orderTotalPrice}" class="fieldError">Incorrect data</p>
+            <p th:if="${#fields.hasErrors('product.productTitle')}" th:errors="*{product.productTitle}" class="fieldError">Incorrect data</p>
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">우편번호</span>
+                    <span class="input-group-text">주문 총액</span>
                 </div>
-                <input id="username" type="text" th:field="*{orderPostCode}" class="form-control">
+                <input type="number" th:field="*{order.orderTotalPrice}" class="form-control" readonly>
             </div>
-            <p th:if="${#fields.hasErrors('orderPostCode')}" th:errors="*{orderPostCode}" class="fieldError">Incorrect data</p>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">주소</span>
-                </div>
-                <input type="text" th:field="*{orderAddress}" class="form-control">
-            </div>
-            <p th:if="${#fields.hasErrors('orderAddress')}" th:errors="*{orderAddress}" class="fieldError">Incorrect data</p>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">상세주소</span>
-                </div>
-                <input type="text" th:field="*{orderDetailAddress}" class="form-control">
-            </div>
-            <p th:if="${#fields.hasErrors('orderDetailAddress')}" th:errors="*{orderDetailAddress}" class="fieldError">Incorrect data</p>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">연락처</span>
-                </div>
-                <input type="text" th:field="*{orderTel}" class="form-control">
-            </div>
-            <p th:if="${#fields.hasErrors('orderTel')}" th:errors="*{orderTel}" class="fieldError">Incorrect data</p>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">주문자</span>
-                </div>
-                <input type="text" th:field="*{user}" class="form-control">
-            </div>
-            <p th:if="${#fields.hasErrors('user')}" th:errors="*{user}" class="fieldError">Incorrect data</p>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">결제방식</span>
-                </div>
-                <input type="text" th:field="*{payment}" class="form-control">
-            </div>
-            <p th:if="${#fields.hasErrors('payment')}" th:errors="*{payment}" class="fieldError">Incorrect data</p>
-
+            <p th:if="${#fields.hasErrors('order.orderTotalPrice')}" th:errors="*{order.orderTotalPrice}" class="fieldError">Incorrect data</p>
 
 
             <a th:href="@{'/admin/orders'}">
