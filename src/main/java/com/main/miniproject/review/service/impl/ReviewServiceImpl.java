@@ -89,7 +89,7 @@ public class ReviewServiceImpl implements ReviewService {
     //전체 리뷰 검색
     @Override
     public Page<Review> searchReview(Pageable pageable, String keyword) {
-        return reviewRepository.findByReviewTitleContainingOrReviewContentContaining(keyword, keyword, pageable);
+        return reviewRepository.findByOrderItemProductProductTitleContainingOrReviewContentContaining(keyword, keyword, pageable);
     }
 
     //내 리뷰 목록 조회

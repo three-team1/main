@@ -8,16 +8,11 @@ import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
-import com.main.miniproject.product.entity.Product;
-import com.main.miniproject.product.entity.ProductImage;
-import com.main.miniproject.product.service.ProductImageService;
-import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
 import com.main.miniproject.review.service.ReviewService;
 import com.main.miniproject.user.entity.Role;
-import com.main.miniproject.order.service.OrderItemService;
 import com.main.miniproject.user.entity.User;
 import com.main.miniproject.user.service.UserInfoService;
 import com.main.miniproject.user.service.UserService;
@@ -52,6 +47,8 @@ public class MypageViewController {
 
     private ReviewImageService reviewImageService;
 
+    private OrderItemRepository orderItemRepository;
+
     @Autowired
     private BoardService boardService;
 
@@ -75,15 +72,16 @@ public class MypageViewController {
         this.userService = userService;
         this.reviewService = reviewService;
         this.reviewImageService = reviewImageService;
+        this.orderItemRepository = orderItemRepository;
     }
 
-    //마이페이지 주문/배송 조회 페이지
+    //마이페이지 주문/배송 조회 페이지 + 미등록 리뷰 있을 경우에만 리뷰 등록 버튼 생성
     @GetMapping("/me")
     public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
-
         User user = userInfoService.getMyInfo(userDetails.getUsername());
 
+        List<Orders> ordersList = ordersService.getOrdersList(user);
 
         List<Orders> ordersList = orderItemService.getOrdersList(user);
 
@@ -91,12 +89,20 @@ public class MypageViewController {
 
         List<ProductImage> productImageList = orderItemService.getImage(user.getId());
 
+        //미등록 리뷰 유무 확인
+        List<OrderItem> notReviewedOrderItems = orderItemRepository.findNotReviewedOrderItemsByUserId(user.getId());
+
         model.addAttribute("orders", ordersList);
+        model.addAttribute("notReviewedOrderItems", notReviewedOrderItems);
         model.addAttribute("items", orderItemList);
         model.addAttribute("prodimgs", productImageList);
 
         return "mypage/me";
     }
+    /*List<Orders> orders = orderService.getOrdersByUserId(userDetail.getId())
+
+    model.addAttribute "orders",orders*/
+
 
     //마이페이지 내 정보 관리 페이지 + 일반 로그인 회원, 소셜 로그인 회원 구분
     @GetMapping("/myInfo")
