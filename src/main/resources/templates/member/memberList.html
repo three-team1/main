@@ -26,22 +26,62 @@
 			crossOrigin="anonymous"></script>
     <script th:inline="javascript">
 
-	$(document).ready(function(){
-            $("#searchBtn").on("click",function(e) {
-                e.preventDefault();
-                page(0);
-            });
-        });
-        
-        function page(page){
-            var searchBy = $("#searchBy").val();
-            var searchQuery = $("#searchQuery").val();
 
-            location.href="/admin/members/" + page
-            + "?searchBy=" + searchBy
-            + "&searchQuery=" + searchQuery;
-        }
-        
+
+		$(document).ready(function() {
+
+			// 페이지 링크 클릭 이벤트 처리
+			$(".page-link").on("click", function (e) {
+				e.preventDefault();
+				var page = $(this).data("page");
+				setPageAndSubmitForm(page);
+
+			});
+
+			// 검색 버튼 클릭시 page 0 부터
+			$("#searchBtn").on("click", function (e) {
+				e.preventDefault();
+				var page = 0;
+				setPageAndSubmitForm(page);
+			});
+
+			//검색어와 페이지 설정 후 검색 폼 제출(가장 밑에 searchForm에 input 태그로 있음)
+			function setPageAndSubmitForm(page) {
+				$("#page").val(page);
+
+				//카테고리 설정이 있을 경우에만 설정
+				// 페이지가 변경되어도 검색어 그대로 유지.
+				var category = $("#searchCategory").val().trim();
+				if(category === ""){
+					$("#category").removeAttr("name");
+				}else{
+					$("#category").val(category);
+					$("#category").attr("name", "category");
+				}
+
+				// 검색어 입력값이 있을 경우에만 설정.
+				// 페이지가 변경되어도 검색어 그대로 유지.
+				// 검색어 필드 값이 빈칸인 경우 전체 데이터 요청
+				var keyword = $("#searchKeyword").val().trim();
+				if (keyword === "") {
+					// 검색어 필드를 제거하여 서버에서 빈 검색어로 처리되도록 함
+					$("#keyword").removeAttr("name");
+				} else {
+					// 검색어 필드를 제거하여 서버에서 빈 검색어로 처리되도록 함
+					$("#keyword").val(keyword);
+					//.attr("name", "keyword")은 선택한 요소의 "name" 속성을 "keyword"로 설정하는 역할.
+					// 이렇게 설정된 "name" 속성은 폼 데이터를 서버로 제출할 때 사용.
+					$("#keyword").attr("name", "keyword");
+
+				}
+
+				$("#searchForm").submit();
+			}
+
+		});
+
+
+
     </script>
 </th:block>
 </head>
@@ -49,8 +89,6 @@
 
 <div layout:fragment="content">
 	<div class="main-content">
-	<form th:action="@{'/admin/members/' + ${members.number}}" role="form"
-		method="get" th:object="${members}">
 
 		<table class="table">
 			<thead>
@@ -67,78 +105,88 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="member, status: ${members.getContent()}">
-					<td th:text="${member.id}"></td>
-					<td th:text="${member.provider}"></td>
-					<td th:text="${member.providerId}"></td>
-					<td	th:text="${member.username}"></td>
-					<td th:text="${member.email}"></td>
-					<td th:text="${member.tel}"></td>
-					<td th:text="${member.my_postcode} + ', ' + ${member.my_address } + ', ' +${member.my_detailAddress}"></td>
-					<td th:text="${member.role}"></td>
+				<tr th:each="user, status: ${userPage}">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.provider}"></td>
+					<td th:text="${user.providerId}"></td>
+					<td	th:text="${user.username}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.tel}"></td>
+					<td th:text="${user.my_postcode} + ', ' + ${user.my_address } + ', ' +${user.my_detailAddress}"></td>
+					<td th:text="${user.role}"></td>
 					<td>
-						<a th:href="@{'/admin/memberDetail/' + ${member.id}}">
+						<a th:href="@{'/admin/memberDetail/' + ${user.id}}">
 						<button type="button">선택</button>
 						</a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		
-		
-		<!-- 페이지 기능 구현(이전 페이지, 페이지 번호, 다음 페이지) -->
-		<div th:with="start=${(members.number/maxPage)*maxPage + 1}, end=${(members.totalPages == 0) ? 1 : ((start + maxPage - 1) < members.totalPages ? (start + maxPage - 1) : members.totalPages)}" >
-            <ul class="pagination justify-content-center">
 
-				<!-- 맨 앞페이지로 가는 버튼 -->
-				<li class="page-member" th:classappend="${members.first}?'disabled'">
-					<a th:onclick="'javascript:page(0)'" aria-label="First"class="page-link">
-						<span aria-hidden="true">첫 페이지</span>
+
+<!--		th:field="*{}"-->
+<!--		· th:object속성과 함께 th:field를 이용해서 HTML 태그에 멤버 변수를 매핑할 수 있다.-->
+<!--		· th:field을 이용한 사용자 입력 필드는 id, name, value 속성 값이 자동으로 매핑된다.-->
+<!--		· th:object와 th:field는 Controller에서 특정 클래스의 객체를 전달 받은 경우에만 사용 가능하다.-->
+
+
+		<!--검색 기능-->
+		<form th:action="@{'/admin/members/'}" method="get">
+			<div class="form-inline justify-content-center">
+				<select id="searchCategory" name="category" class="form-control" style="width:auto;">
+					<option value="" th:selected="${searchCondition == 'all' ||
+            searchCondition == '' || searchCondition == null}">전체</option>
+					<option value="username" th:selected="${category == 'username'}">이름</option>
+					<option value="email" th:selected="${category == 'email'}">이메일</option>
+					<option value="tel" th:selected="${category == 'tel'}">연락처</option>
+				</select>
+				<input type="text" id="searchKeyword" class="form-control"  th:field="*{keyword}" placeholder="검색어를 입력해주세요" style="width: auto;">
+				<button type="submit" id="searchBtn" class="btn btn-primary">검색</button>
+			</div>
+		</form>
+
+
+
+		<!-- 페이징처리 시작 -->
+		<!-- href="javascript:void(0)"를 사용하여 클릭 시 페이지 이동을 방지하고 JavaScript 코드만 실행되도록 할 수 있다.-->
+		<div th:if="${!userPage.isEmpty()}">
+			<ul class="pagination justify-content-center">
+				<li th:classappend="${!userPage.hasPrevious} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="0">
+						첫 페이지
 					</a>
 				</li>
-
-				<!-- 첫 번째 페이지이면 이전버튼 사용못하게 설정(disabled) -->
-                <li class="page-member" th:classappend="${members.first}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${members.number - 1} + ')'" aria-label='Previous' class="page-link">
-                        <span aria-hidden='true'>이전</span>
-                    </a>
-                </li>
-
-                <li class="page-member" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${members.number eq page-1}?'active':''">
-                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
-                </li>
-
-					<!-- 마지막 페이지이면 다음버튼 사용못하게 설정(disabled) -->
-                <li class="page-member" th:classappend="${members.last}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${members.number + 1} + ')'" aria-label='Next' class="page-link">
-                        <span aria-hidden='true'>다음</span>
-                    </a>
-                </li>
-                <!-- 맨 뒷 페이지로 가는 버튼 -->
-				<li class="page-member" th:classappend="${members.last}?'disabled'">
-					<a th:onclick="'javascript:page(' + ${members.totalPages - 1} + ')'" aria-label="Last" class="page-link">
-						<span aria-hidden="true">마지막 페이지</span>
+				<li th:classappend="${!userPage.hasPrevious} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${userPage.number-1}">
+						이전
 					</a>
 				</li>
-				
-				
-
-
+				<li th:each="page: ${#numbers.sequence(0, userPage.totalPages-1)}"
+					th:classappend="${page == userPage.number} ? 'active'"
+					class="page-item">
+					<a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+				</li>
+				<li  th:classappend="${!userPage.hasNext} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${userPage.number+1}">
+						다음
+					</a>
+				</li>
+				<li  th:classappend="${!userPage.hasNext} ? 'disabled'">
+					<a class="page-link" href="javascript:void(0)" th:data-page="${userPage.totalPages-1}">
+						마지막 페이지
+					</a>
+				</li>
 			</ul>
-        </div>
-		
-		<!-- 검색 기능 구현 -->
-		<div class="form-inline justify-content-center" th:object="${memberDto}">
-            <select th:field="*{searchBy}" class="form-control" style="width:auto;">
-                <option value="username">이름</option>
-                <option value="email">이메일</option>
-                <option value="my_address">주소</option>
-            </select>
-            <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색명을 입력해주세요">
-            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-        </div>
+		</div>
+		<!-- 페이징처리 끝 -->
 
-    </form>
+		<form th:action="@{/admin/members}" method="get" id="searchForm">
+			<input type="hidden" id="category" name="category" th:value="${category}">
+			<input type="hidden" id="keyword" name="keyword" th:value="${keyword}">
+			<input type="hidden" id="page" name="page" th:value="${userPage.number}">
+		</form>
+
+
 	</div>
 </div>
 

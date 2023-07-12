@@ -219,6 +219,10 @@
         color: white;
       }
 
+      h3 {
+        color: white;
+      }
+
       a {
         text-decoration: none;
         color: white;
@@ -361,6 +365,9 @@
       <div th:each="review : ${reviews}">
         <div class="review-card">
           <div class="text-zone">
+            <div class="review-title">
+              <h3 th:text="${review.orderItem.product.productTitle}"></h3>
+            </div>
             <div class="top-section">
               <div class="rating-and-info">
                 <div class="starRating">
@@ -374,7 +381,6 @@
                 </div>
               </div>
               <div class="buttons">
-                <button type="button" id="btnSave" th:if="${#authentication.principal.username == review.user.username}" onclick="alert('수정')">수정</button>
                 <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" th:attr="data-id=${review.id}" onclick="deleteReview(this)">삭제</button>
               </div>
             </div>

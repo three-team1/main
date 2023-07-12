@@ -36,7 +36,7 @@ public class PaymentRestController {
 	
 	@Autowired
 	public PaymentRestController(PaymentService paymentService,ProductRepository productRepository) {
-		this.iamportClient = new IamportClient("8810180857446724", "faYN7PPoc1MSXm7fQjjIwsPi81eTZ4wOK9leaEtQUrfEB904ijeSm2NqbhokVL9hyYD65awZ04hWIScN");
+        this.iamportClient = new IamportClient("6726834646432386", "j3ibQpza6I2mvrN9WFcOnEeFTarl5A3U9vZDS2jnUNImUu4xyHBRjogsegfEfVEGd38rK5qxGgEflHI5");
 		this.paymentService = paymentService;
 		this.productRepository = productRepository;
 		
