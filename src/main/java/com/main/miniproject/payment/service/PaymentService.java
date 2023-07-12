@@ -77,8 +77,8 @@ public class PaymentService {
 	        
 	        for (int i = 0; i < productIds.size(); i++) {
 	            OrderItem orderItem = new OrderItem();
-	            Product product = productRepository.findById(productIds.get(i)).get();	            
-	            
+	            Product product = productRepository.findById(productIds.get(i)).get();
+
 	            orderItem.setOrder(order);
 	            orderItem.setProduct(product);
 	            orderItem.setOrderQuantity(quantities.get(i));

@@ -63,8 +63,6 @@ public class MypageViewController {
     private OrderItemService orderItemService;
 
 
-
-
     @Autowired
     public MypageViewController(UserInfoService userInfoService,
                                 UserService userService,
