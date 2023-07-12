@@ -8,6 +8,7 @@ import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
 import com.main.miniproject.order.service.OrdersService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
@@ -47,6 +48,8 @@ public class MypageViewController {
 
     private ReviewImageService reviewImageService;
 
+    private OrderItemRepository orderItemRepository;
+
     @Autowired
     private BoardService boardService;
 
@@ -63,27 +66,31 @@ public class MypageViewController {
     public MypageViewController(UserInfoService userInfoService,
                                 UserService userService,
                                 ReviewService reviewService,
-                                ReviewImageService reviewImageService) {
+                                ReviewImageService reviewImageService,
+                                OrderItemRepository orderItemRepository) {
         this.userInfoService = userInfoService;
         this.userService = userService;
         this.reviewService = reviewService;
         this.reviewImageService = reviewImageService;
+        this.orderItemRepository = orderItemRepository;
     }
 
-    //마이페이지 주문/배송 조회 페이지
+    //마이페이지 주문/배송 조회 페이지 + 미등록 리뷰 있을 경우에만 리뷰 등록 버튼 생성
     @GetMapping("/me")
     public String mypageView(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
-
         User user = userInfoService.getMyInfo(userDetails.getUsername());
-
 
         List<Orders> ordersList = ordersService.getOrdersList(user);
 
         List<Orders> prodList = ordersService.getProductsList(user.getId());
 
+        //미등록 리뷰 유무 확인
+        List<OrderItem> notReviewedOrderItems = orderItemRepository.findNotReviewedOrderItemsByUserId(user.getId());
+
         model.addAttribute("orders", ordersList);
         model.addAttribute("products", prodList);
+        model.addAttribute("notReviewedOrderItems", notReviewedOrderItems);
 
         return "mypage/me";
     }
