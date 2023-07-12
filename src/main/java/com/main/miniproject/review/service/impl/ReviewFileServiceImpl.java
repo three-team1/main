@@ -23,10 +23,10 @@ import java.util.UUID;
 @Service
 public class ReviewFileServiceImpl implements ReviewFileService {
 
-    @Value("./review/images/")
+    @Value("C:/review/images/")
     String attachPath;
 
-    @Value("./review/resized/")
+    @Value("C:/review/resized/")
     String resizedPath;
 
     @Override

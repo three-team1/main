@@ -101,12 +101,12 @@
                 <tbody>
                     <tr th:each="orders, status: ${ordersPage}">
                         <td th:text="${orders.id}"></td>
-                        <td th:text="${orders.user}"></td>
-                        <td th:text="${orders.orderDate}"></td>
+                        <td th:text="${orders.user.username}"></td>
+                        <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${orders.orderTotalPrice}"></td>
                         <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
                         <td th:text="${orders.orderTel}"></td>
-                        <td th:text="${orders.payment}"></td>
+                        <td th:text="${orders.payment.paymentPlan}"></td>
                         <td>
                             <a th:href="@{'/admin/orderDetail/' + ${orders.id}}">
                                 <button type="button">선택</button>
