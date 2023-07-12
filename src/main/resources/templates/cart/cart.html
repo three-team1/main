@@ -18,7 +18,6 @@
   <style>
     * {
       padding: 0;
-      margin: 0;
     }
 
     .cart-cart {
@@ -327,69 +326,73 @@
 
 <body>
 <header>
-  <div class="nav-bar-container">
+		<div class="nav-bar-container">
 
-    <div class="nav-logo">
-      <a href="/"> <img src="/icon/Black n White Luxury  Rent Car Logo.png">
-      </a>
-    </div>
-
-    <div class="nav-bar-item-box">
-      <div class="nav-bar-item">
-        <a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
-          컬렉션
-        </a>
-      </div>
-
-      <div class="nav-bar-item">
-        <a href="/board/list"> <span></span> <span></span> <span></span>
-          <span></span> 커뮤니티
-        </a>
-      </div>
-
-      <div class="nav-bar-item">
-        <a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
-          Q&A
-        </a>
-      </div>
-
-      <div class="nav-bar-item">
-        <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
-          장바구니
-
-          <span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
+			<div class="nav-logo">
+				<a href="/"> <img
+					src="icon/Black n White Luxury  Rent Car Logo.png">
+				</a>
 
 
-        </a>
-      
-      </div>
-    </div>
+			</div>
 
-    <div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
-      <p>
-        환영합니다! <span class="username" sec:authentication="name"></span>님
-      </p>
-      <a href="/mypage/me">마이페이지</a>
-    </div>
+			<div class="nav-bar-item-box">
+				<div class="nav-bar-item">
+					<a href="/product/productList"> <span></span> <span></span> <span></span> <span></span>
+						컬렉션
+					</a>
+				</div>
 
-    <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-      <a href="/admin">관리자페이지</a>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/board/list"> <span></span> <span></span> <span></span>
+						<span></span> 커뮤니티
+					</a>
+				</div>
 
-    <div class="nav-bar-login" sec:authorize="isAuthenticated()">
-      <a href="/logout">로그아웃</a>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/qna/list"> <span></span> <span></span> <span></span> <span></span>
+						Q&A
+					</a>
+				</div>
 
-    <div class="nav-bar-login" sec:authorize="!isAuthenticated()">
-      <a href="/login"> 로그인 </a>
-    </div>
+				<div class="nav-bar-item">
+					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
+						장바구니
+						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
+					</a>
+				</div>
 
-    <div class="nav-bar-join nav-bar-login"
-         sec:authorize="!isAuthenticated()">
-      <a href="/register"> 회원가입 </a>
-    </div>
-  </div>
-</header>
+			</div>
+
+
+			<div class="nav-bar-member-text" sec:authorize="isAuthenticated()">
+				<p>
+					환영합니다! <span class="username" sec:authentication="name"></span>님
+				</p>
+				<img th:if="${userDetail.user.provider == 'kakao' || userDetail.user.provider == 'google'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
+				<a href="/mypage/me">마이페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<a href="/admin">관리자페이지</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
+				<a href="/logout">로그아웃</a>
+			</div>
+
+			<div class="nav-bar-login" sec:authorize="!isAuthenticated()">
+				<a href="/login"> 로그인 </a>
+			</div>
+
+			<div class="nav-bar-join nav-bar-login"
+				sec:authorize="!isAuthenticated()">
+				<a href="/register"> 회원가입 </a>
+			</div>
+
+		</div>
+
+	</header>
 
 <section>
   <div class="cart-cart">
