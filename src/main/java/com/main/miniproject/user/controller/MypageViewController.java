@@ -8,6 +8,10 @@ import com.main.miniproject.comment.repository.CommentRepository;
 import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
+import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
+import com.main.miniproject.order.service.OrderItemService;
+import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
@@ -58,8 +62,6 @@ public class MypageViewController {
     @Autowired
     private OrderItemService orderItemService;
 
-    @Autowired
-    private ProductService productService;
 
 
 
@@ -67,7 +69,8 @@ public class MypageViewController {
     public MypageViewController(UserInfoService userInfoService,
                                 UserService userService,
                                 ReviewService reviewService,
-                                ReviewImageService reviewImageService) {
+                                ReviewImageService reviewImageService,
+                                OrderItemRepository orderItemRepository) {
         this.userInfoService = userInfoService;
         this.userService = userService;
         this.reviewService = reviewService;
@@ -81,7 +84,6 @@ public class MypageViewController {
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
 
-        List<Orders> ordersList = ordersService.getOrdersList(user);
 
         List<Orders> ordersList = orderItemService.getOrdersList(user);
 
