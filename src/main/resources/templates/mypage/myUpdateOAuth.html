@@ -107,6 +107,51 @@
         outline: none;
       }
 
+      #email1 {
+        margin-right: 20px;
+        margin-bottom: 10px;
+        width: 200px;
+        height: 35px;
+        padding-left: 10px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      #email2, #email3 {
+        margin-right: 20px;
+        width: 200px;
+        height: 35px;
+        padding-left: 10px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      .emailAddress-etc {
+        margin-left: 247px;
+      }
+
+      #tel-1, #tel-2, #tel-3 {
+        margin-right: 20px;
+        width: 80px;
+        height: 35px;
+        padding-left: 10px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      .tel-span {
+        margin-right: 15px;
+      }
+
       #my_postcode {
         margin-right: 20px;
         width: 80px;
@@ -185,41 +230,83 @@
     </script>
     <script th:inline="javascript">
       $(function () {
-        $("#btnSave").on("click", () => {
-          var data = {
-            username: $("#username").val(),
-            email: $("#email").val(),
-            tel: $("#tel").val(),
-            my_postcode: $("#my_postcode").val(),
-            my_address: $("#my_address").val(),
-            my_detailAddress: $("#my_detailAddress").val()
-          };
+        $.get("/api/mypage/myInfo", function (user) {
+          if (user.tel && user.tel.length >= 11) {
+            let tel = user.tel;
+            let tel1 = tel.substring(0, 3);
+            let tel2 = tel.substring(3, 7);
+            let tel3 = tel.substring(7, 11);
+            $("#tel-1").val(tel1);
+            $("#tel-2").val(tel2);
+            $("#tel-3").val(tel3);
+          }
 
-          $.ajax({
-            url: "/api/mypage/myInfo",
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function(result) {
-              alert("정보가 성공적으로 수정되었습니다.");
-              window.location.replace("/mypage/myInfo");
-            },
-            error: function(err){
-              console.log(err);
+          if (user.email) {
+            let email = user.email;
+            let emailParts = email.split("@");
+            if (emailParts.length === 2) {
+              let emailPart1 = emailParts[0];
+              let emailPart2 = emailParts[1];
+
+              $("#email1").val(emailPart1);
+
+              let selectOptions = $("#email2 option");
+              let isListedEmail = false;
+
+              for (let i = 0; i < selectOptions.length; i++) {
+                if (selectOptions[i].value === emailPart2) {
+                  $("#email2").val(emailPart2);
+                  isListedEmail = true;
+                  break;
+                }
+              }
+
+              if (!isListedEmail) {
+                $("#email2").val("etc");
+                $("#email3").val(emailPart2);
+              }
             }
+          }
+          $("#btnSave").on("click", () => {
+            let emailPart1 = $("#email1").val();
+            let emailPart2 = ($("#email2").val() === "etc" ? $("#email3").val() : $("#email2").val());
+            let email = (emailPart1 && emailPart2) ? emailPart1 + "@" + emailPart2 : "";
+
+            let data = {
+              username: $("#username").val(),
+              email: email,
+              tel: $("#tel-1").val() + $("#tel-2").val() + $("#tel-3").val(),
+              my_postcode: $("#my_postcode").val(),
+              my_address: $("#my_address").val(),
+              my_detailAddress: $("#my_detailAddress").val()
+            };
+
+            $.ajax({
+              url: "/api/mypage/myInfo",
+              type: "PUT",
+              contentType: "application/json",
+              data: JSON.stringify(data),
+              success: function (result) {
+                alert("정보가 성공적으로 수정되었습니다.");
+                window.location.replace("/mypage/myInfo");
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
           });
-        });
 
-        $("#btnCancel").on("click", () => {
-          $.ajax({
-            url: "/mypage/myInfo",
-            type: "GET",
-            success: function () {
-              window.location.href="/mypage/myInfo";
-            },
-            error: function () {
-              console.log(err);
-            }
+          $("#btnCancel").on("click", () => {
+            $.ajax({
+              url: "/mypage/myInfo",
+              type: "GET",
+              success: function () {
+                window.location.href = "/mypage/myInfo";
+              },
+              error: function () {
+                console.log(err);
+              }
+            });
           });
         });
       });
@@ -259,13 +346,37 @@
           <tr class="myInfo-tr">
             <th class="myInfo-th">이메일</th>
             <td class="myInfo-td">
-              <input type="text" class="input-updateDetail" id="email" name="email" th:value="${user.email}">
+              <input id="email1" name="email1" value type="text" maxlength="64">
+              @
+              <span class="emailAddress">
+                            <select id="email2">
+                                <option value selected="selected"> - 이메일 선택 - </option>
+                                <option value="naver.com">naver.com</option>
+                                <option value="daum.net">daum.net</option>
+                                <option value="gmail.com">gmail.com</option>
+                                <option value="nate.com">nate.com</option>
+                                <option value="etc" id="self-email">직접입력</option>
+                            </select>
+                            <p class="emailAddress-etc">
+                                <input id="email3" name="email3" placeholder="직접입력" value type="text">
+                            </p>
             </td>
           </tr>
           <tr class="myInfo-tr">
             <th class="myInfo-th">연락처</th>
             <td class="myInfo-td">
-              <input type="text" class="input-updateDetail" id="tel" name="tel" th:value="${user.tel}">
+              <select id="tel-1" name="tel">
+                <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
+              </select>
+              <span class="tel-span">-</span>
+              <input id="tel-2" name="tel" maxlength="4" size="4" value type="text">
+              <span class="tel-span">-</span>
+              <input id="tel-3" name="tel" maxlength="4" size="4" value type="text">
             </td>
           </tr>
           <tr class="myInfo-tr">
