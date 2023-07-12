@@ -172,6 +172,18 @@
             </td>
           </tr>
           <tr class="myInfo-tr">
+            <th class="myInfo-th">이메일</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-noUpdate" id="email" name="email" th:value="${#authentication.principal.user.email}" readonly>
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
+            <th class="myInfo-th">연락처</th>
+            <td class="myInfo-td">
+              <input type="text" class="input-noUpdate" id="tel"name="tel" th:value="${#authentication.principal.user.tel}" readonly>
+            </td>
+          </tr>
+          <tr class="myInfo-tr">
             <th class="myInfo-th">우편번호</th>
             <td class="myInfo-td">
               <input type="text" class="input-noUpdate" id="my_postcode" name="my_postcode" th:value="${#authentication.principal.user.my_postcode}" readonly>
