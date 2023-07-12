@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+  <th:block layout:fragment="css">
+    <style>
+      .main-container {
+        margin-top: 172px;
+        margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 10px;
+        min-height: 620px;
+      }
+
+      .main-container > div {
+        border: 1px dotted aqua;
+        border-radius: 5px;
+        padding: 1em;
+      }
+
+      .aside {
+        grid-column: 1;
+        grid-row: 1;
+        margin-left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+      }
+
+      .section {
+        grid-column: 2 / 5;
+        grid-row: 1;
+      }
+
+      .menu {
+        position: relative;
+        color: white;
+        margin-top: 130px;
+      }
+
+      .menu-title {
+        border: 1px solid pink;
+        padding: 20px 10px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      #menu-title1:hover, #menu-title2:hover, #menu-title3:hover, #menu-title4:hover {
+        background: rgba(255,192,203, 0.4);
+      }
+
+      .section {
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .table-search {
+        text-align: center;
+        margin-bottom: 10px;
+        margin-right: 0;
+      }
+
+      .table-search button {
+        font-size: 12px;
+        width: 40px;
+        height: 20px;
+        color: white;
+        background: transparent;
+        border: 1px solid pink;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .table-search input {
+        margin: 0;
+        padding: 0;
+      }
+
+      .review-block {
+        padding: 5px;
+        min-height: 600px;
+        width: 650px;
+        background: transparent;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .review-card {
+        border: 1px solid aqua;
+        margin-bottom: 20px;
+        padding: 10px;
+        min-height: 150px;
+        width: 640px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        color: white;
+      }
+
+      .text-zone {
+        width: 460px;
+        padding: 5px;
+        margin-right: 40px;
+      }
+
+      .top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 450px;
+      }
+
+      .goldStar {
+        color: gold;
+      }
+
+      .greyStar {
+        color: gray;
+      }
+
+      .review-card .username {
+        margin-bottom: 10px;
+      }
+
+      .review-card .reviewContent {
+        margin-bottom: 10px;
+      }
+
+      .review-card .reviewRegdate {
+        color: #777;
+        font-size: 14px;
+      }
+
+      .reviewContent {
+        width: 450px;
+        padding: 10px;
+      }
+
+      .reviewContent > p {
+        word-wrap: break-word;
+      }
+
+      .more-article {
+        width: 430px;
+        overflow: hidden;
+        position: relative;
+        line-height: 25px;
+      }
+
+      .more-article__text {
+        width: 100%;
+        text-overflow: ellipsis;
+        text-align: left;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        white-space: unset;
+        -webkit-line-clamp: 2;
+      }
+
+      .more-article.expanded .more-article__text {
+        -webkit-line-clamp: unset;
+      }
+
+      .more-toggle {
+        float: right;
+        display: flex;
+        align-items: flex-end;
+        height: 100%;
+        shape-outside: inset(calc(100% - 10px) 0 0 0);
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .thumbnail-wrap, .thumbnail-container {
+        position: relative;
+        display: inline-block;
+        margin: 8px;
+        width: 100px;
+        height: 100px;
+      }
+
+      .thumbnail-container::after {
+        display: block;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        content: attr(data-count);
+        background: gray;
+        color: white;
+        text-align: center;
+        line-height: 25px;
+      }
+
+      .review-card .thumbnail {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+      }
+
+      .images-container {
+        padding: 10px;
+        width: 640px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .images-container > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-height: 1px;
+      }
+
+      .images-container img {
+        display: block;
+        height: auto;
+        cursor: pointer;
+      }
+
+      #btnSave, #btnDelete {
+        width: 40px;
+        height: 20px;
+        font-size: 12px;
+        color: white;
+        background: transparent;
+        border: 1px solid pink;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        margin-top: 10px;
+        width: 500px;
+      }
+
+      .selected {
+        color: aqua;
+      }
+
+      h2 {
+        margin-top: 70px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      h3 {
+        text-align: left;
+        color: white;
+      }
+
+      a {
+        text-decoration: none;
+        color: white;
+        margin-right: 3px;
+        cursor: pointer;
+      }
+
+      a:hover {
+        text-decoration: none;
+        color: white;
+      }
+    </style>
+  </th:block>
+  <th:block layout:fragment="script">
+    <script type="text/javascript">
+      function divBtn4() {
+        window.location.href="/mypage/myInfo";
+
+        $.ajax({
+          url: "/api/mypage/myInfo",
+          type: "GET",
+          contentType: "application/json",
+          success: function(user) {
+            $('#username').val(user.username);
+            $('#email').val(user.email);
+            $('#tel').val(user.tel);
+            $('#my_postcode').val(user.my_postcode);
+            $('#my_address').val(user.my_address);
+            $('#my_detailAddress').val(user.my_detailAddress);
+          },
+          error: function(err){
+            console.log(err);
+          }
+        });
+      }
+
+      $(function () {
+        $(".review-card").each(function () {
+          const imageCount = $(this).find(".images-container img").length;
+          $(this).find(".thumbnail-container").attr("data-count", imageCount);
+        });
+
+        $(".thumbnail").on("click", function () {
+          const reviewCard = $(this).closest(".review-card");
+          reviewCard.find(".images-container").css("display", "block").css("visibility", "visible");
+
+          reviewCard.find(".full").each(function() {
+            const imageUrl = $(this).attr("data-url");
+            $(this).attr("src", imageUrl);
+
+            //이미지 로드 이후 이미지 컨테이너 높이 설정
+            $(this).on("load", function () {
+              const imageHeight = $(this).data("height");
+              $(this).closest(".images-container").css("height", imageHeight + "px");
+            });
+
+            // 이미지가 이미 로드되었는지 확인
+            if(this.complete) $(this).trigger("load");
+
+            //이미지 로드 안 됐을 경우 높이 설정
+            if(!this.complete) {
+              const imageHeight = $(this).data("height");
+              $(this).closest(".images-container").css("height", imageHeight + "px");
+            }
+          });
+
+          reviewCard.find(".thumbnail-container").hide();
+        });
+
+        $(".images-container").on("click", ".full", function () {
+          const reviewCard = $(this).closest(".review-card");
+          reviewCard.find(".images-container").css("display", "none").css("visibility", "hidden");
+          reviewCard.find(".thumbnail-container").show();
+        });
+
+        //더보기 기능
+        $(".more-article").each(function () {
+          const lineHeight = parseFloat($(this).css("line-height"));
+          const checkHeight = lineHeight * 2;
+          const moreToggle = $(this).find('.more-toggle');
+
+          //텍스트 전체 내용의 높이 담아줄 변수
+          const actualHeight = $(this).find('.more-article__text')[0].scrollHeight;
+
+          if (actualHeight > checkHeight) {
+            $(this).addClass('hasMore');
+          } else {
+            moreToggle.hide(); //2줄 이하의 경우 '더보기' 숨김
+          }
+        });
+
+        $(".more-toggle").on("click", function () {
+          const moreArticle = $(this).parent();
+          moreArticle.toggleClass("expanded");
+          const isExpanded = moreArticle.hasClass("expanded");
+
+          $(this).text(isExpanded ? "숨기기" : "더보기");
+          if (isExpanded) {
+            $(this).show(); // '숨기기' 상태일 때 항상 '더보기'
+          } else if (!moreArticle.hasClass('hasMore')) {
+            $(this).hide(); // 2줄 이하의 경우 다시 '더보기' 숨김
+          }
+        });
+      });
+
+      $(window).on("load", function () {
+        //검색 기능
+        $("#searchForm").on("submit", searchFunction);
+
+        function searchFunction(e) {
+          e.preventDefault();
+
+          const keyword = $("input[name='keyword']").val();
+          localStorage.setItem("keyword", keyword);
+          window.location.href = "/mypage/myReview-search?keyword=" + keyword;
+        }
+
+        //검색어 유지
+        const storedKeyword = localStorage.getItem("keyword");
+        if(storedKeyword) {
+          $("input[name='keyword']").val(storedKeyword);
+        }
+      });
+
+      //리뷰 삭제
+      function deleteReview(button) {
+        const id = $(button).attr("data-id");
+        const reviewCard = $(button).closest('.review-card');
+
+        $.ajax({
+          url: "/api/review/myReview/" + id,
+          type: "DELETE",
+          success: function (result) {
+            console.log(result)
+            if (result.status === "success") {
+              window.location.reload();
+            } else {
+              alert(result.message);
+            }
+          },
+          error: function (request, msg, error) {
+            alert(error + " 오류 발생");
+          }
+        });
+      }
+    </script>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="main-container">
+    <div class="aside">
+      <div class="menu">
+        <div class="menu-title" id="menu-title1" onclick="location.href='/mypage/me'">
+          <p>내 주문/배송조회</p>
+        </div>
+        <div class="menu-title" id="menu-title2" onclick="location.href='/mypage/myBoard'">
+          <p>내 글/댓글 조회</p>
+        </div>
+        <div class="menu-title" id="menu-title3" onclick="location.href='/mypage/myReview'">
+          <p>내 리뷰 관리</p>
+        </div>
+        <div class="menu-title" id="menu-title4" onclick="divBtn4()">
+          <p>내 정보 관리</p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="review-block">
+        <h2>내 리뷰</h2>
+        <div class="table-search">
+          <form id="searchForm" th:action="@{/mypage/myReview-search}" method="get">
+            <input type="text" id="keyword" name="keyword" placeholder="Search">
+            <button type="submit" id="btnSearch">검색</button>
+            <a th:href="@{/mypage/myReview}">내 목록</a>
+          </form>
+        </div>
+        <div th:each="review : ${reviews}">
+          <div class="review-card">
+            <div class="text-zone">
+              <div class="review-title">
+                <h3 th:text="${review.orderItem.product.productTitle}"></h3>
+              </div>
+              <div class="top-section">
+                <div class="rating-and-info">
+                  <div class="starRating">
+                                            <span th:each="star : ${#numbers.sequence(1, 5)}"
+                                                  th:class="${star <= review.reviewRating} ? 'goldStar' : 'greyStar'">★</span>                                <span th:text="${review.reviewRating}"></span>
+                  </div>
+                  <div class="userInfo">
+                    <span class="username" th:text="${review.user.username}"></span>
+                    <span class="reviewRegdate" th:text="${#temporals.format(review.reviewRegdate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                  </div>
+                </div>
+                <div class="buttons">
+                  <button type="button" id="btnDelete" th:if="${#authentication.principal.username == review.user.username}" th:attr="data-id=${review.id}" onclick="deleteReview(this)">삭제</button>
+                </div>
+              </div>
+              <div class="reviewContent more-article">
+                <p class="more-article__text" th:text="${review.reviewContent}"></p>
+                <span class="more-toggle">더보기</span>
+              </div>
+              <div class="images-container" style="display: none; visibility: hidden;"
+                   th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
+                   th:each="reviewImage : ${reviewImages.get(review.id)}">
+                <img class="full" th:src="@{${reviewImage.url}}" th:data-url="${reviewImage.url}"
+                     th:data-height="${reviewImage.height}" alt="리뷰 이미지">
+              </div>
+            </div>
+            <div class="thumbnail-wrap" th:if="${reviewImages.containsKey(review.id) and !reviewImages.get(review.id).isEmpty()}"
+                 th:each="reviewImage, stat : ${reviewImages.get(review.id)}">
+              <div class="thumbnail-container" th:if="${stat.first}">
+                <img class="thumbnail" th:src="@{${reviewImage.url}}" alt="리뷰 이미지 썸네일">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pagination">
+        <th:block th:if="${page.totalPages > 0}">
+          <a th:href="@{/mypage/myReview-search(page=0, keyword=${keyword})}">[처음]</a>
+          <a th:href="@{/mypage/myReview-search(page=${page.number > 9 ? page.number - 9 : 0}, keyword=${keyword})}"
+             th:if="${page.number > 0}">[이전 10쪽]</a>
+          <th:block th:each="i : ${#numbers.sequence(page.number / 10 * 10,
+                                      (page.number / 10 + 1) * 10 < page.totalPages ? (page.number / 10 + 1) * 10 - 1 : page.totalPages - 1)}">
+            <a th:href="@{/mypage/myReview-search(page=${i}, keyword=${keyword})}"
+               th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}"></a>
+          </th:block>
+          <a th:href="@{/mypage/myReview-search(page=${page.number + 10 < page.totalPages ? page.number + 10 : page.totalPages - 1}, keyword=${keyword})}"
+             th:if="${page.number < page.totalPages - 10}">[다음 10쪽]</a>
+          <a th:href="@{/mypage/myReview-search(page=${page.totalPages - 1}, keyword=${keyword})}"
+             th:if="${page.number < page.totalPages - 1}">[마지막]</a>
+        </th:block>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

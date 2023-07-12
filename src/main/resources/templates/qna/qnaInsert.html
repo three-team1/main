@@ -81,8 +81,9 @@
       display: block;
       border: 1px solid black;
       background-color: #86cfda;
-      padding: 5px;
+      padding: 5px 10px 5px 10px;
       margin-bottom: 10px;
+      font-size: 15px;
     }
   </style>
 
@@ -125,7 +126,7 @@
         <p>
           환영합니다! <span class="username" sec:authentication="name"></span>님
         </p>
-        <a href="/mypage">마이페이지</a>
+        <a href="/mypage/me">마이페이지</a>
       </div>
 
       <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -169,7 +170,7 @@
                 내용
               </td>
               <td style="text-align: left;">
-                <textarea name="qnaContent" cols="100" rows="20"></textarea >
+                <textarea name="qnaContent" cols="100" rows="30"></textarea >
               </td>
             </tr>
           </table>

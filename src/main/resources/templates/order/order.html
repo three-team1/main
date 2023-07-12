@@ -13,9 +13,7 @@
     <link type="image/png" sizes="32x32" rel="icon" href="/icon/icons8-에너지-32.png">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-
     <script>
         //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
         function execDaumPostcode() {
@@ -56,12 +54,7 @@
                                     + ')';
                             }
                             // 조합된 참고항목을 해당 필드에 넣는다.
-                            document
-                                .getElementById("jibunAddress").value = extraAddr;
 
-                        } else {
-                            document
-                                .getElementById("jibunAddress").value = '';
                         }
 
                         // 변경된 입력 필드에 주소 정보를 채움
@@ -74,6 +67,27 @@
                 }).open();
         }
         $(document).ready(function() {
+
+            $(".defaultLocation").on("change", function() {
+                if($(this).is(":checked")){
+                    $.get("/api/cart/user", function(user) {
+                        $("#order-name").val(user.username);
+                        $("#postcode").val(user.my_postcode);
+                        $("#roadAddress").val(user.my_address);
+                        $("#detailAddress").val(user.my_detailAddress);
+                        let tel = user.tel;
+                        let tel1 = tel.substring(0,3);
+                        let tel2 = tel.substring(3,7);
+                        let tel3 = tel.substring(7,11);
+                        $("#order-tel-1").val(tel1).trigger('change');
+                        $("#order-tel-2").val(tel2);
+                        $("#order-tel-3").val(tel3);
+                        let email = user.email.split("@");
+                        $("#order-email1").val(email[0]);
+                        $("#order-email2").val(email[1]).trigger('change');
+                    });
+                }
+            });
 
             $.get("/api/cart/count", function(data) {
                 $('#cart-count').text(data);
@@ -149,13 +163,11 @@
 
         });
 
-
         // 필수 입력 값 체크하기
         function checkForm() {
             let name = document.getElementById("order-name").value;
             let postcode = document.getElementById("postcode").value;
             let addr1 = document.getElementById("roadAddress").value;
-            let addr2 = document.getElementById("jibunAddress").value;
             let addr3 = document.getElementById("detailAddress").value;
             let tel1 = document.getElementById("order-tel-2").value;
             let tel2 = document.getElementById("order-tel-3").value;
@@ -166,7 +178,7 @@
                 alert("받는 사람을 입력해주세요.");
                 name.focus();
                 return false;
-            } else if (postcode == "" || addr1 == "" || addr2 == "" || addr3 == "") {
+            } else if (postcode == "" || addr1 == "" || addr3 == "") {
                 alert("주소를 입력해주세요.")
                 postcode.focus();
                 return false;
@@ -185,15 +197,14 @@
         const IMP = window.IMP;
         IMP.init("imp04710710");
 
-        let productId = [];
-        let quantity = [];
-        $('.cart').each(function() {
-            productId.push($(this).data('product-id'));
-            quantity.push($(this).data('quantity-id'));
-
-        });
-
         function requestSelectPay() {
+
+            let productId = [];
+            let quantity = [];
+            $('.orderList').each(function() {
+                productId.push(parseInt($(this).find(".orderProductId").text()));
+                quantity.push(parseInt($(this).find(".orderQuantity").text()));
+            });
 
             $.get("/api/cart/user", function(user) {
                 $.get("/api/cart", function(cart) {
@@ -204,12 +215,23 @@
                         return parseInt(numericString, 10);
                     }
 
+
                     let name = "";
                     $(".orderTitle").each(function () {
                         name += $(this).text();
                     });
-
+                    let userName = document.getElementById("order-name").value;
                     let amount = parsePriceString($("#total-price").text());
+                    let postcode = document.getElementById("postcode").value;
+                    let addr1 = document.getElementById("roadAddress").value;
+                    let addr3 = document.getElementById("detailAddress").value;
+                    let tel1 = document.getElementById("order-tel-1").value;
+                    let tel2 = document.getElementById("order-tel-2").value;
+                    let tel3 = document.getElementById("order-tel-3").value;
+                    let email1 = document.getElementById("order-email1").value;
+                    let email2 = document.getElementById("order-email2").value;
+                    let email = email1 + "@" + email2;
+                    let tel = ""+ tel1 + tel2 + tel3;
 
                     // Initiate payment request
                     IMP.request_pay(
@@ -220,17 +242,15 @@
                             name: name,
                             amount: amount,
                             company : '포션이었다...',
-                            buyer_email: user.email,
-                            buyer_name: user.username,
-                            buyer_tel: user.tel,
-                            buyer_addr: user.my_address,
-                            buyer_postcode: user.my_postcode,
+                            buyer_email: email,
+                            buyer_name: userName,
+                            buyer_tel: tel,
+                            buyer_addr: addr1,
+                            buyer_postcode: postcode,
 
 
 
                         }, function (rsp) {
-
-                            console.log(rsp);
 
                             let paymentDTO = {
                                 pg: rsp.pg,
@@ -238,11 +258,11 @@
                                 imp_uid:rsp.imp_uid,
                                 merchant_uid: rsp.merchant_uid,
                                 name: rsp.name,
-                                amount: rsp.amount,
+                                amount: amount,
                                 buyer_tel: rsp.buyer_tel,
                                 buyer_addr: rsp.buyer_addr,
                                 buyer_postcode: rsp.buyer_postcode,
-                                buyer_detailAddr: user.my_detailAddress,
+                                buyer_detailAddr: addr3,
                                 productId: productId,
                                 quantity: quantity
                             };
@@ -251,8 +271,6 @@
                                 type: 'POST',
                                 url:'/verifyIamport/' + rsp.imp_uid
                             }).done(function(result) {
-
-                                console.log(result);
 
                                 if(rsp.paid_amount === result.response.amount) {
                                     alert("결제가 완료되었습니다.");
@@ -392,7 +410,7 @@
             margin-right: 0;
         }
 
-        #roadAddress, #jibunAddress, #detailAddress {
+        #roadAddress, #detailAddress {
             width: 100%;
         }
 
@@ -490,6 +508,16 @@
             margin-bottom: 15px;
         }
 
+        .location {
+            display: inline;
+            float: right;
+        }
+
+        .location div input {
+            width: 16px;
+            height: 16px;
+        }
+
         .payment-inner label {
             border: 1px solid darkgray;
             display: block;
@@ -523,11 +551,13 @@
             border-bottom: 1px solid black;
         }
 
-       .final-payment input {
+       .final-payment a {
            font-size: 20px;
            font-weight: bold;
            border: none;
            background-color: #86cfda;
+           color: black;
+           text-decoration: none;
         }
 
 
@@ -535,14 +565,23 @@
            width: 100%;
        }
 
-       .orderPrice {
+
+       .orderPrice, .orderTotalPrice{
 
            text-align: right;
        }
 
        #order-total-price, #ship-price {
            text-align: right;
+           float: right;
+           width: 150px;
+           height: 20px;
        }
+
+        #order-payment-table{
+            width: 100%;
+        }
+
 
        #order-payment-table th, td {
            padding: 10px;
@@ -592,7 +631,7 @@
                 <p>
                     환영합니다! <span class="username" sec:authentication="name"></span>님
                 </p>
-                <a href="/mypage">마이페이지</a>
+                <a href="/mypage/me">마이페이지</a>
             </div>
 
             <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -628,9 +667,20 @@
             <div class="order-form">
                 <table class="order-form-table">
                     <tr>
+                        <td></td>
+                        <td class="location">
+                            <div style="display: inline">내 배송지입력</div>
+                            <div style="display: inline">
+                                <input type="checkbox" class="defaultLocation">
+                            </div>
+                        </td>
+
+
+                    </tr>
+                    <tr>
                         <th>받는 사람<span class="icoRequired">필수</span></th>
                         <td>
-                            <input id="order-name" name="order-name" placeholder size="15" value type="text">
+                            <input id="order-name" name="order-name" size="15" value type="text">
                         </td>
                     </tr>
                     <tr>
@@ -642,10 +692,7 @@
                                     <input type="button" id="address-btn" onclick="execDaumPostcode()" value="주소 찾기"><br>
                                 </li>
                                 <li>
-                                    <input type="text" id="roadAddress" placeholder="도로명주소">
-                                </li>
-                                <li>
-                                    <input type="text" id="jibunAddress" placeholder="지번주소">
+                                    <input type="text" id="roadAddress" placeholder="주소">
                                 </li>
                                 <li>
                                     <input type="text" id="detailAddress" placeholder="상세주소">
@@ -717,19 +764,19 @@
                 <div class="order-product-contents">
                     <table id="order-product-contents-table">
                         <colgroup>
-                            <col style="width:25%">
-                            <col style="width:50%">
+                            <col style="width:30%">
                             <col style="width:auto">
+                            <col style="width:15%">
+                            <col style="width:7%">
+                            <col style="width:15%">
                         </colgroup>
-
-                        <tr class="orderList" th:each="cart: ${cart}" th:data-product-id="${cart.product.id}" th:data-quantity-id="${cart.cartQuantity}">
-
+                        <tr class="orderList" th:each="cart: ${cart}">
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
-                            <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
+                            <td class="orderQuantity" th:text="${cart.cartQuantity} + 개"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
-
+                            <td class="orderProductId" style="display: none" th:text="${cart.product.id}"></td>
                         </tr>
                     </table>
                 </div>
@@ -742,23 +789,19 @@
                 </div>
                 <div id="order-payment-contents">
                     <table id="order-payment-table">
-                        <colgroup>
-                            <col style="width:200%">
-                            <col style="width:auto">
-                        </colgroup>
                         <tbody>
                             <tr>
                                 <th>주문상품</th>
-                                <td>
 
-                                    <span id="order-total-price" th:text="0"></span>
+                                <td id="order-total-price">
+                                    <span th:text="0"></span>
 
                                 </td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
                                 <td>
-                                    <p id="ship-price">+ 3,000</p>
+                                    <p id="ship-price">+3,000원</p>
                                 </td>
                             </tr>
                         </tbody>

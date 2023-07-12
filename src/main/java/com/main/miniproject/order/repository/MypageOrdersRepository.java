@@ -13,13 +13,6 @@ import java.util.List;
 @Repository
 public interface MypageOrdersRepository extends JpaRepository<Orders, Long> {
 
-//    @Query("select o " +
-//            "from Orders o " +
-//            "join fetch OrderItem oi " +
-//            "join fetch oi.product " +
-//            "where o.user.id = :userId")
-//    List<Orders> findWithProductByUserId(@Param("userId") Long userId);
-
 //    SELECT *
 //    FROM ORDERS O
 //    JOIN ORDER_ITEM OI
@@ -27,20 +20,18 @@ public interface MypageOrdersRepository extends JpaRepository<Orders, Long> {
 //    JOIN PRODUCT P
 //    ON OI.PRODUCT_ID = P.PRODUCT_ID
 //    WHERE O.USER_ID = 1; 이 쿼리를 응용해보자.
-    @Query(
-            value = "SELECT * " +
-                   " FROM ORDERS O " +
-            " JOIN ORDER_ITEM OI " +
-            " ON O.ORDER_ID = OI.ORDER_ID ", nativeQuery = true
-    )
-    List<Orders> findWithProductByUserId(@Param("userId") Long userId);
+//    @Query(
+//            value = "SELECT * " +
+//                   " FROM ORDERS O " +
+//            " JOIN ORDER_ITEM OI " +
+//            " ON O.ORDER_ID = OI.ORDER_ID ", nativeQuery = true
+//    )
+//    List<Orders> findWithProductByUserId(@Param("userId") Long userId);
+
+//    @Query("SELECT oi FROM OrderItem oi WHERE oi.order.user.id = :userId")
+//    List<OrderItem> findWithProductByOrderUserId(@Param("userId") Long userId);
 
 
-//    List<Orders> findAllByUser(User user);
-
-//    List<OrderItem> findAllById(Orders orders);
-
-//    List<Orders> findByUserId(Long userId);
 
     List<Orders> findAllByUser(User user);
 }

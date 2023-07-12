@@ -135,23 +135,44 @@
                 });
 
                 $("#btnSave").on("click", function() {
-                    let reviewRating = document.getElementById('reviewRating').value;
-                    let reviewContent = document.getElementById('reviewContent').value;
+                    let orderItemId = document.getElementById("orderItem").value;
+                    let reviewRating = document.getElementById("reviewRating").value;
+                    let reviewContent = document.getElementById("reviewContent").value;
                     let files = $("#btnAttach")[0].files;
-                    let validExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+                    let validExtensions = ["jpg", "png", "gif"];
+
+                    //JSON 데이터를 묶음
+                    let jsonInputs = {
+                        orderItemId: orderItemId,
+                        reviewRating: reviewRating,
+                        reviewContent: reviewContent
+                    };
+
+                    //JSON 객체 문자열 변환
+                    const json = JSON.stringify(jsonInputs);
+
+                    //JSON 문자열 Blob 객체 변환
+                    const blob = new Blob([json], { type: "application/json" });
+
+                    //FormData 객체 생성
                     let formData = new FormData();
 
                     for(let i = 0; i < files.length; i++){
                         let ext = files[i].name.split('.').pop().toLowerCase();
                         if (!validExtensions.includes(ext)) {
-                            alert("jpg, jpeg, png, gif, webp 형식의 이미지 파일만 첨부할 수 있습니다.");
+                            alert("jpg, png, gif 형식의 이미지 파일만 첨부할 수 있습니다.");
                             return;
                         }
-                        formData.append('files', files[i]);
+                        formData.append("files", files[i]);
                     }
 
-                    formData.append('reviewRating', reviewRating);
-                    formData.append('reviewContent', reviewContent);
+                    //Blob 객체 FormData에 추가
+                    formData.append("jsonBlob", blob);
+
+                    //formData 확인용
+                    for(let pair of formData.entries()) {
+                        console.log(pair[0] + ', ' + pair[1]);
+                    }
 
                     $.ajax({
                         url: "/api/review/myReview",
@@ -167,8 +188,8 @@
                             }
                         },
                         error: function (err) {
-                        console.error('Error', err);
-                        alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
+                            console.error('Error', err);
+                            alert("리뷰 작성에 실패했습니다. 다시 시도해주세요.");
                         }
                     });
                 });
@@ -176,18 +197,18 @@
         </script>
         <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
-            console.log("페이지 로드");
-            document.querySelectorAll('#starRating .star').forEach(star => {
-                console.log("별 이벤트 리스너 추가");
-                star.addEventListener("click", event => {
-                    console.log("별 클릭");
-                    document.querySelectorAll('#starRating .star').forEach(s => {
-                        s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
+                console.log("페이지 로드");
+                document.querySelectorAll('#starRating .star').forEach(star => {
+                    console.log("별 이벤트 리스너 추가");
+                    star.addEventListener("click", event => {
+                        console.log("별 클릭");
+                        document.querySelectorAll('#starRating .star').forEach(s => {
+                            s.style.color = parseInt(s.dataset.value, 10) <= parseInt(event.target.dataset.value, 10) ? "gold" : "gray";
+                        });
+                        document.getElementById("reviewRating").value = event.target.dataset.value;
                     });
-                    document.getElementById("reviewRating").value = event.target.dataset.value;
                 });
             });
-        });
         </script>
     </th:block>
 </head>
@@ -197,7 +218,9 @@
         <div class="review-block">
             <form id="reviewForm" th:object="${review}">
                 <div class="review-writing">
-                    <h2 th:text="${productTitle}"></h2>
+                    <select id="orderItem" th:field="*{orderItemId}">
+                        <option th:each="item : ${notReviewedOrderItems}" th:value="${item.id}" th:text="${item.product.productTitle}"></option>
+                    </select>
                     <div id="ratingZone">
                         <input class="review-block-title" value="별점">
                         <div id="starRating">

@@ -150,34 +150,33 @@
     }
 
     .qna-comment-section {
-      width: 1000px;
-      margin: auto;
-      color: lightblue;
+      width: 100%;
     }
 
-
-    #qna-commentForm {
-      display: flex;
+    .qna-comment-section p {
+      font-weight: bold;
     }
 
     .qna-comment-section input {
-      width: 600px;
+      width: 80%;
       height: 50px;
-      border: 2px solid lightgreen;
-      border-radius : 3px;
+      border: 1px solid black;
+      border-radius : 0;
+      outline: none;
     }
 
-    .qna-comment-section button {
-      width: 80px;
-      border-radius: 3px;
-      border: 2px solid lightblue;
+    #qna-commentForm button {
+      float: right;
+      width: 18%;
+      height: 50px;
+      border-radius: 0;
+      border: 1px solid black;
       background-color: black;
       color: white;
-      transition: all 0.2s;
       cursor: pointer;
     }
 
-    .qna-comment-section button:hover {
+    #qna-commentForm button:hover {
       background-color: white;
       color: black;
     }
@@ -189,23 +188,28 @@
     }
 
     .qna-comment-list {
-      border-top : 1px solid gray;
       border-bottom : 1px solid gray;
-      margin-top : 40px;
       padding: 10px;
     }
 
     .qna-comment-author {
-      margin-bottom: 25px;
-      color: burlywood;
+      margin-bottom: 15px;
+      color: #86cfda;
       font-weight: bold;
     }
 
+    .qna-comment-content {
+      color: black;
+      display: inline-block;
+    }
+
     .qna-delete-comment-btn {
-      margin-top : 30px;
-      width:50px !important;
-      color:red;
-      border : 2px solid lightcoral !important;
+      float: right;
+      background-color: red;
+      color: black;
+      border: 1px solid black;
+      cursor: pointer;
+      padding: 2px 5px 2px 5px;
     }
 
   </style>
@@ -249,7 +253,7 @@
         <p>
           환영합니다! <span class="username" sec:authentication="name"></span>님
         </p>
-        <a href="/mypage">마이페이지</a>
+        <a href="/mypage/me">마이페이지</a>
       </div>
 
       <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -301,35 +305,34 @@
           </tr>
         </table>
       </div>
+
+      <br>
+      <br>
+
+      <div class="qna-comment-section">
+        <!-- 댓글 작성 폼 -->
+        <form id="qna-commentForm" th:action="'/qna/list/' + ${qnaDetail.id}" method="post" class="comment-form">
+          <input type="hidden" id="qnaId" th:value="${qnaDetail.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
+          <input name="qna-commentContent" placeholder="  댓글을 입력하세요.">
+          <button type="submit">작성</button>
+        </form>
+
+        <!-- 댓글 목록 -->
+        <div class="qna-comment-list-box">
+          <div class="qna-comment-list" th:each="comment : ${comments}">
+            <div class="qna-comment-author" th:text="${comment.user.username}"></div>
+            <div class="qna-comment-content" th:text="${comment.commentContent}"></div>
+            <button class="qna-delete-comment-btn" th:data-id="${comment.id}">삭제</button>
+          </div>
+        </div>
+      </div>
+
       <div class="detail-btn">
         <a href="/qna/list"><button>목록</button></a>
         <a th:href="@{'/qna/list/update/' + ${qnaDetail.id}}"><button>수정</button></a>
         <a th:href="@{'/qna/list/delete/' + ${qnaDetail.id}}"><button>삭제</button></a>
       </div>
     </div>
-
-    <div class="qna-comment-section">
-      <h3>댓글</h3>
-
-      <!-- 댓글 작성 폼 -->
-
-      <form id="qna-commentForm" th:action="'/qna/list/' + ${qnaDetail.id}" method="post" class="comment-form">
-        <input type="hidden" id="qnaId" th:value="${qnaDetail.id}"> <!-- ajax에 사용하기위한 숨김함수 -->
-        <input name="qna-commentContent" placeholder="댓글을 입력하세요.">
-        <button type="submit">작성</button>
-      </form>
-
-      <!-- 댓글 목록 -->
-      <div class="qna-comment-list-box">
-        <div class="qna-comment-list" th:each="comment : ${comments}">
-          <div class="qna-comment-author" th:text="${comment.user.username}"></div>
-          <div class="qna-comment-content" th:text="${comment.commentContent}"></div>
-          <button class="qna-delete-comment-btn" th:data-id="${comment.id}">삭제</button>
-        </div>
-      </div>
-    </div>
-
-    <br>
 
   </section>
 

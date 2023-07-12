@@ -48,7 +48,6 @@ public class QnaService {
     }
 
 
-
     public QNA getDetail(Long id) {
         //Optional은 값의 존재 여부를 나타내는 컨테이너 클래스로
         //값이 존재할 경우에는 Optional에 해당값을 감싸고
@@ -64,7 +63,6 @@ public class QnaService {
     }
 
 
-
     public QNA update(QNA qna) {
         qnaRepository.save(qna);
         //레파지토리에 담았다가
@@ -77,7 +75,7 @@ public class QnaService {
     public void delete(Long id) {
         List<Comment> commentList = commentRepository.findByBoardIdAndBoardType(id, "qna");
 
-        for(Comment comment : commentList) {
+        for (Comment comment : commentList) {
 
             commentRepository.delete(comment);
         }
@@ -91,7 +89,7 @@ public class QnaService {
         qnaRepository.save(qna);
     }
 
-    public User getCurrentUser() {											// 사용자 인증정보 반환
+    public User getCurrentUser() {                                            // 사용자 인증정보 반환
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
@@ -104,7 +102,13 @@ public class QnaService {
     }
 
 
-    public Page<QNA> searchQNA(Pageable pageable, String keyword) {
-        return qnaRepository.findByQnaTitleContainingOrQnaContentContaining(keyword, keyword, pageable);
+    public Page<QNA> searchQNAByTitle(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaTitleContaining(keyword, pageable);
+    }
+
+
+    public Page<QNA> searchQNAByQnaContent(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaContentContaining(keyword, pageable);
+
     }
 }
