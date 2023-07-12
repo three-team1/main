@@ -9,7 +9,9 @@ import com.main.miniproject.comment.service.CommentService;
 import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.order.entity.Orders;
 import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
-import com.main.miniproject.order.service.OrdersService;
+import com.main.miniproject.order.service.OrderItemService;
+import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.product.service.ProductService;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewImageService;
@@ -58,10 +60,10 @@ public class MypageViewController {
     private CommentService commentService;
 
     @Autowired
-    private OrdersService ordersService;
+    private OrderItemService orderItemService;
 
-    @Autowired
-    private CommentRepository commentRepository;
+
+
 
     @Autowired
     public MypageViewController(UserInfoService userInfoService,
@@ -82,16 +84,20 @@ public class MypageViewController {
 
         User user = userInfoService.getMyInfo(userDetails.getUsername());
 
-        List<Orders> ordersList = ordersService.getOrdersList(user);
 
-        List<Orders> prodList = ordersService.getProductsList(user.getId());
+        List<Orders> ordersList = orderItemService.getOrdersList(user);
+
+        List<OrderItem> orderItemList = orderItemService.getProductsList(user.getId());
+
+        List<ProductImage> productImageList = orderItemService.getImage(user.getId());
 
         //미등록 리뷰 유무 확인
         List<OrderItem> notReviewedOrderItems = orderItemRepository.findNotReviewedOrderItemsByUserId(user.getId());
 
         model.addAttribute("orders", ordersList);
-        model.addAttribute("products", prodList);
         model.addAttribute("notReviewedOrderItems", notReviewedOrderItems);
+        model.addAttribute("items", orderItemList);
+        model.addAttribute("prodimgs", productImageList);
 
         return "mypage/me";
     }
