@@ -138,6 +138,11 @@
                 font-weight: bold;
             }
 
+            #cart-count.notification-badge {
+                box-sizing: content-box;
+            }
+
+
         </style>
     </th:block>
     <th:block layout:fragment="script">
@@ -146,6 +151,24 @@
                 $(".btnReview").on("click", () => {
                     window.location.href="/review/insert-view";
                 });
+            });
+
+            $(function updateCartCount() {
+                $.get("/api/cart/count", function(data) {
+                    $('#cart-count').text(data);
+                });
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/api/cart/count",
+                success: function(data) {
+
+                    $('#cart-count').text(data);
+                },
+                error: function() {
+                    console.log("장바구니 수량을 불러오는데 실패했습니다.");
+                }
             });
 
             function addToCart(itemId) {
@@ -160,7 +183,7 @@
                         } else {
                             console.log(response)
                             alert("해당상품을 장바구니에 담았습니다!");
-                            updateCartCount()
+                            updateCartCount();
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
@@ -202,7 +225,6 @@
                     th:with="item=${items[i]}">
                     <div class="order-info">
                         <span th:text="|${#temporals.format(item.order.orderDate, 'yyyy-MM-dd')} 주문|"></span>
-<!--                        <img src="/images/time-man.jpg"  width="200px" height="200px">-->
                         <img th:src="${prodimgs[i].url}" width="200px" height="200px">
                     </div>
                             <ul>
