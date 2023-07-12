@@ -8,4 +8,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QnaRepository extends JpaRepository<QNA, Long> {
+
+
+    Page<QNA> findByQnaTitleContaining(String keyword, Pageable pageable);
+
+    Page<QNA> findByQnaContentContaining(String keyword, Pageable pageable);
+
+    Page<QNA> findByQnaTitleContainingOrQnaContentContaining(String keyword, String keyword1, Pageable pageable);
+
 }

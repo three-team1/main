@@ -75,19 +75,27 @@ public class BoardController {
 	@GetMapping("/board/list")
 	public String getBoardList(Model model,
 							   @RequestParam(required = false) String keyword,
-							   @PageableDefault(size = 15 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-							   ,@AuthenticationPrincipal UserDetail userDetail) {
+							   @PageableDefault(size = 10 , sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+							   ,@AuthenticationPrincipal UserDetail userDetail,
+							   @RequestParam(defaultValue = "title") String searchType) {
 
-		Page<Board> boardPage;
-		if(keyword != null) {
-			boardPage = boardService.searchBoard(pageable, keyword);
-		} else {
-			boardPage = boardService.getAllBoards(pageable);
-		}
+		   Page<Board> boardPage;
+
+		    if (keyword != null) {
+		        if (searchType.equals("writer")) {
+		            boardPage = boardService.searchBoardUsername(keyword, pageable);
+		        } else {
+		            boardPage = boardService.searchBoard(pageable, keyword);
+		        }
+		    } else {
+		        boardPage = boardService.getAllBoards(pageable);
+		    }
 
 		model.addAttribute("userDetail",userDetail);
 		model.addAttribute("boards", boardPage);
 		model.addAttribute("page", boardPage);
+		model.addAttribute("keyword", keyword);       
+	    model.addAttribute("searchType", searchType);
 
 		return "boardList";
 	}

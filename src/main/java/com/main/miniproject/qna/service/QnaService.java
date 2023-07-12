@@ -41,18 +41,11 @@ public class QnaService {
         qnaRepository.save(qna);
     }
 
-    public List<QNA> getList(Pageable pageable) {
+    public Page<QNA> getList(Pageable pageable) {
         Page<QNA> qnaList = qnaRepository.findAll(pageable);
-        List<QNA> qnaQNAList = new ArrayList<>();
 
-
-        for (QNA qna : qnaList) {
-            qnaQNAList.add(qna);
-        }
-
-        return qnaQNAList;
+        return qnaList;
     }
-
 
 
     public QNA getDetail(Long id) {
@@ -70,7 +63,6 @@ public class QnaService {
     }
 
 
-
     public QNA update(QNA qna) {
         qnaRepository.save(qna);
         //레파지토리에 담았다가
@@ -83,7 +75,7 @@ public class QnaService {
     public void delete(Long id) {
         List<Comment> commentList = commentRepository.findByBoardIdAndBoardType(id, "qna");
 
-        for(Comment comment : commentList) {
+        for (Comment comment : commentList) {
 
             commentRepository.delete(comment);
         }
@@ -97,7 +89,7 @@ public class QnaService {
         qnaRepository.save(qna);
     }
 
-    public User getCurrentUser() {											// 사용자 인증정보 반환
+    public User getCurrentUser() {                                            // 사용자 인증정보 반환
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
@@ -110,4 +102,13 @@ public class QnaService {
     }
 
 
+    public Page<QNA> searchQNAByTitle(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaTitleContaining(keyword, pageable);
+    }
+
+
+    public Page<QNA> searchQNAByQnaContent(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaContentContaining(keyword, pageable);
+
+    }
 }

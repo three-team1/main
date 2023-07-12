@@ -374,7 +374,8 @@
         }
 
         .order-form-table th {
-            padding: 16px 10px 12px 0;
+            padding: 16px 0px 12px 0;
+            font-size: 12px;
         }
 
         .order-form {
@@ -550,18 +551,23 @@
             border-bottom: 1px solid black;
         }
 
-       .final-payment input {
+       .final-payment a {
            font-size: 20px;
            font-weight: bold;
            border: none;
            background-color: #86cfda;
+           color: black;
+           text-decoration: none;
         }
+
 
        .orderImage img{
            width: 100%;
        }
 
-       .orderPrice {
+
+       .orderPrice, .orderTotalPrice{
+
            text-align: right;
        }
 
@@ -571,6 +577,11 @@
            width: 150px;
            height: 20px;
        }
+
+        #order-payment-table{
+            width: 100%;
+        }
+
 
        #order-payment-table th, td {
            padding: 10px;
@@ -753,15 +764,17 @@
                 <div class="order-product-contents">
                     <table id="order-product-contents-table">
                         <colgroup>
-                            <col style="width:25%">
-                            <col style="width:50%">
+                            <col style="width:30%">
                             <col style="width:auto">
+                            <col style="width:15%">
+                            <col style="width:7%">
+                            <col style="width:15%">
                         </colgroup>
                         <tr class="orderList" th:each="cart: ${cart}">
                             <td class="orderImage"><img th:src="${cart.productImage}"></td>
                             <td class="orderTitle" th:text="${cart.product.productTitle}"></td>
                             <td class="orderPrice" th:text="${cart.product.productPrice.longValue()}"></td>
-                            <td class="orderQuantity" th:text="${cart.cartQuantity}"></td>
+                            <td class="orderQuantity" th:text="${cart.cartQuantity} + 개"></td>
                             <td class="orderTotalPrice" th:text="0"></td>
                             <td class="orderProductId" style="display: none" th:text="${cart.product.id}"></td>
                         </tr>
@@ -776,15 +789,13 @@
                 </div>
                 <div id="order-payment-contents">
                     <table id="order-payment-table">
-                        <colgroup>
-                            <col style="width:200%">
-                            <col style="width:auto">
-                        </colgroup>
                         <tbody>
                             <tr>
                                 <th>주문상품</th>
-                                <td>
-                                    <span id="order-total-price" th:text="0"></span>
+
+                                <td id="order-total-price">
+                                    <span th:text="0"></span>
+
                                 </td>
                             </tr>
                             <tr>
