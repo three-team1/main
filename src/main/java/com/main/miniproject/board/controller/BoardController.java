@@ -121,6 +121,7 @@ public class BoardController {
 	    Board board = boardService.getBoard(id);
 	    	     
 	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
+	    System.out.println(boardImageList);
 	    List<Comment> commentList = commentService.commentList(id, "community");
 	    
 	    Map<Long, List<Comment>> commentReplies = new HashMap<>();
