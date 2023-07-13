@@ -352,21 +352,19 @@
 
         .order-top p {
             font-size: 20px;
+            font-weight: bold;
+            color: orchid;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+            margin-top: 250px;
+            text-align: center;
         }
 
         .order-total-div {
             width: 60%;
             margin: 0 auto;
             padding: 10px;
-            background-color: whitesmoke;
+            background-color: #2b2b2b;
             margin-bottom: 150px;
-        }
-
-        .order-top p {
-            margin-top: 250px;
-            text-align: center;
-            color: white;
-            font-weight: bold;
         }
 
         .icoRequired {
@@ -398,9 +396,10 @@
         }
 
         .order-form, .shipping-msg, #order-product-list, #order-payment, .total-payment-price {
+            color: white;
             width: 100%;
             margin: 0 auto;
-            background-color: white;
+            background-color: #2b2b2b;
             padding: 20px;
         }
 
@@ -416,14 +415,16 @@
         }
 
         .order-form {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #86cfda;
         }
 
         #order-name {
+            background-color: #2b2b2b;
+            color: white;
             height: 40px;
             width: 100%;
             padding: 10px;
-            border: 1px solid darkgray;
+            border: 1px solid #86cfda;
             outline-style: none;
             box-sizing: border-box;
             margin-bottom: 15px;
@@ -436,19 +437,25 @@
         #address-td input {
             height: 40px;
             padding: 10px;
-            border: 1px solid darkgray;
+            border: 1px solid #86cfda;
             outline-style: none;
             box-sizing: border-box;
             margin-bottom: 15px;
+            background-color: #2b2b2b;
+            color: white;
         }
 
         #postcode {
             width: 150px;
             margin-right: 0;
+            background-color: #2b2b2b;
+            color: white;
         }
 
         #roadAddress, #detailAddress {
             width: 100%;
+            background-color: #2b2b2b;
+            color: white;
         }
 
         #address-btn {
@@ -460,14 +467,18 @@
             padding: 0 20px 0 10px;
             height: 40px;
             word-break: break-all;
-            border: 1px solid darkgray;
+            border: 1px solid #86cfda;
             box-sizing: border-box;
             outline-style: none;
             margin-bottom: 15px;
+            background-color: #2b2b2b;
+            color: white;
         }
 
         #order-email3 {
             margin-left: 14px;
+            background-color: #2b2b2b;
+            color: white;
 
         }
 
@@ -476,18 +487,19 @@
         }
 
         #shipping-msg-select {
+            background-color: #2b2b2b;
+            color: white;
             height: 40px;
             width: 100%;
             padding: 10px;
-            border: 1px solid darkgray;
-            color: darkgray;
+            border: 1px solid #86cfda;
             outline-style: none;
             box-sizing: border-box;
         }
 
 
         #order-product-list, #order-payment {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #86cfda;
         }
 
         #order-product-contents-table td {
@@ -527,10 +539,10 @@
 
         .payment {
             width: 100%;
-            background-color: white;
+            background-color: #2b2b2b;
             margin: 0 auto;
             padding: 20px;
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #86cfda;
         }
 
         #payment-method {
@@ -543,6 +555,7 @@
 
         #payment-top1, #payment-top2 {
             margin-bottom: 15px;
+            color: white;
         }
 
         .location {
@@ -556,7 +569,8 @@
         }
 
         .payment-inner label {
-            border: 1px solid darkgray;
+            color: white;
+            border: 1px solid #86cfda;
             display: block;
             padding: 15px;
             width: 100%;
@@ -565,15 +579,16 @@
         }
 
         .payment-help {
-            background-color: mintcream;
+            background-color: #2b2b2b;
+
             padding: 20px;
-            border: 1px solid darkgray;
+            border: 1px solid #86cfda;
             width: 100%;
         }
 
         .payment-help li {
             list-style: none;
-            color: black;
+            color: white;
             font-size: 12px;
             line-height: 15px;
         }
@@ -693,7 +708,7 @@
 
     <section>
             <div class="order-top">
-                <p>주문/결제</p>
+                <p>O r d e r</p>
             </div>
 
         <div class="order-total-div">
@@ -726,11 +741,11 @@
                         <td id="address-td">
                             <ul>
                                 <li>
-                                    <input type="text" id="postcode" placeholder="우편번호">
+                                    <input type="text" id="postcode" onclick="execDaumPostcode()" placeholder="우편번호" readonly>
                                     <input type="button" id="address-btn" onclick="execDaumPostcode()" value="주소 찾기"><br>
                                 </li>
                                 <li>
-                                    <input type="text" id="roadAddress" placeholder="주소">
+                                    <input type="text" id="roadAddress" onclick="execDaumPostcode()" placeholder="주소" readonly>
                                 </li>
                                 <li>
                                     <input type="text" id="detailAddress" placeholder="상세주소">

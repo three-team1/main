@@ -29,6 +29,7 @@
                 width: 100%;
                 z-index: 100000;
                 background-color: rgba(0, 0, 0, 0.8); /* 배경색 설정, 불투명도 조절 가능 */
+                backdrop-filter: blur(30px);
             }
 
             /* 화면 가운데로 정렬되는 GIF 이미지 스타일 지정 */
@@ -37,8 +38,9 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                max-width: 200%; /* 화면 크기에 맞게 GIF 크기 조절 */
-                max-height: 200%;
+                max-width: 100%; /* 화면 크기에 맞게 GIF 크기 조절 */
+                max-height: 100%;
+                filter: blur(2px);
             }
 
         </style>
