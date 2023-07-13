@@ -3,9 +3,7 @@ package com.main.miniproject.review.service.impl;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 import com.main.miniproject.review.service.ReviewFileService;
-import com.main.miniproject.review.service.ReviewImageService;
 import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +23,13 @@ import java.util.UUID;
 @Service
 public class ReviewFileServiceImpl implements ReviewFileService {
 
+
     @Value("${reviewImgLocation}")
     String reviewImgPath;
 
     @Value("${reviewResizedLocation}")
     String reviewResizedPath;
+
 
     @Override
     @Transactional

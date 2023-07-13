@@ -56,7 +56,7 @@
 					</a>
 				</div>
 
-				<div class="nav-bar-item">
+				<div class="nav-bar-item nav-bar-item-cart">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
 						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
@@ -71,11 +71,11 @@
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
 				<img th:if="${userDetail.user.provider == 'kakao' || userDetail.user.provider == 'google'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
-				<a style="color:pink" href="/mypage/me">마이페이지</a>
+				<a href="/mypage/me">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin">관리자페이지</a>
+				<a href="/admin/orders">관리자페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
@@ -372,7 +372,7 @@
 				<div class="company-info">
 					<h2>회사정보</h2>
 					<p>상호 : ...포션이었다 ( 초능력 )</p>
-					<p>대표이사 : 김용순,김이슬,양재민,박지해,강호현,박다원</p>
+					<p>대표이사 : 김용순,김이슬,양재민,박지해,강호현,문다원</p>
 					<p>주소 : 서울특별시 강남구 819 3 삼오빌딩 5-8층</p>
 					<p>사업지명 : 비트캠프 강남 본원</p>
 					<p>개인정보관리 책임자 : 박지해</p>

@@ -21,6 +21,8 @@ public class BoardRestController {
         boardImageService.deleteImage(imageId);
         return ResponseEntity.ok().build();
     }
+    
+
 }
 
       

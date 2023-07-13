@@ -38,4 +38,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
 	List<OrderItem> findOrderItemsByUserId(@Param("userId") Long userId);
 
 
+	@Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :orderId")
+	List<OrderItem> findOrderItemsByOrderId(@Param("orderId")Long orderId);
+
+
 }

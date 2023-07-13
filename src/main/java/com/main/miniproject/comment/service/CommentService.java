@@ -35,7 +35,6 @@ public class CommentService {
 	
 	}	
 	
-	
 	public void saveComment(Comment comment, Long boardId, String boardType) {
 	    User user = getCurrentUser();
 	    comment.setUser(user);
@@ -55,6 +54,21 @@ public class CommentService {
         }
 		commentRepository.deleteById(commentId);
 	}
+	
+	/*
+	 * public void deleteReplyComment(Long commentId) {
+	 * 
+	 * User user = getCurrentUser();
+	 * 
+	 * Comment comment = commentRepository.findById(commentId).get();
+	 * 
+	 * if (!comment.getUser().getUsername().equals(user.getUsername()) &&
+	 * user.getRole() != Role.ADMIN) { throw new RuntimeException("권한이 없습니다."); }
+	 * 
+	 * commentRepository.deleteById(commentId);
+	 * 
+	 * }
+	 */
 	
 	public Comment getComment(Long commentID) {
 		

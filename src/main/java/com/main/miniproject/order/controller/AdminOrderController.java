@@ -8,6 +8,9 @@ import com.main.miniproject.order.orderItemRepository.OrderItemRepository;
 import com.main.miniproject.order.ordersRepository.OrdersRepository;
 import com.main.miniproject.order.service.OrderItemService;
 import com.main.miniproject.product.dto.ProductFormDto;
+import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.product.repository.ProductImageRepository;
+import com.main.miniproject.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.filter.OrderedFormContentFilter;
 import org.springframework.data.domain.Page;
@@ -29,21 +32,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequiredArgsConstructor
 public class AdminOrderController {
     @Autowired
     public OrderService orderService;
     
     @Autowired
-    private final AdminOrderService adminOrderService;
+    private AdminOrderService adminOrderService;
 
     @Autowired
-    private final OrderItemService orderItemService;
+    private OrderItemService orderItemService;
 
     @Autowired
-    private final OrdersRepository ordersRepository;
+    private OrdersRepository ordersRepository;
 
-    
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ProductImageRepository productImageRepository;
+
     @PostMapping("/order")
     public String createOrder() {
         return "/order/order";
@@ -74,8 +81,13 @@ public class AdminOrderController {
     @GetMapping("/admin/orderDetail/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, Model model){
 
-        OrderItem orderItem = orderItemService.getOrderItemDetail(orderId);
-        model.addAttribute("OrdersFormDto", orderItem);
+        List<OrderItem> orderItemList = orderItemRepository.findOrderItemsByOrderId(orderId);
+
+        List<ProductImage> productImageList = productImageRepository.findProductImagesByProductId(orderItemList.get(0).getProduct().getId());
+
+        model.addAttribute("orderItemList", orderItemList);
+        model.addAttribute("productImageList", productImageList);
+
         return "order/orderForm";
     }
 

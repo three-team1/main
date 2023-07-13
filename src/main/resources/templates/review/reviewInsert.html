@@ -128,8 +128,8 @@
                     }
 
                     //글자수 제한
-                    if (content.length > 200) {
-                        $(this).val($(this).val().substring(0, 200));
+                    if (content.length > 500) {
+                        $(this).val($(this).val().substring(0, 500));
                         alert("글자수는 200자까지 입력 가능합니다.");
                     }
                 });
@@ -237,7 +237,7 @@
                         <textarea id="reviewContent" name="reviewContent" th:field="*{reviewContent}" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
                         <div class="counting">
                             <span class="textCount">0</span>
-                            <span class="textTotal">/ 200자</span>
+                            <span class="textTotal">/ 500자</span>
                         </div><br>
                     </div>
                     <div id="imagePreview">
@@ -249,7 +249,7 @@
                 </div>
                 <div class="buttons">
                     <button type="button" id="btnSave">등록</button>
-                    <button type="button" id="btnCancel">취소</button>
+                    <button type="button" id="btnCancel" onclick="location.href='/mypage/me'">취소</button>
                 </div>
             </form>
         </div>
