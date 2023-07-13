@@ -248,7 +248,7 @@
         <script type="text/javascript">
             $(function () {
                 $(".review-card").each(function () {
-                    const imageCount = $(this).find(".images-container img").length;
+                    const imageCount = Math.min($(this).find(".images-container img").length, 10);
                     $(this).find(".thumbnail-container").attr("data-count", imageCount);
                 });
 

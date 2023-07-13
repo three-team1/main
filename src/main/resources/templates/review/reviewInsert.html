@@ -14,18 +14,19 @@
                 align-items: start;
                 padding: 10px;
                 margin-top: 172px;
-                min-height: 640px;
+                min-height: 730px;
                 min-width: 400px;
             }
 
             #orderItem {
                 margin-right: 20px;
+                margin-bottom: 20px;
                 width: 150px;
                 height: 35px;
                 padding-left: 10px;
                 font-size: 1rem;
                 color: white;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(0, 0, 0, 0.3);
                 border: none;
                 outline: none;
                 cursor: pointer;
@@ -35,6 +36,7 @@
                 display: grid;
                 grid-template-rows: auto auto auto auto;
                 grid-gap: 10px;
+                margin-top: 50px;
                 padding: 5px;
                 min-height: 640px;
                 width: 470px;
@@ -118,6 +120,10 @@
                 background: rgba(255, 255, 255, 0.8);
             }
 
+            #attachZone img {
+                cursor: pointer;
+            }
+
             .buttons {
                 text-align: center;
             }
@@ -160,6 +166,9 @@
                     }
                 });
 
+                //전송할 파일 목록
+                let uploadFiles = [];
+
                 //이미지 미리보기
                 document.getElementById("btnAttach").addEventListener("change", function (e) {
                     let files = Array.from(e.target.files);
@@ -174,7 +183,13 @@
                     //미리보기 초기화
                     attachZone.innerHTML = "";
 
+                    //파일 목록 초기화
+                    uploadFiles = [];
+
                     for (let i = 0; i < files.length; i++) {
+                        //파일 목록에 추가
+                        uploadFiles.push(files[i]);
+
                         let image = new Image();
                         image.src = URL.createObjectURL(files[i]);
 
@@ -191,6 +206,33 @@
                         imgElement.style.height = "110px";
                         imgElement.style.margin = "10px";
                         attachZone.appendChild(imgElement);
+
+
+                        //이미지 클릭 시 삭제
+                        imgElement.addEventListener("click", function () {
+                            attachZone.removeChild(imgElement);
+
+                            //파일 목록에서 삭제
+                            const index = uploadFiles.indexOf(files[i]);
+                            if (index > -1) {
+                                uploadFiles.splice(index, 1);
+                            }
+
+                            //실제 파일 삭제
+                            let fileInput = document.getElementById("btnAttach");
+                            let fileList = Array.from(fileInput.files);
+                            //해당 index 파일 삭제
+                            fileList.splice(index, 1);
+                            fileInput.files = new FileListItems(fileList);
+                        });
+                        // FileList 형식으로 변환하는 함수
+                        function FileListItems(a) {
+                            a = [].slice.call(Array.isArray(a) ? a : arguments);
+                            for (var c, b = c = a.length, d = !0; b-- && d;) d = a[b] instanceof File;
+                            if (!d) throw new TypeError("expected argument to FileListItems to be a File or array of File items");
+                            for (b = (new ClipboardEvent("")).clipboardData || new DataTransfer; c--;) b.items.add(a[c]);
+                            return b.files
+                        }
                     }
 
                     Promise.all(promises).then(() => {
@@ -225,9 +267,9 @@
                     let files = $("#btnAttach")[0].files;
                     let validExtensions = ["jpg", "png", "gif"];
 
-                    //null 방지
-                    if (reviewContent == null || reviewContent.trim() == "") {
-                        alert("내용을 입력해주세요.");
+                    //10글자 이상 입력
+                    if (reviewContent == null || reviewContent.trim() == "" || reviewContent.length < 10) {
+                        alert("내용을 10글자 이상 입력해주세요.");
                         return;
                     }
 
