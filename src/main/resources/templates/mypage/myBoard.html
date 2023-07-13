@@ -384,14 +384,14 @@
                         <div class="pagination1">
                             <th:block th:if="${page.totalPages > 0}">
                                 <!-- 이전 페이지로 가는 링크 추가 -->
-                                <a th:href="@{/mypage/myBoard(page=0, keyword=${keyword}, searchType=${searchType})}"><<</a>
+                                <a th:href="@{/mypage/myBoard(page=0)}"><<</a>
 
                                 <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
-                                    <a th:href="@{/mypage/myBoard(page=${i}, keyword=${keyword}, searchType=${searchType})}" th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}">1</a>
+                                    <a th:href="@{/mypage/myBoard(page=${i})}" th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}">1</a>
                                 </th:block>
 
                                 <!-- 다음 페이지로 가는 링크 추가 -->
-                                <a th:href="@{/mypage/myBoard(page=${page.totalPages - 1}, keyword=${keyword}, searchType=${searchType})}">>></a>
+                                <a th:href="@{/mypage/myBoard(page=${page.totalPages - 1})}">>></a>
                             </th:block>
                         </div>
                     </div>
