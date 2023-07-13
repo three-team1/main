@@ -285,11 +285,17 @@
 						Q&A
 					</a>
 				</div>
-
+				
 				<div class="nav-bar-item">
+					<a href="/review/list"> <span></span> <span></span> <span></span> <span></span>
+						리뷰			
+					</a>
+				</div>
+
+				<div class="nav-bar-item nav-bar-item-cart">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
-						<span id="cart-count" class="notification-badge"></span>
+						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
 					</a>
 				</div>
 
@@ -300,12 +306,12 @@
 				<p>
 					환영합니다! <span class="username" sec:authentication="name"></span>님
 				</p>
-				<img th:if="${userDetail.user.provider != 'naver'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
+				<img th:if="${userDetail.user.provider == 'kakao' || userDetail.user.provider == 'google'}" th:src="${userDetail.user.profileImage}" alt="Profile Image" />
 				<a href="/mypage/me">마이페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin/orders">관리자페이지</a>
+				<a href="/admin/orders">관리자</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
@@ -322,10 +328,6 @@
 			</div>
 
 		</div>
-
-
-
-
 
 	</header>
 
