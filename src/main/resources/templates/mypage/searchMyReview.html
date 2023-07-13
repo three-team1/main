@@ -65,9 +65,12 @@
       }
 
       .table-search {
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-bottom: 10px;
-        margin-right: 0;
+        margin-left: 370px;
+        min-width: 260px;
       }
 
       .table-search button {
@@ -83,12 +86,31 @@
       }
 
       .table-search input {
-        margin: 0;
-        padding: 0;
+        width: 200px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      .title-zone {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 160px;
+      }
+
+      #return-reviewList {
+        margin-top: 95px;
+        margin-left: 20px;
+        color: white;
+        cursor: pointer;
       }
 
       .review-block {
-        padding: 5px;
+        padding: 0 5px;
         min-height: 600px;
         width: 650px;
         background: transparent;
@@ -243,7 +265,7 @@
         cursor: pointer;
       }
 
-      #btnSave, #btnDelete {
+      #btnDelete {
         width: 40px;
         height: 20px;
         font-size: 12px;
@@ -452,13 +474,9 @@
     </div>
     <div class="section">
       <div class="review-block">
-        <h2>내 리뷰</h2>
-        <div class="table-search">
-          <form id="searchForm" th:action="@{/mypage/myReview-search}" method="get">
-            <input type="text" id="keyword" name="keyword" placeholder="Search">
-            <button type="submit" id="btnSearch">검색</button>
-            <a th:href="@{/mypage/myReview}">내 목록</a>
-          </form>
+        <div class="title-zone">
+          <h2>내 리뷰</h2>
+          <p id="return-reviewList" onclick="location.href='/mypage/myReview'">[목록으로 돌아가기]</p>
         </div>
         <div th:each="review : ${reviews}">
           <div class="review-card">
@@ -499,6 +517,12 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="table-search">
+          <form id="searchForm" th:action="@{/mypage/myReview-search}" method="get">
+            <input type="text" id="keyword" name="keyword" placeholder="Search">
+            <button type="submit" id="btnSearch">검색</button>
+          </form>
         </div>
       </div>
       <div class="pagination">
