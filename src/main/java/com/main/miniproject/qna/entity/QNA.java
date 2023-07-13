@@ -15,6 +15,7 @@ import com.main.miniproject.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,6 +58,10 @@ public class QNA {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-	
+
+	//댓글 개수
+	@Formula("(SELECT count(1) FROM comment c WHERE c.board_id = qna_id and c.board_type = 'qna')")
+	private int replyCount;
+
 
 }

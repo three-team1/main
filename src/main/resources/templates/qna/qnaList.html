@@ -263,9 +263,11 @@ tr:nth-child(odd) {
             <th id="th5">조회수</th>
           </tr>
           <tr th:each="qna: ${qnaList}">
-            <td class="qna-id" th:text="${qna.id}"></td>
-            <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
-            <td class="qna-writer" th:text="${qna.user.username}"></td>
+            <td th:text="${qna.id}"></td>
+            <td id="qna-title" >
+              <a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle + ' [' + qna.replyCount +']'}"></a>
+            </td>
+            <td th:text="${qna.user.username}"></td>
             <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
             <td class="qna-cnt" th:text="${qna.qnaCnt}"></td>
           </tr>
