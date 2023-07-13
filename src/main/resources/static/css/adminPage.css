@@ -41,9 +41,20 @@ body{
 }
 
 .side-item{
+    list-style: none;
     position: relative;
     color: whitesmoke;
     margin: auto;
+}
+
+.side-item a {
+    margin-right: 30px;
+}
+
+.side-item:hover{
+    color: #86cfda; /* 호버 시 글자색 변경 */
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .side-flex-column a {
@@ -52,16 +63,11 @@ body{
     color: inherit; /* 부모 요소로부터 상속 */
 }
 
-.side-flex-column a :hover{
-    color: #86cfda; /* 호버 시 글자색 변경 */
-    font-size: 1.2rem;
-    font-weight: bold;
-}
 
-.side-flex-column a.active,
-.side-flex-column a.active:hover {
+.side-item.active,
+.side-item:hover {
     color: #86cfda;  /* 활성 탭 설정 */
-    font-size: 1.5px;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
