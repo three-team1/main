@@ -6,7 +6,40 @@
 <head>
     <th:block layout:fragment="css">
         <style>
+            /* 전체 화면에 대한 스타일 지정 */
+            html, body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+            }
 
+            /* GIF를 가운데로 정렬하기 위한 스타일 지정 */
+            .gif-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+            }
+            /* 화면을 가득 채우는 GIF 컨테이너 스타일 지정 */
+            .gif-container-full {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                z-index: 100000;
+                background-color: rgba(0, 0, 0, 0.8); /* 배경색 설정, 불투명도 조절 가능 */
+            }
+
+            /* 화면 가운데로 정렬되는 GIF 이미지 스타일 지정 */
+            .gif-container-full img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                max-width: 200%; /* 화면 크기에 맞게 GIF 크기 조절 */
+                max-height: 200%;
+            }
 
         </style>
     </th:block>
@@ -73,6 +106,13 @@
                 }
 
 
+                // 페이지 로드 후 일정 시간(예: 1.5초) 후에 GIF가 사라지도록 설정
+                window.addEventListener('load', function() {
+                    var gif = document.querySelector('.gif-container-full');
+                    setTimeout(function() {
+                        gif.style.display = 'none';
+                    }, 1500); // 1500밀리초(1.5초) 후에 GIF를 숨김
+                });
             });
 
         </script>
@@ -80,8 +120,10 @@
 
 </head>
 <body>
-
 <div layout:fragment="content">
+    <div class="gif-container-full">
+        <img src="/images/디멘터.gif" alt="GIF" />
+    </div>
     <div class="main-content">
         <h1>ORDER LIST</h1>
         <div class="total-div">
