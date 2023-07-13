@@ -55,6 +55,10 @@ public class FileService {
 
 						file.transferTo(new File(filePath));
 
+						filePath = filePath.split("static")[1];
+						System.out.println(filePath);
+
+
 						ProductImage productImage = ProductImage.builder()
 								.product(product)
 								.name(fileName)

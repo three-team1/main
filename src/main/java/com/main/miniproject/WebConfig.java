@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer{
 
-	@Value("${itemImgLocation}")
+	@Value("${user.dir}/src/main/resources/static/images/")
 	String itemImgPath;
 
 	@Override
