@@ -23,21 +23,38 @@
 
     <th:block layout:fragment="css">
         <style>
-            .input-group {
-                margin-bottom : 15px
-            }
-            .img-div {
-                margin-bottom : 10px
-            }
-            .fieldError {
-                color: #bd2130;
+
+            .product-grid {
+                display: flex;
+                flex-wrap: wrap;
             }
 
+            .product-item {
+                width: calc(33.33% - 20px);
+                margin: 10px;
+                padding: 10px;
+                background-color: #f2f2f2;
+            }
 
+            .product-item.first {
+                clear: left;
+            }
 
-            .test{
-                color: white;
-                text-align: center;
+            .order-info {
+                margin-bottom: 10px;
+            }
+
+            .order-info span {
+                font-weight: bold;
+            }
+
+            .order-detail {
+                margin-bottom: 5px;
+            }
+
+            .product-item img {
+                width: 100%;
+                height: auto;
             }
 
 
@@ -50,8 +67,10 @@
 <div layout:fragment="content">
     <div class="main-content">
 
-        <h1>주문 내역</h1>
+        <h1>주문 상세 내역</h1>
+        <div class="product-grid">
             <div th:each="productImageList : ${productImageList}">
+<!--                <div class="product-item" th:classappend="${status.index % 3 == 0} ? 'first' : ''">-->
                 <div th:each="orderItemList : ${orderItemList}" >
                     <div class="order-info">
                         <span th:text="|주문일 ${#temporals.format(orderItemList.order.orderDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
@@ -66,8 +85,10 @@
                         <li class="order-detail" th:text="|주문 상태: 입금 완료(입금자: ${orderItemList.order.user.username})|"></li>
                         <li class="order-detail">배송 완료</li>
                     </ul>
+<!--                </div>-->
                 </div>
             </div>
+        </div>
 
 
             <a th:href="@{'/admin/orders'}">

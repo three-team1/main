@@ -67,6 +67,7 @@ public class AdminOrderController {
 
         Page<Orders> ordersPage = adminOrderService.getList(page, keyword, longKeyword, category);
 
+
         model.addAttribute("ordersPage", ordersPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
