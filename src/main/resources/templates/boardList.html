@@ -31,8 +31,9 @@ tr:nth-child(odd) {
 }
 
 th {
-  background-color:  beige;
+  background-color:   #86cfda;
   color: black;
+  height:50px;
 }
 
 .noBorder {
@@ -42,9 +43,22 @@ th {
 
 }
 
+.noBorder-title{
+      text-align: left;
+}
+
+.noBorder-count {
+	color:  rgb(255, 128, 0);
+}
+
+.noBorder-id {
+	color:gray;
+}
+
 .board-title {
 	font-weight:bold;
-	color:lightblue;
+	color:white;
+	text-align:start;
 }
 
 .board-writer {
@@ -57,11 +71,11 @@ a {
 }
 
 .container {
-	margin-top: 270px;
+	margin-top: 250px;
 }
 
 .table {
-	width: 1050px;
+	width: 60%;
 	margin: auto;
 	text-align: center;
 	border-collapse: collapse;
@@ -72,26 +86,31 @@ a {
 }
 
 .id {
-	width: 8%;
-	height: 70px;
+	width: 10%;
 }
 
 .title {
-	width: 60%;
+	width: 40%;
 }
 
 .writer {
-	width: 12%;
+	width: 10%;
 }
 
 .date {
 	width: 10%;
 }
 
+.count {
+	width:10%;
+}
+
 .table-header {
 	margin: auto;
 	text-align: center;
-	color: lightblue;
+ 	font-weight: bold;
+    color: lightblue;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
 	letter-spacing:5px;
 }
 
@@ -123,7 +142,7 @@ a {
 	margin-bottom: 30px;
 	width: 200px;
 	text-align:center;
-	border : 1px solid gray;
+	border : 1px solid aqua;
 }
 
 .pagination a{
@@ -141,13 +160,27 @@ a {
 
 .btn-write button {
   width: 100px;
-  background-color: antiquewhite;
-  border: none;
-  border-radius: 3px;
+  background-color: black;
+  color:red;
+  border: 1px solid gray;
+  border-radius: 5px;
   cursor : pointer;
 }
 
 
+.table-search select {
+border: 2px solid black;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    background-color: transparent;
+    appearance: none;
+    width:100px;
+    text-align:center;
+    cursor: pointer;
+    font-weight: bold;
+    color: rgb(255, 84, 84);
+
+}
 
 </style>
 </head>
@@ -200,7 +233,7 @@ a {
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin">관리자페이지</a>
+				<a href="/admin/orders">관리자페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
@@ -259,16 +292,16 @@ a {
 			</thead>
 			<tbody>
 				<tr th:each="board : ${boards}">
-					<td class="noBorder" th:text="${board.id}"></td>
+					<td class="noBorder noBorder-id" th:text="${board.id}"></td>
 
-					<td class="noBorder"><a class="board-title"
+					<td class="noBorder noBorder-title"><a class="board-title"
 						th:href="@{'/board/detail/' + ${board.id}}"
 						th:text="${board.boardTitle}"></a></td>
 
 					<td class="noBorder board-writer" th:text="${board.user.username}"></td>
 					<td class="noBorder"
 						th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
-					<td class="noBorder" th:text="${board.boardView}"></td>
+					<td class="noBorder noBorder-count" th:text="${board.boardView}"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -276,7 +309,7 @@ a {
 	
 	<div class="btn-write">
     <a href="/board/write">
-    <button type="submit">등록</button>
+    <button type="submit">글쓰기</button>
    </a>
   </div>
 

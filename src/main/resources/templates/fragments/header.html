@@ -38,7 +38,7 @@
         <div class="nav-bar-item">
           <a href="/cart"> <span></span> <span></span> <span></span> <span></span>
             장바구니
-            <span id="cart-count" class="notification-badge"></span>
+            <span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
           </a>
         </div>
 
@@ -53,7 +53,7 @@
       </div>
 
       <div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <a href="/admin">관리자페이지</a>
+        <a href="/admin/orders">관리자페이지</a>
       </div>
 
       <div class="nav-bar-login" sec:authorize="isAuthenticated()">

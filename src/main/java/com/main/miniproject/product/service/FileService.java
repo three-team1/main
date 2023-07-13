@@ -2,6 +2,7 @@ package com.main.miniproject.product.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import com.main.miniproject.product.entity.Product;
 import com.main.miniproject.product.entity.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FileService {
 
+	@Value("${itemImgLocation}")
+	String itemImgPath;
 
 	//파일을 만드는 동작
 		public List<ProductImage> saveFiles(Product product, MultipartFile[] files) {
@@ -30,6 +34,13 @@ public class FileService {
 //				return productImages;
 //			}
 
+			String dataPath = Paths.get(itemImgPath).toString();
+
+			File dir = new File(dataPath);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+
 
 			for(MultipartFile file : files) {
 
@@ -38,11 +49,15 @@ public class FileService {
 					String fileOrigin = file.getOriginalFilename();
 					String fileExt = fileOrigin.substring(fileOrigin.lastIndexOf("."));
 					String fileName = UUID.randomUUID().toString() + fileExt;
-					String filePath = "C:/miniproject/images/" + fileName;
+					String filePath = Paths.get(dataPath, fileName).toString();
 
 					try {
 
 						file.transferTo(new File(filePath));
+
+						filePath = filePath.split("static")[1];
+						System.out.println(filePath);
+
 
 						ProductImage productImage = ProductImage.builder()
 								.product(product)

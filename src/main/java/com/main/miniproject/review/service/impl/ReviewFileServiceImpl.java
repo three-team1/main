@@ -23,11 +23,13 @@ import java.util.UUID;
 @Service
 public class ReviewFileServiceImpl implements ReviewFileService {
 
+
     @Value("${reviewImgLocation}")
     String reviewImgPath;
 
     @Value("${reviewResizedLocation}")
     String reviewResizedPath;
+
 
     @Override
     @Transactional

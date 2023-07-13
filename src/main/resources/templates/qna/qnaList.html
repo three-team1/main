@@ -21,23 +21,41 @@
   <style>
 
 
+tr:nth-child(even) {
+  background-color: #2b2b2b;
+}
+
+tr:nth-child(odd) {
+  background-color: #2b2b2b;
+}
+
     .qna-qna {
       text-align: center;
       margin-top: 250px;
       margin-bottom: 20px;
-      color: white;
+      color: lightcoral;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+    letter-spacing: 5px;
+    
     }
 
     .qna-qna p {
-      font-size: 20px;
+      font-size: 25px;
+      font-weight:bold;
+      
+    }
+    
+    .qna-cnt{
+    color:  rgb(255, 128, 0);
     }
 
     .qna-total-div {
       width: 60%;
       margin: 0 auto;
       padding: 10px;
-      background-color: whitesmoke;
       margin-bottom: 150px;
+       background-color: #2b2b2b;
+
     }
 
     .qna-table table {
@@ -54,8 +72,8 @@
     }
 
     th {
-      padding: 10px;
       border-bottom: 1px solid black;
+      height:50px;
     }
 
     tr #th1 {
@@ -84,10 +102,21 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      color:white;
     }
 
     tr #qna-title {
       text-align: left;
+    }
+    
+    #qna-title a {
+    	color:white;
+    	font-weight:bold;
+    }
+    
+    .qna-writer {
+    	color:lightcoral;
+    	font-weight:bold;
     }
 
     tr a {
@@ -134,6 +163,12 @@
       cursor: pointer;
     }
 
+	.search-btn {
+		background:black;
+		color:white;
+		border-radius:3px;
+	}
+	
     </style>
 
 
@@ -209,25 +244,27 @@
 
   <section>
     <div class="qna-qna">
-      <p>q n a</p>
+      <p>Q N A</p>
     </div>
 
     <div class="qna-total-div">
       <div class="qna-table">
         <table>
           <tr id="qna-table-tr1">
-            <th id="th1">no.</th>
-            <th id="th2">title</th>
-            <th id="th3">writer</th>
-            <th id="th4">data</th>
-            <th id="th5">hits</th>
+            <th id="th1">번호</th>
+            <th id="th2">제목</th>
+            <th id="th3">작성자</th>
+            <th id="th4">작성일</th>
+            <th id="th5">조회수</th>
           </tr>
           <tr th:each="qna: ${qnaList}">
             <td th:text="${qna.id}"></td>
-            <td id="qna-title" ><a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle}"></a></td>
+            <td id="qna-title" >
+              <a th:href="@{|/updateBoardCnt/${qna.id}|}" th:text="${qna.qnaTitle + ' [' + qna.replyCount +']'}"></a>
+            </td>
             <td th:text="${qna.user.username}"></td>
             <td th:text="*{#temporals.format(qna.qnaRegdate, 'yy-MM-dd')}"></td>
-            <td th:text="${qna.qnaCnt}"></td>
+            <td class="qna-cnt" th:text="${qna.qnaCnt}"></td>
           </tr>
         </table>
       </div>
@@ -261,7 +298,7 @@
           <input type="radio" name="category" value="title" checked> 제목
           <input type="radio" name="category" value="content"> 내용
 
-          <button type="submit">검색</button>
+          <button class="search-btn" type="submit">검색</button>
         </form>
       </div>
 

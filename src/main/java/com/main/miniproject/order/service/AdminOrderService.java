@@ -93,8 +93,6 @@ public class AdminOrderService {
                             criteriaBuilder.like(ordersRoot.get("orderTel"), "%" + keyword + "%")
                     ));
                 }
-                System.out.println("===============keyword================="+keyword);
-                System.out.println("==============category================="+category);
 
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 

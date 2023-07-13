@@ -20,27 +20,40 @@
       padding: 0;
     }
 
+	tr:nth-child(even) {
+	  background-color: #2b2b2b;
+	}
+	
+	tr:nth-child(odd) {
+	  background-color: #2b2b2b;
+	}
+
     .cart-cart {
       text-align: center;
       margin-top: 250px;
       margin-bottom: 20px;
+      font-weight:bold;
     }
 
-    .cart-header p{
+    
+	.cart-header p{
       font-size: 12px;
-      color: white;
+      color: red;
+      font-weight:bold;
     }
+
 
     .cart-cart p {
-      font-size: 20px;
-      color: white;
+      font-size: 25px;
+      color: lightgreen;
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
     }
 
     .cart-total-div {
       width: 60%;
       margin: 0 auto;
       padding: 10px;
-      background-color: whitesmoke;
+      background-color:#2b2b2b ;
       margin-bottom: 150px;
     }
 
@@ -48,7 +61,7 @@
       background-color: #86cfda;
       height: 50px;
       text-align: right;
-      padding: 20px;
+      padding: 10px;
       border-bottom: 1px solid black;
       border-top: 1px solid black;
     }
@@ -56,11 +69,16 @@
     .cart-table {
       color: black;
       text-align: center;
-      border: 1px solid white;
       border-collapse: collapse;
       background-color: white;
       width: 100%;
       margin: 0 auto;
+      color:white;
+    }
+
+    .cart-table .images img {
+        width:100px;
+        height: 70px;
     }
 
     .cart-table th, td {
@@ -133,10 +151,40 @@
       border-top : 1px solid black;
       border-bottom: 1px solid black;
     }
-    
+
     .images img{
     	width:100px;
+    	height:70px;
+    	border-radius:5px;
     }
+    
+    #payMoney , .totalCost, #itemCost.money{
+    	color: orange;
+    	font-weight:bold;
+    }
+    
+    #checkCnt{
+    	color:aqua;
+    }
+    
+  .cart-product-title {
+    font-size: 16px;
+    background: -webkit-linear-gradient(right, #EE0979, #FF6A00, #FFD300, #08D9D6, #FF2E63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: 0 0%;
+    }
+}
+
   </style>
 
   <script>
@@ -374,7 +422,7 @@
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin">관리자페이지</a>
+				<a href="/admin/orders">관리자페이지</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
@@ -396,7 +444,7 @@
 
 <section>
   <div class="cart-cart">
-    <p>c a r t</p>
+    <p>C a r t</p>
   </div>
 
   <div class="cart-total-div">
@@ -418,7 +466,7 @@
         <tr th:each="cart: ${cartList} ">
           <td id="td1"><input type="checkbox" name="check" value="1"></td>
           <td class="images"><img th:src="${cart.productImage}"></td>
-          <td th:text="${cart.product.getProductTitle()}"></td>
+          <td class="cart-product-title" th:text="${cart.product.getProductTitle()}"></td>
           <td class="money" id="itemCost" th:text="${cart.product.getProductPrice().longValue()}">
           </td>
           <td>
