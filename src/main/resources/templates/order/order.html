@@ -708,7 +708,7 @@
 
     <section>
             <div class="order-top">
-                <p>주문/결제</p>
+                <p>O r d e r</p>
             </div>
 
         <div class="order-total-div">
@@ -741,11 +741,11 @@
                         <td id="address-td">
                             <ul>
                                 <li>
-                                    <input type="text" id="postcode" placeholder="우편번호">
+                                    <input type="text" id="postcode" onclick="execDaumPostcode()" placeholder="우편번호" readonly>
                                     <input type="button" id="address-btn" onclick="execDaumPostcode()" value="주소 찾기"><br>
                                 </li>
                                 <li>
-                                    <input type="text" id="roadAddress" placeholder="주소">
+                                    <input type="text" id="roadAddress" onclick="execDaumPostcode()" placeholder="주소" readonly>
                                 </li>
                                 <li>
                                     <input type="text" id="detailAddress" placeholder="상세주소">
