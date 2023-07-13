@@ -55,6 +55,12 @@
 						Q&A
 					</a>
 				</div>
+				
+				<div class="nav-bar-item">
+					<a href="/review/list"> <span></span> <span></span> <span></span> <span></span>
+						리뷰			
+					</a>
+				</div>
 
 				<div class="nav-bar-item nav-bar-item-cart">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
@@ -75,7 +81,7 @@
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin">관리자페이지</a>
+				<a href="/admin/orders">관리자</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
