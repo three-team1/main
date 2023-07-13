@@ -291,6 +291,10 @@
         text-decoration: none;
         color: white;
       }
+
+      #cart-count.notification-badge {
+        box-sizing: content-box;
+      }
     </style>
   </th:block>
   <th:block layout:fragment="script">
@@ -404,6 +408,27 @@
           }
         });
       }
+
+      //장바구니 카트 카운트
+      function updateCartCount() {
+
+        $.ajax({
+          type: "GET",
+          url: "/api/cart/count",
+          success: function(data) {
+
+            $('#cart-count').text(data);
+          },
+          error: function() {
+            console.log("장바구니 수량을 불러오는데 실패했습니다.");
+          }
+        });
+
+      };
+
+      $(document).ready(function() {
+        updateCartCount();
+      })
     </script>
   </th:block>
 </head>
