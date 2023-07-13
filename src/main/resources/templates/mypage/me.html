@@ -152,23 +152,23 @@
                 });
             });
 
-            $(function updateCartCount() {
-                $.get("/api/cart/count", function(data) {
-                    $('#cart-count').text(data);
+            function updateCartCount() {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/cart/count",
+                    success: function(data) {
+
+                        $('#cart-count').text(data);
+                    },
+                    error: function() {
+                        console.log("장바구니 수량을 불러오는데 실패했습니다.");
+                    }
                 });
-            });
 
-            $.ajax({
-                type: "GET",
-                url: "/api/cart/count",
-                success: function(data) {
+            };
 
-                    $('#cart-count').text(data);
-                },
-                error: function() {
-                    console.log("장바구니 수량을 불러오는데 실패했습니다.");
-                }
-            });
+
 
             function addToCart(itemId) {
                 $.ajax({
@@ -190,6 +190,11 @@
                     }
                 });
             }
+
+            $(document).ready(function() {
+                updateCartCount();
+            })
+
 
         </script>
     </th:block>
