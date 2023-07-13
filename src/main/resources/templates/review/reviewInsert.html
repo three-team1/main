@@ -7,35 +7,59 @@
     <th:block layout:fragment="css">
         <style>
             .main-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                grid-gap: 20px;
+                justify-items: center;
+                align-items: start;
+                padding: 10px;
                 margin-top: 172px;
                 min-height: 640px;
                 min-width: 400px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+            }
+
+            #orderItem {
+                margin-right: 20px;
+                width: 150px;
+                height: 35px;
+                padding-left: 10px;
+                font-size: 1rem;
+                color: white;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                outline: none;
+                cursor: pointer;
             }
 
             .review-block {
+                display: grid;
+                grid-template-rows: auto auto auto auto;
+                grid-gap: 10px;
                 padding: 5px;
-                height: 640px;
+                min-height: 640px;
                 width: 470px;
                 background: transparent;
                 border: none;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+                justify-items: center;
+            }
+
+            #ratingZone, #textZone, #imagePreview {
+                order: 1;
             }
 
             .review-writing {
+                grid-row: span 1;
+                display: grid;
+                grid-template-rows: auto auto;
+                grid-gap: 10px;
                 margin-bottom: 5px;
                 padding: 5px 15px;
-                height: 550px;
+                min-height: 550px;
                 width: 450px;
                 background: rgba(255, 255, 255, 0.3);
                 border: 1px dotted aqua;
                 border-radius: 5px;
+                align-content: start;
             }
 
             .review-block-title {
@@ -48,7 +72,8 @@
             }
 
             #ratingZone {
-                height: 90px;
+                height: 100px;
+                width: 418px;
             }
 
             .star {
@@ -84,10 +109,11 @@
                 outline: none;
                 margin-bottom: 2px;
                 background: rgba(255, 255, 255, 0.8);
+                color: #777;
             }
 
             #attachZone {
-                height: 100px;
+                min-height: 130px;
                 width: 418px;
                 background: rgba(255, 255, 255, 0.8);
             }
@@ -128,18 +154,82 @@
                     }
 
                     //글자수 제한
-                    if (content.length > 500) {
-                        $(this).val($(this).val().substring(0, 500));
+                    if (content.length > 200) {
+                        $(this).val($(this).val().substring(0, 200));
                         alert("글자수는 200자까지 입력 가능합니다.");
                     }
                 });
 
-                $("#btnSave").on("click", function() {
+                //이미지 미리보기
+                document.getElementById("btnAttach").addEventListener("change", function (e) {
+                    let files = Array.from(e.target.files);
+                    let totalRows = Math.ceil(files.length / 3);
+                    let promises = [];
+
+                    if (files.length > 10) {
+                        alert("이미지 파일은 10개까지 첨부할 수 있습니다.");
+                        files = files.slice(0, 10);
+                    }
+
+                    //미리보기 초기화
+                    attachZone.innerHTML = "";
+
+                    for (let i = 0; i < files.length; i++) {
+                        let image = new Image();
+                        image.src = URL.createObjectURL(files[i]);
+
+                        let promise = new Promise((resolve) => {
+                            image.onload = resolve;
+                        });
+
+                        promises.push(promise);
+
+                        //이미지 attachZone 추가
+                        let imgElement = document.createElement("img");
+                        imgElement.src = image.src;
+                        imgElement.style.width = "110px";
+                        imgElement.style.height = "110px";
+                        imgElement.style.margin = "10px";
+                        attachZone.appendChild(imgElement);
+                    }
+
+                    Promise.all(promises).then(() => {
+                        let currentReviewBlockHeight = parseFloat(window.getComputedStyle(document.querySelector(".review-block"), null).getPropertyValue("height"));
+                        let currentReviewWritingHeight = parseFloat(window.getComputedStyle(document.querySelector(".review-writing"), null).getPropertyValue("height"));
+                        let currentImagePreviewHeight = parseFloat(window.getComputedStyle(document.querySelector("#imagePreview"), null).getPropertyValue("height"));
+                        let currentAttachZoneHeight = parseFloat(window.getComputedStyle(document.querySelector("#attachZone"), null).getPropertyValue("height"));
+
+                        let totalHeight;
+                        if (files.length <= 3) {
+                            // 1~3개 이미지일 경우 현재 높이 유지
+                            totalHeight = currentAttachZoneHeight - currentAttachZoneHeight;
+                        } else {
+                            // 4개 이상 이미지일 경우 행당 110px 높이 증가
+                            totalHeight = (130 * totalRows) - currentAttachZoneHeight;
+                        }
+                        let newReviewBlockHeight = currentReviewBlockHeight + totalHeight;
+                        let newReviewWritingHeight = currentReviewWritingHeight + totalHeight;
+                        let newImagePreviewHeight = currentImagePreviewHeight + totalHeight;
+
+                        document.querySelector(".review-block").style.height = newReviewBlockHeight + "px";
+                        document.querySelector(".review-writing").style.height = newReviewWritingHeight + "px";
+                        document.querySelector("#imagePreview").style.height = newImagePreviewHeight + "px";
+                        document.querySelector("#attachZone").style.height = newAttachZoneHeight + "px";
+                    });
+                });
+
+                $("#btnSave").on("click", function () {
                     let orderItemId = document.getElementById("orderItem").value;
                     let reviewRating = document.getElementById("reviewRating").value;
                     let reviewContent = document.getElementById("reviewContent").value;
                     let files = $("#btnAttach")[0].files;
                     let validExtensions = ["jpg", "png", "gif"];
+
+                    //null 방지
+                    if (reviewContent == null || reviewContent.trim() == "") {
+                        alert("내용을 입력해주세요.");
+                        return;
+                    }
 
                     //JSON 데이터를 묶음
                     let jsonInputs = {
@@ -152,12 +242,12 @@
                     const json = JSON.stringify(jsonInputs);
 
                     //JSON 문자열 Blob 객체 변환
-                    const blob = new Blob([json], { type: "application/json" });
+                    const blob = new Blob([json], {type: "application/json"});
 
                     //FormData 객체 생성
                     let formData = new FormData();
 
-                    for(let i = 0; i < files.length; i++){
+                    for (let i = 0; i < files.length; i++) {
                         let ext = files[i].name.split('.').pop().toLowerCase();
                         if (!validExtensions.includes(ext)) {
                             alert("jpg, png, gif 형식의 이미지 파일만 첨부할 수 있습니다.");
@@ -170,7 +260,7 @@
                     formData.append("jsonBlob", blob);
 
                     //formData 확인용
-                    for(let pair of formData.entries()) {
+                    for (let pair of formData.entries()) {
                         console.log(pair[0] + ', ' + pair[1]);
                     }
 
@@ -237,7 +327,7 @@
                         <textarea id="reviewContent" name="reviewContent" th:field="*{reviewContent}" placeholder="내용은 10자 이상으로 작성하세요."></textarea><br>
                         <div class="counting">
                             <span class="textCount">0</span>
-                            <span class="textTotal">/ 500자</span>
+                            <span class="textTotal">/ 200자</span>
                         </div><br>
                     </div>
                     <div id="imagePreview">
