@@ -129,7 +129,7 @@ public class BoardController {
 	        List<Comment> replies = commentService.commentReplyList(comment.getId());
 	        commentReplies.put(comment.getId(), replies);
 	    }
-	    	    
+	    
 	    
 	    model.addAttribute("userDetail",userDetail);
 	    model.addAttribute("board", board);
