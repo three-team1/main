@@ -11,46 +11,44 @@
                 color: red;
                 font-weight: bold;
             }
-
-
-            .btn-container {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
-            }
-
+            
+            body{
+				font-family: 'Nanum Gothic Coding', monospace;
+			}
 
         </style>
     </th:block>
 
     <!-- 사용자 스크립트 추가 -->
     <th:block layout:fragment="script">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-              integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-              crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-                crossorigin="anonymous"></script>
+<!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"-->
+<!--              integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"-->
+<!--              crossorigin="anonymous">-->
+<!--        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"-->
+<!--                integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"-->
+<!--                crossorigin="anonymous"></script>-->
+        <link rel="stylesheet" th:href="@{../static/css/adminPage.css}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+              rel="stylesheet">
         <script th:inline="javascript">
-
-            // let globalKeyword = "";
 
 
             $(document).ready(function () {
 
                 // 페이지 링크 클릭 이벤트 처리
-                $(".page-link").on("click", function (e) {
-                    e.preventDefault();
-                    var page = $(this).data("page");
-					setPageAndSubmitForm(page);
-
-
-                });
+                // $(".page-link").on("click", function (e) {
+                //     e.preventDefault();
+                //     var page = $(this).data("page");
+				// 	setPageAndSubmitForm(page);
+                //
+                //
+                // });
 
                 // 검색 버튼 클릭 이벤트 처리
                 $("#searchBtn").on("click", function (e) {
                     e.preventDefault();
-                    // globalKeyword = "";
                     var page = 0;
                     setPageAndSubmitForm(page);
                 });
@@ -64,9 +62,7 @@
                     // 검색어 필드 값이 빈칸인 경우 전체 데이터 요청
 
                     var keyword = $("#searchKeyword").val().trim();
-                    // if (globalKeyword !== "") {
-                    //     keyword = globalKeyword;
-                    // }
+
                     if (keyword === "") {
                         // // 	// 검색어 필드를 제거하여 서버에서 빈 검색어로 처리되도록 함
 						$("#keyword").removeAttr("name");
@@ -85,7 +81,7 @@
                 }
 
             )
-                ;
+
 
 
                 $(document).ready(function () {
@@ -199,10 +195,11 @@
 <body>
 <div layout:fragment="content">
     <div class="main-content">
-
+        <h1>PRODUCT LIST</h1>
+        <div class="total-div">
         <div class="btn-container">
-            <button id="deleteproductBtn" type="button" class="btn btn-primary">선택 삭제</button>
-            <button id="newproductBtn" type="button" class="btn btn-primary">새 상품 등록</button>
+            <button id="newproductBtn" type="button" class="btn btn-product-create">상품 등록</button>
+            <button id="deleteproductBtn" type="button" class="btn btn-product-delete">선택 삭제</button>
         </div>
         <table class="table">
             <thead>
@@ -217,32 +214,38 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="product, status: ${productPage}">
+            <tr class="itemlist" th:each="product, status: ${productPage}">
                 <td><input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}"></td>
                 <td th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
                 <td th:text="${product.id}"></td>
-                <td th:text="${product.productType}"></td>
-                <td th:text="${product.productTitle}"></td>
+            <td th:classappend="${product.productType == '초월'} ? 'cho-wol' : ((${product.productType == '초인'} ? 'cho-in' : (${product.productType == '자연'} ? 'ja-yeon' : (${product.productType == '속성'} ? 'sok-seong' : ''))))" 
+    			th:text="${product.productType}"></td>
+
+
+
+
+
+                <td  class="product-admin-title" th:text="${product.productTitle}"></td>
                 <td th:text="${product.productQuantity}"
                     th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''"></td>
                 <td>
                     <a th:href="@{'/admin/item/' + ${product.id}}">
-                        <button type="button">선택</button>
+                        <button class="detail-btn" type="button">선택</button>
                     </a>
                 </td>
-
             </tr>
-            </tbody>
-        </table>
+        </tbody>
+    </table>
+</div>
 
         <!--검색 기능-->
         <!--form으로 묶으면 enter를 눌렀을 때 type이 submit인 버튼이 작동할 수 있다.-->
         <form th:action="@{'/admin/items/'}" method="get" class="form-inline">
-            <div class="form-group">
-                <input type="text" id="searchKeyword" class="form-control" th:field="*{keyword}"
+            <div class="search-box">
+                <input type="text" id="searchKeyword" class="search-keyword" th:field="*{keyword}"
                        placeholder="상품명 or 상품타입을 입력해주세요">
             </div>
-            <button type="submit" id="searchBtn" class="btn btn-primary">검색</button>
+            <button type="submit" id="searchBtn" class="search-btn">검색</button>
         </form>
 
         <!--페이징 시작-->
@@ -250,28 +253,26 @@
         <div th:if="${!productPage.isEmpty()}">
             <ul class="pagination justify-content-center">
                 <li th:classappend="${!productPage.hasPrevious} ? 'disabled'">
-<!--                    <a class="page-link" href="javascript:void(0)" th:if="${keyword}" th:data-page="0">-->
-                        <a class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=0)}">처음</a>
-<!--                        첫 페이지-->
-<!--                    </a>-->
+                        <a class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=0)}">
+                            처음
+                        </a>
                 </li>
                 <li th:classappend="${!productPage.hasPrevious} ? 'disabled'">
-                    <a class="page-link" href="javascript:void(0)" th:if="${keyword}" th:data-page="${productPage.number-1}">
+                    <a class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=${productPage.number-1})}">
                         이전
                     </a>
                 </li>
                 <li th:each="page: ${#numbers.sequence(0, productPage.totalPages-1)}"
                     th:classappend="${page == productPage.number} ? 'active'" class="page-item">
-                    <a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-keyword="${keyword}" th:data-page="${page}"></a>
-<!--                    <a th:text="${page+1}" class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=${page})}"></a>-->
+                    <a th:text="${page+1}" class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=${page})}"></a>
                 </li>
                 <li th:classappend="${!productPage.hasNext} ? 'disabled'">
-                    <a class="page-link" href="javascript:void(0)" th:if="${keyword}" th:data-page="${productPage.number+1}">
+                    <a class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=${productPage.number+1})}">
                         다음
                     </a>
                 </li>
                 <li th:classappend="${!productPage.hasNext} ? 'disabled'">
-                    <a class="page-link" href="javascript:void(0)" th:if="${keyword}" th:data-page="${productPage.totalPages-1}">
+                    <a class="page-link" th:href="@{/admin/items/(keyword=${keyword}, page=${productPage.totalPages-1})}">
                         마지막
                     </a>
                 </li>
