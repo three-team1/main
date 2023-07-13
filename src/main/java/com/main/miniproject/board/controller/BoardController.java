@@ -121,6 +121,7 @@ public class BoardController {
 	    Board board = boardService.getBoard(id);
 	    	     
 	    List<BoardImage> boardImageList = boardImageService.boardImageList(board);
+	    System.out.println(boardImageList);
 	    List<Comment> commentList = commentService.commentList(id, "community");
 	    
 	    Map<Long, List<Comment>> commentReplies = new HashMap<>();
@@ -129,7 +130,7 @@ public class BoardController {
 	        List<Comment> replies = commentService.commentReplyList(comment.getId());
 	        commentReplies.put(comment.getId(), replies);
 	    }
-	    	    
+	    
 	    
 	    model.addAttribute("userDetail",userDetail);
 	    model.addAttribute("board", board);

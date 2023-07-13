@@ -22,24 +22,23 @@
 </head>
 	<style>
 		.board-detail-box {
-			width: 1000px;
+			width: 1200px;
 			margin:auto;
 			margin-top: 300px;
 			text-align: left;
-			color: wheat;
+			color: white;
 			padding: 20px;
-			border: 2px solid beige;
+			border: 1px solid aqua;
 			border-radius : 5px;
 			
 		}
 
 		.board-detail-box h1 {
 			text-align: center;
-			margin-left: 150px;
+			margin-left: 170px;
 		}
 
 		.board-detail-box span {
-			text-align: end;
 			font-size: 10px;
 			margin-left: 100px;
 		}
@@ -65,7 +64,7 @@
 
 		.board-detail-content-box{
 			margin-top: 20px;
-			border-top: 1px solid lightgrey;
+			border-top: 2px solid lightgrey;
 			color: aqua;
 		}
 
@@ -104,6 +103,10 @@
 
 		.board-image img {
 			width: 400px;
+		}
+		
+		#file-upload-button {
+			background:black;
 		}
 
 	</style>
@@ -205,7 +208,7 @@
         			<button class="delete-img-btn" th:data-id="${image.id}">삭제</button>
     			</div>
     			
-		    <textarea id="boardContent" rows="30" cols="140" name="boardContent" th:text="${board.boardContent}"></textarea>
+		    <textarea id="boardContent" rows="30" cols="170" name="boardContent" th:text="${board.boardContent}"></textarea>
 		</div>
 		
 		    <input class="update-btn" type="submit" value="수정하기">

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,9 @@ public class BoardService {
     
     @Autowired
     private CommentRepository commentRepository;
+    
+    @Value("${boardImgLocation}")
+    private String boardImgLocation;
 
     public Board createBoard(Board board) {											//게시글 등록
 
@@ -88,7 +92,7 @@ public class BoardService {
         for(BoardImage boardImage : boardImages) {
 
             try {
-                Path filePath = Paths.get("C:/board/images/" + boardImage.getName());  // DB에서 삭제가되면 로컬저장폴더에도 삭제하는 로직
+                Path filePath = Paths.get(boardImgLocation ,boardImage.getName());  // DB에서 삭제가되면 로컬저장폴더에도 삭제하는 로직
                 Files.deleteIfExists(filePath);
             } catch (IOException e) {
                 e.printStackTrace();
