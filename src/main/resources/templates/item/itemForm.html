@@ -212,12 +212,10 @@
 
 <div layout:fragment="content">
     <div class="main-content">
-    <form id="updateForm" enctype="multipart/form-data" th:object="${itemFormDto}">
+        <form id="updateForm" enctype="multipart/form-data" th:object="${itemFormDto}">
 
-        <p class="h2">
-            새 상품 등록
-        </p>
-
+        <h1>새 상품 등록</h1>
+        <div class="total-div">
         <input id="id" type="hidden" th:field="*{id}">
 
         <div class="form-group">
@@ -298,17 +296,17 @@
                 </div>
             </div>
         </div>
-
+</div>
 
 
         <a th:href="@{'/admin/items'}">
-            <button id="listBtn" type="button">목록</button>
+            <button id="listBtn" type="button" class="search-btn">목록</button>
         </a>
         <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button id="saveBtn" type="button" class="btn btn-primary">저장</button>
+            <button id="saveBtn" type="button" class="search-btn">저장</button>
         </div>
         <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button id="updateBtn" type="button" class="btn btn-primary">수정</button>
+            <button id="updateBtn" type="button" class="search-btn">수정</button>
         </div>
 
 

@@ -183,7 +183,7 @@ public class ProductService {
 	public Page<Product> getList(int page, String keyword){
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.asc("productQuantity"));
-		Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+		Pageable pageable = PageRequest.of(page, 1, Sort.by(sorts));
 		Specification<Product> productSpecification = search(keyword);
 
 		return productRepository.findAll(productSpecification, pageable);
