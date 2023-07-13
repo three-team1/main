@@ -23,22 +23,26 @@ import java.util.UUID;
 @Service
 public class ReviewFileServiceImpl implements ReviewFileService {
 
-    @Value("/review/images/")
-    String attachPath;
 
-    @Value("/review/resized/")
-    String resizedPath;
+    @Value("${reviewImgLocation}")
+    String reviewImgPath;
+
+    @Value("${reviewResizedLocation}")
+    String reviewResizedPath;
+
 
     @Override
     @Transactional
     public List<ReviewImage> saveFiles(Review review, List<MultipartFile> files) {
 
+        System.out.println(new File(".").getAbsoluteFile());
+
         List<ReviewImage> reviewImages = new ArrayList<>();
 
         //업로드 일자 기준으로 파일 저장 폴더 생성
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
-        String dataPath = Paths.get(attachPath, today).toString();
-        String resizedDatePath = Paths.get(resizedPath, today).toString();
+        String dataPath = Paths.get(reviewImgPath, today).toString();
+        String resizedDatePath = Paths.get(reviewResizedPath, today).toString();
 
         File dir = new File(dataPath);
         if (!dir.exists()) {

@@ -61,6 +61,11 @@ div {
   margin: auto;
 }
 
+.nav-bar-item-cart a{
+  line-height: -15px;
+}
+
+
 .nav-bar-item-box {
   display: flex;
   margin: auto;
@@ -80,7 +85,7 @@ div {
 .nav-bar-member-text a {
   text-decoration: none;
   font-weight : bold;
-  color: lightblue;
+  color:pink !important;
 }
 
 .nav-bar-member-text img {
@@ -881,9 +886,11 @@ div {
               0 0 200px #03e9f4;
    -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
 }
-a:nth-child(2){
+
+/* a:nth-child(2){
   filter: hue-rotate(110deg);
-}
+} */ 
+
 a span{
   position: absolute;
   display: block;

@@ -45,7 +45,6 @@ dependencies {
 	implementation 'net.coobird:thumbnailator:0.4.17'
 
 
-
 }
 
 tasks.named('test') {

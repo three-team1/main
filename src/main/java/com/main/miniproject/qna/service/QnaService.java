@@ -111,4 +111,8 @@ public class QnaService {
         return qnaRepository.findByQnaContentContaining(keyword, pageable);
 
     }
+
+    public Page<QNA> searchQNAByQnaWriter(Pageable pageable, String keyword) {
+        return qnaRepository.findByQnaWriterContaining(keyword, pageable);
+    }
 }

@@ -104,6 +104,7 @@
                         <td th:text="${orders.user.username}"></td>
                         <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${#numbers.formatInteger(orders.orderTotalPrice, 3, 'COMMA')}"></td>
+                        <td th:text="${orders.orderTotalPrice}"></td>
                         <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
                         <td th:text="${orders.orderTel}"></td>
                         <td th:text="${orders.payment.paymentPlan}"></td>

@@ -133,6 +133,10 @@
         color: gray;
       }
 
+      .starRating {
+        text-align: left;
+      }
+
       .review-card .username {
         margin-bottom: 10px;
       }
@@ -375,6 +379,11 @@
         if(storedKeyword) {
           $("input[name='keyword']").val(storedKeyword);
         }
+
+        //로그아웃 시 검색어 삭제
+        $(".nav-bar-login a[href='/logout']").on("click", function () {
+          localStorage.removeItem("keyword");
+        });
       });
 
       //리뷰 삭제
@@ -427,7 +436,6 @@
           <form id="searchForm" th:action="@{/mypage/myReview}" method="get">
             <input type="text" id="keyword" name="keyword" placeholder="Search">
             <button type="submit" id="btnSearch">검색</button>
-            <a th:href="@{/mypage/myReview}">전체 목록</a>
           </form>
         </div>
         <div th:each="review : ${reviews}">
