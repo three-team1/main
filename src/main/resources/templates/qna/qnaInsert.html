@@ -24,7 +24,8 @@
       text-align: center;
       margin-top: 250px;
       margin-bottom: 20px;
-      color: white;
+      color: lightcoral;
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
     }
 
     .insert-insert p{
@@ -35,7 +36,7 @@
       width: 60%;
       margin: 0 auto;
       padding: 10px;
-      background-color: whitesmoke;
+      background-color: #2b2b2b;
       margin-bottom: 150px;
     }
 
@@ -46,16 +47,26 @@
     }
 
     #insert-table {
-      background-color: white;
-      border: 1px solid black;
+      color: white;
+      background-color: #2b2b2b;
+      border: 1px solid #86cfda;
       border-collapse: collapse;
       width: 100%;
       margin: 20px auto;
     }
 
+    #insert-table th {
+      width: 10%;
+      color: white;
+      background-color: #2b2b2b;
+      font-size: 13px;
+    }
+
     #insert-table td, input, textarea {
-      font-size: 12px;
+      color: white;
+      background-color: #2b2b2b;
       border: none;
+      font-size: 13px;
     }
 
     #insert-table input, textarea {
@@ -67,9 +78,9 @@
       padding: 10px;
     }
 
-    #insert-table td {
-      border-bottom : 1px solid black;
-      border-right: 1px solid black;
+    #insert-table td, th {
+      border-bottom : 1px solid #86cfda;
+      border-right: 1px solid #86cfda;
     }
 
     #insert-table textarea {
@@ -77,6 +88,7 @@
     }
 
     #insertForm #insert-btn {
+      color: black;
       margin: 0px auto;
       display: block;
       border: 1px solid black;
@@ -158,17 +170,17 @@
         <form id="insertForm" action="/qna/postInsert" method="post">
           <table id="insert-table">
             <tr>
-              <td style="text-align: center">
+              <th style="text-align: center">
                 제목
-              </td>
+              </th>
               <td style="text-align: left;">
                 <input type="text" name="qnaTitle">
               </td>
             </tr>
             <tr>
-              <td style="text-align: center">
+              <th style="text-align: center">
                 내용
-              </td>
+              </th>
               <td style="text-align: left;">
                 <textarea name="qnaContent" cols="100" rows="30"></textarea >
               </td>

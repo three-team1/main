@@ -9,7 +9,34 @@
 	<th:block layout:fragment="css">
 		<style>
 
-
+			body{
+				font-family: 'Nanum Gothic Coding', monospace;
+			}
+			
+/* 			.search-btn{
+				background:black;
+				border:1px solid white;
+				color:white;
+			} */
+			
+			.detail-btn {
+    display: inline-block;
+    font-weight: 400;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #86cfda;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition:all 0.5s;
+}
 
 		</style>
 	</th:block>
@@ -125,7 +152,7 @@
 					<td th:text="${user.role}"></td>
 					<td>
 						<a th:href="@{'/admin/memberDetail/' + ${user.id}}">
-						<button class="btn" type="button">선택</button>
+						<button class="detail-btn" type="button">선택</button>
 						</a>
 					</td>
 				</tr>
@@ -150,7 +177,7 @@
 					<option value="tel" th:selected="${category == 'tel'}">연락처</option>
 				</select>
 				<input type="text" id="searchKeyword" class="search-keyword"  th:field="*{keyword}" placeholder="검색어를 입력해주세요" style="width: auto;">
-				<button type="submit" id="searchBtn" class="btn search-btn">검색</button>
+				<button type="submit" id="searchBtn" class="btn detail-btn">검색</button>
 			</div>
 		</form>
 
