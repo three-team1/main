@@ -1,4 +1,21 @@
 
+
+body{
+	 font-family: 'Nanum Gothic Coding', monospace;
+}
+
+	thead {
+	  background-color: #86cfda;
+	  
+	}
+	
+	thead td {
+		color:black;
+		font-weight:bold;
+	}
+	
+
+
 .sideMenu-bar{
     width: 15%;
     float: left;
@@ -62,7 +79,7 @@
 .total-div{
     width: 100%;
     padding: 10px;
-    background-color: transparent;
+    background-color: #2b2b2b;
     margin-inline: auto;
     color: whitesmoke;
 }
@@ -70,7 +87,7 @@
 h1 {
     text-align: center;
     margin-bottom: 20px;
-    color: whitesmoke;
+    color: orange;
 }
 
 .table {
@@ -89,10 +106,10 @@ h1 {
 
 
 /*상세 조회 버튼*/
-.btn {
+.detail-btn {
     display: inline-block;
     font-weight: 400;
-    color: whitesmoke;
+    color: black;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
@@ -100,15 +117,17 @@ h1 {
     -ms-user-select: none;
     user-select: none;
     background-color: #86cfda;
-    border: 1px solid whitesmoke;
+    border: none;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 0.25rem;
+    transition:all 0.5s;
 }
 
-.btn:hover{
-    background-color: grey;
+.detail-btn:hover{
+    background: transparent;
+    color:white !important;
 }
 
 .search-box {
@@ -122,9 +141,12 @@ h1 {
     padding: 5px 10px;
     border: 1px solid whitesmoke;
     border-radius: 5px;
-    background-color: whitesmoke;
     color: black;
     font-size: 14px;
+}
+
+.search-category option{
+	color:black !important;
 }
 
 .search-btn{
@@ -147,4 +169,62 @@ h1 {
 
 .search-btn:hover {
     background-color: grey;
+}
+
+.search-keyword{
+	color:black !important;
+}
+
+.btn-container {
+	margin-bottom:10px;
+}
+
+.btn-product-create{
+	background-color:aqua !important;
+	font-weight:bold !important;
+}
+
+.btn-product-delete {
+	
+	background-color:lightcoral !important;
+	font-weight:bold !important;
+}
+
+.cho-wol {
+	color:red;
+}
+
+.cho-in {
+	    color: #de8cff !important;
+}
+
+.sok-seong{
+	background: linear-gradient(to left, red,purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight:bold;
+}
+
+
+
+.product-admin-title {
+    font-size: 16px;
+    background: -webkit-linear-gradient(right, #EE0979, #FF6A00, #FFD300, #08D9D6, #FF2E63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+}
+
+.ja-yeon{
+	color: lightgreen !important
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: 0 0%;
+    }
 }

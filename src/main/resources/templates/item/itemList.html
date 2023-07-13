@@ -11,14 +11,10 @@
                 color: red;
                 font-weight: bold;
             }
-
-
-            .btn-container {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
-            }
-
+            
+            body{
+				font-family: 'Nanum Gothic Coding', monospace;
+			}
 
         </style>
     </th:block>
@@ -202,8 +198,8 @@
         <h1>PRODUCT LIST</h1>
         <div class="total-div">
         <div class="btn-container">
-            <button id="deleteproductBtn" type="button" class="btn btn-primary">선택 삭제</button>
-            <button id="newproductBtn" type="button" class="btn btn-primary">새 상품 등록</button>
+            <button id="newproductBtn" type="button" class="btn btn-product-create">상품 등록</button>
+            <button id="deleteproductBtn" type="button" class="btn btn-product-delete">선택 삭제</button>
         </div>
         <table class="table">
             <thead>
@@ -222,13 +218,19 @@
                 <td><input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}"></td>
                 <td th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
                 <td th:text="${product.id}"></td>
-                <td th:text="${product.productType}"></td>
-                <td th:text="${product.productTitle}"></td>
+            <td th:classappend="${product.productType == '초월'} ? 'cho-wol' : ((${product.productType == '초인'} ? 'cho-in' : (${product.productType == '자연'} ? 'ja-yeon' : (${product.productType == '속성'} ? 'sok-seong' : ''))))" 
+    			th:text="${product.productType}"></td>
+
+
+
+
+
+                <td  class="product-admin-title" th:text="${product.productTitle}"></td>
                 <td th:text="${product.productQuantity}"
                     th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''"></td>
                 <td>
                     <a th:href="@{'/admin/item/' + ${product.id}}">
-                        <button class="btn" type="button">선택</button>
+                        <button class="detail-btn" type="button">선택</button>
                     </a>
                 </td>
             </tr>

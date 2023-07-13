@@ -6,7 +6,9 @@
 <head>
     <th:block layout:fragment="css">
         <style>
-
+			body{
+				font-family: 'Nanum Gothic Coding', monospace;
+			}
 
         </style>
     </th:block>
@@ -15,8 +17,12 @@
         <link rel="stylesheet" th:href="@{../static/css/adminPage.css}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
-              rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
+	rel="stylesheet">
+              
+              
+              
 
         <script th:inline="javascript">
 
@@ -103,14 +109,13 @@
                         <td th:text="${orders.id}"></td>
                         <td th:text="${orders.user.username}"></td>
                         <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${#numbers.formatInteger(orders.orderTotalPrice, 3, 'COMMA')}"></td>
                         <td th:text="${orders.orderTotalPrice}"></td>
                         <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
-                        <td th:text="${orders.orderTel}"></td>
+                        <td th:text="${orders.orderTel}"></td>       
                         <td th:text="${orders.payment.paymentPlan}"></td>
                         <td>
                             <a th:href="@{'/admin/orderDetail/' + ${orders.id}}">
-                                <button class="btn" type="button">선택</button>
+                                <button class="detail-btn" type="button">선택</button>
                             </a>
                         </td>
                     </tr>
