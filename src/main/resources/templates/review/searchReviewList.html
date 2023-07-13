@@ -17,9 +17,12 @@
       }
 
       .table-search {
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-bottom: 10px;
-        margin-right: 0;
+        margin-left: 370px;
+        min-width: 260px;
       }
 
       .table-search button {
@@ -35,8 +38,27 @@
       }
 
       .table-search input {
-        margin: 0;
-        padding: 0;
+        width: 200px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+        background: rgba(255,192,203, 0.4);
+        border: none;
+        outline: none;
+      }
+
+      .title-zone {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 160px;
+      }
+
+      #return-reviewList {
+        margin-top: 25px;
+        margin-left: 20px;
+        color: white;
+        cursor: pointer;
       }
 
       .review-block {
@@ -191,7 +213,7 @@
         cursor: pointer;
       }
 
-      #btnSave, #btnDelete {
+      #btnDelete {
         width: 40px;
         height: 20px;
         font-size: 12px;
@@ -359,13 +381,9 @@
 <div layout:fragment="content">
   <div class="main-container">
     <div class="review-block">
-      <h1>상품 후기</h1>
-      <div class="table-search">
-        <form id="searchForm" th:action="@{/review/list-search}" method="get">
-          <input type="text" id="keyword" name="keyword" placeholder="Search">
-          <button type="submit" id="btnSearch">검색</button>
-          <a th:href="@{/review/list}">전체 목록</a>
-        </form>
+      <div class="title-zone">
+        <h1>상품 후기</h1>
+        <p id="return-reviewList" onclick="location.href='/review/list'">[목록으로 돌아가기]</p>
       </div>
       <div th:each="review : ${reviews}">
         <div class="review-card">
@@ -406,6 +424,12 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="table-search">
+        <form id="searchForm" th:action="@{/review/list-search}" method="get">
+          <input type="text" id="keyword" name="keyword" placeholder="Search">
+          <button type="submit" id="btnSearch">검색</button>
+        </form>
       </div>
     </div>
     <div class="pagination">

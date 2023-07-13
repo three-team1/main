@@ -17,9 +17,12 @@
             }
 
             .table-search {
-                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 margin-bottom: 10px;
-                margin-right: 0;
+                margin-left: 370px;
+                min-width: 260px;
             }
 
             .table-search button {
@@ -35,8 +38,13 @@
             }
 
             .table-search input {
-                margin: 0;
-                padding: 0;
+                width: 200px;
+                height: 35px;
+                font-size: 1rem;
+                color: white;
+                background: rgba(255,192,203, 0.4);
+                border: none;
+                outline: none;
             }
 
             .review-block {
@@ -191,7 +199,7 @@
                 cursor: pointer;
             }
 
-            #btnSave, #btnDelete {
+            #btnDelete {
                 width: 40px;
                 height: 20px;
                 font-size: 12px;
@@ -360,12 +368,6 @@
     <div class="main-container">
         <div class="review-block">
             <h1>상품 후기</h1>
-            <div class="table-search">
-                <form id="searchForm" th:action="@{/review/list}" method="get">
-                    <input type="text" name="keyword" id="keyword" placeholder="Search">
-                    <button type="submit" id="btnSearch">검색</button>
-                </form>
-            </div>
             <div th:each="review : ${reviews}">
                 <div class="review-card">
                     <div class="text-zone">
@@ -405,6 +407,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="table-search">
+                <form id="searchForm" th:action="@{/review/list}" method="get">
+                    <input type="text" name="keyword" id="keyword" placeholder="Search">
+                    <button type="submit" id="btnSearch">검색</button>
+                </form>
             </div>
         </div>
         <div class="pagination">
