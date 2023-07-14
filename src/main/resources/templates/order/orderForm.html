@@ -116,7 +116,6 @@
                     <div class="order-info">
                         <img th:src="${productImageList.url}" width="200px" height="200px">
                     </div>
-<!--                        <div class="order-detail-form">-->
                             <ul class="order-detail-ul">
                                 <li class="order-detail" th:text="|주문번호: ${orderItemList.id}|"></li>
                                 <li class="order-detail" th:text="|상품명: ${orderItemList.product.productTitle}|"></li>
@@ -126,7 +125,6 @@
                                 <li class="order-detail" th:text="|주문 상태: 입금 완료(입금자: ${orderItemList.order.user.username})|"></li>
                                 <li class="order-detail">배송 완료</li>
                             </ul>
-<!--                        </div>-->
                  </div>
                 </div>
                 </div>
@@ -138,6 +136,6 @@
     </div>
 </div>
 
-
+</div>
 </body>
 </html>
