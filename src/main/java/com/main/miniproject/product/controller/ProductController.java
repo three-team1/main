@@ -180,21 +180,17 @@ public class ProductController {
 		return "item/itemList";
 	}
 
-//	@GetMapping("/admin/items/{page}")	//페이지 정보 없는 것, 있는 것 둘 다 처리 가능.
-//	public String itemListWithPage(Model model, @PathVariable("page") int page,
-//						   @RequestParam(value = "keyword", defaultValue = "") String keyword,
-//						   @RequestParam(value = "category1", defaultValue = "") String category,
-//						   Product product) {
+//	int nowPage = appForLeader.getNumber() + 1;
+//	//Page<Approval>에서 getNumber를 하여 인덱스 숫자 반환. 인덱스는 -0부터 시작하니까 + 1
 //
-//		Page<Product> productPage = productService.getList(page, keyword);
-//
-//		model.addAttribute("productPage", productPage);
-//		model.addAttribute("keyword", keyword);
-//		model.addAttribute("category", category);
-//		model.addAttribute("productSearch", product);
-//
-//		return "item/itemList";
-//	}
+//	int startPage = ((nowPage - 1) / 5) * 5 + 1;
+//	int endPage = Math.min(startPage + 4, appForLeader.getTotalPages());
+//	int lastPage = appForLeader.getTotalPages();
+//        model.addAttribute("cls", cls);
+//        model.addAttribute("appForLeader", appForLeader);
+//        model.addAttribute("nowPage", nowPage);
+//        model.addAttribute("startPage", startP...
+
 
 
 	//상품 삭제하기

@@ -8,15 +8,14 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
 <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">-->
-<!--    <script src="https://code.jquery.com/jquery-latest.min.js"></script>-->
 <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>-->
 
-<!--    <link rel="stylesheet" th:href="@{/css/layout1.css}">-->
     <link rel="stylesheet" th:href="@{../static/css/adminPage.css}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&family=Noto+Sans+KR&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script th:inline="javascript">
         $(document).ready(function(){
             var errorMessage = [[${errorMessage}]];
@@ -145,64 +144,87 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        .input-group {
-            margin-bottom : 15px
-        }
-        .img-div {
-            margin-bottom : 10px
-        }
-        .fieldError {
-            color: #bd2130;
-        }
+
+    .custom-select{
+        background-color: #2b2b2b;
+        color: white;
+        height: 40px;
+        border: 1px solid #86cfda;
+        outline-style: none;
+        box-sizing: border-box;
+        width: 120px; /* 또는 원하는 폭으로 설정 */
+        max-width: 100%; /* 필요에 따라 조정 */
+        overflow: clip;
+        text-overflow: ellipsis;
+        position: relative;
+        padding-right: 20px; /* 아이콘과의 간격 조절 */
+    }
+
+    .total-div{
+        width: 60%;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #2b2b2b;
+        margin-bottom: 150px;
+    }
+
+    .input-group-text {
+        background-color: #86cfda;
+        color: white;
+        border: 1px solid #86cfda;
+        width: 120px;
+        font-weight: bold;
+
+    }
+
+    #updateForm > div > div > div > span {
+        font-weight: bold;
+    }
+
+    .input-group .form-control {
+        background-color: #2b2b2b;
+        color: white;
+        border: 1px solid #86cfda;
+    }
+
+    .input-group-prepend{
+        background-color: #86cfda;
+        border: 1px solid #86cfda;
+        width: 120px;
+        text-align: center;
+    }
+
+    .search-btn {
+        background-color: #86cfda;
+        color: black;
+        border: 1px solid #86cfda;
+        margin-left: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight:bold;
+    }
+
+    .search-btn:hover {
+        background-color: grey;
+        color: white;
+    }
+
+   #listBtn{
+       margin-top: 20px;
+   }
+
+   #updateBtn{
+       margin-left: 45%;
+       display: block;
+   }
 
 
-        .menuImage{
-            width: 200px; /* 이미지의 가로 크기 */
-            height: 350px; /* 이미지의 세로 크기 */
-            border-radius: 50%; /* 타원형 모양으로 표시 */
-            overflow: hidden; /* 내부 내용이 넘치면 숨김 */
-            position: relative; /* 자식 요소의 위치를 설정하기 위해 필요 */
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 50%);
-        }
+   #saveBtn{
+       margin-left: 50%;
+       display: block;
+   }
 
-        .menuImage img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 이미지를 가득 채우도록 설정 */
-        }
 
-        .nav.flex-column {
-            margin-top: 172px;
-            display: grid;
-            grid-template-columns: fit-content(px);
-            grid-template-rows: auto;
-            grid-gap: 10px;
-            align-items: flex-start;
-            justify-content: flex-start;
-            color: white; /* 글자색 */
-            text-decoration-style: solid;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .nav.flex-column :hover {
-            background-color: #03e9f4; /* 호버 시 배경색 변경 */
-        }
-
-        .nav.flex-column.active {
-            background-color: #03e9f4 /* 활성 탭 배경색 */
-        }
-
-        .nav.flex-column a {
-            display: block;
-            text-align: center;
-            color: inherit; /* 부모 요소로부터 상속 */
-        }
-
-        .test{
-            color: white;
-            text-align: center;
-        }
 
 
     </style>
@@ -215,7 +237,9 @@
         <form id="updateForm" enctype="multipart/form-data" th:object="${itemFormDto}">
 
         <h1>새 상품 등록</h1>
+
         <div class="total-div">
+
         <input id="id" type="hidden" th:field="*{id}">
 
         <div class="form-group">
@@ -242,7 +266,7 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">상품명</span>
+                <span class="input-group-text" style="background-color: #86cfda;   text-align: center; " >상품명</span>
             </div>
             <input id="productTitle" type="text" th:field="*{productTitle}" class="form-control" placeholder="상품명을 입력해주세요">
         </div>
@@ -250,7 +274,7 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">가격</span>
+                <span class="input-group-text" style="background-color: #86cfda">가격</span>
             </div>
             <input type="number" th:field="*{productPrice}" class="form-control" placeholder="상품의 가격을 입력해주세요">
         </div>
@@ -258,7 +282,7 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">재고</span>
+                <span class="input-group-text" style="background-color: #86cfda">재고</span>
             </div>
             <input type="number" th:field="*{productQuantity}" class="form-control" placeholder="상품의 재고를 입력해주세요">
         </div>
@@ -266,7 +290,7 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">상품 상세 내용</span>
+                <span class="input-group-text" style="background-color: #86cfda">상품 상세 내용</span>
             </div>
             <textarea class="form-control" aria-label="With textarea" th:field="*{productContent}"></textarea>
         </div>
@@ -277,7 +301,7 @@
             <div class="form-group" th:each="num: ${#numbers.sequence(1,3)}">
                 <div class="custom-file img-div">
                 		<!-- 나중에 name에 해당되는 itemImgFile을 들고 날라간다. 똑같은 이름이 세 번 나타난다. -->
-                    <input type="file" class="custom-file-input" name="itemImgFile" >
+                    <input type="file" class="custom-file-input" name="itemImgFile" accept=".jpg, .jpeg, .png, .gif, .webp" multiple>
                     <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>
                 </div>
 <!--                <div class="board-image" th:each="image : ${images}">-->
@@ -289,25 +313,29 @@
         <div th:if = "${not #lists.isEmpty(itemFormDto.productImgDtoList)}">
             <div class="form-group" th:each="productImgDto, status: ${itemFormDto.productImgDtoList}">
                 <div class="custom-file img-div">
-                    <input type="file" class="custom-file-input" name="itemImgFile">
+                    <input type="file" class="custom-file-input" name="itemImgFile" accept=".jpg, .jpeg, .png, .gif, .webp" multiple>
                     <input type="hidden" name="itemImgIds" th:value="${productImgDto.id}">
-                    <input type="button" id="imgDeleteBtn" value="x" th:data-delImage="${productImgDto.id}">
+<!--                    <input type="button" id="imgDeleteBtn" value="x" th:data-delImage="${productImgDto.id}">-->
                     <label class="custom-file-label" th:text="${not #strings.isEmpty(productImgDto.originName)} ? ${productImgDto.originName} : '상품이미지' + ${status.index+1}"></label>
                 </div>
             </div>
         </div>
-</div>
+
+            <div th:if="${#strings.isEmpty(itemFormDto.id)}">
+                <button id="saveBtn" type="button" class="search-btn">저장</button>
+            </div>
+            <div th:unless="${#strings.isEmpty(itemFormDto.id)}">
+                <button id="updateBtn" type="button" class="search-btn">수정</button>
+            </div>
+
+            <a th:href="@{'/admin/items'}">
+                <button id="listBtn" type="button" class="search-btn">목록</button>
+            </a>
+
+        </div>
 
 
-        <a th:href="@{'/admin/items'}">
-            <button id="listBtn" type="button" class="search-btn">목록</button>
-        </a>
-        <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button id="saveBtn" type="button" class="search-btn">저장</button>
-        </div>
-        <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
-            <button id="updateBtn" type="button" class="search-btn">수정</button>
-        </div>
+
 
 
     </form>

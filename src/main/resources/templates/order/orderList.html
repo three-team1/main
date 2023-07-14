@@ -40,7 +40,6 @@
                 transform: translate(-50%, -50%);
                 max-width: 100%; /* 화면 크기에 맞게 GIF 크기 조절 */
                 max-height: 100%;
-                filter: blur(2px);
             }
 
 			body{
@@ -115,13 +114,13 @@
 
 
                 // 페이지 로드 후 일정 시간(예: 1.5초) 후에 GIF가 사라지도록 설정
+            });
                 window.addEventListener('load', function() {
                     var gif = document.querySelector('.gif-container-full');
                     setTimeout(function() {
                         gif.style.display = 'none';
                     }, 1500); // 1500밀리초(1.5초) 후에 GIF를 숨김
                 });
-            });
 
         </script>
     </th:block>
@@ -153,7 +152,7 @@
                         <td th:text="${orders.id}"></td>
                         <td th:text="${orders.user.username}"></td>
                         <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${orders.orderTotalPrice}"></td>
+                        <td th:text="${#numbers.formatInteger(orders.orderTotalPrice, 3, 'COMMA')}"></td>
                         <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
                         <td th:text="${orders.orderTel}"></td>       
                         <td th:text="${orders.payment.paymentPlan}"></td>

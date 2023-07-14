@@ -204,6 +204,7 @@
                 <td>상품번호</td>
                 <td>상품 타입</td>
                 <td>상품명</td>
+                <td>가격</td>
                 <td>재고수량</td>
                 <td>조회 및 수정</td>
             </tr>
@@ -213,15 +214,11 @@
                 <td><input type="checkbox" class="rowcheck" id="rowcheck" th:value="${product.id}"></td>
                 <td th:text="${product.productSellStatus == 0} ? '품절' : '판매중'"></td>
                 <td th:text="${product.id}"></td>
-            <td th:classappend="${product.productType == '초월'} ? 'cho-wol' : ((${product.productType == '초인'} ? 'cho-in' : (${product.productType == '자연'} ? 'ja-yeon' : (${product.productType == '속성'} ? 'sok-seong' : ''))))" 
+                <td th:classappend="${product.productType == '초월'} ? 'cho-wol' : ((${product.productType == '초인'} ? 'cho-in' : (${product.productType == '자연'} ? 'ja-yeon' : (${product.productType == '속성'} ? 'sok-seong' : ''))))"
     			th:text="${product.productType}"></td>
-
-
-
-
-
                 <td  class="product-admin-title" th:text="${product.productTitle}"></td>
-                <td th:text="${product.productQuantity}"
+                <td th:text="${#numbers.formatInteger(product.productPrice, 3, 'COMMA')}"></td>
+                <td th:text="${#numbers.formatInteger(product.productQuantity, 3, 'COMMA')}"
                     th:classappend="${product.productQuantity <= 30} ? 'low-stock' : ''"></td>
                 <td>
                     <a th:href="@{'/admin/item/' + ${product.id}}">
@@ -274,6 +271,33 @@
             </ul>
         </div>
         <!--페이징 끝-->
+
+
+
+<!--        <div class="pagination">-->
+<!--                     <span th:style="${startPage == 1 ? 'display:none' : 'display:inline;'}">-->
+<!--                         <th:block th:with="startPage=${((nowPage - 5)/5) * 5}">-->
+<!--                             <a th:href="@{/approvalList(page = ${startPage}, cls = ${cls}, sWord = ${param.sWord})}" class="pageNum">&laquo;</a>-->
+<!--                         </th:block>-->
+<!--                     </span>-->
+<!--            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
+<!--                <th:block th:if="${page > 0}">-->
+<!--                    <a th:if="${page != nowPage}"-->
+<!--                       th:href="@{/approvalList(page = ${page - 1}, cls = ${cls}, sWord = ${param.sWord})}"-->
+<!--                       th:text="${page}" class="pageNum"></a>-->
+<!--                    <strong th:if="${page == nowPage}" th:text="${page}" id="nowPage"></strong>-->
+<!--                </th:block>-->
+<!--            </th:block>-->
+
+<!--            <span th:style="${lastPage == endPage ? 'display:none' : 'display:inline'}">-->
+<!--                         <th:block th:with="startPage=${((nowPage + 5)/5) * 5}">-->
+<!--                             <a th:href="@{/approvalList(page = ${startPage}, cls = ${cls}, sWord = ${param.sWord})}" class="pageNum">&raquo;</a>-->
+<!--                         </th:block>-->
+<!--                     </span>-->
+<!--        </div>-->
+
+
+
 
         <form th:action="@{/admin/items}" method="get" id="searchForm">
             <input type="hidden" id="keyword" name="keyword" th:value="${keyword}">

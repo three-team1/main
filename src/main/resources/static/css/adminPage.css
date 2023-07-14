@@ -157,24 +157,21 @@ h1 {
 
 .search-btn{
     display: inline-block;
-    font-weight: 400;
-    color: whitesmoke;
+    color: black;
     text-align: center;
     vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     background-color: #86cfda;
-    border: 1px solid whitesmoke;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 0.25rem;
+    border: 1px solid #86cfda;
+    font-weight:bold;
 }
 
 .search-btn:hover {
     background-color: grey;
+    color: white;
 }
 
 .search-keyword{

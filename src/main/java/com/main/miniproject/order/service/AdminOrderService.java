@@ -54,7 +54,7 @@ public class AdminOrderService {
     public Page<Orders> getList(int page, String keyword, Long longKeyword, String category) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("orderDate"));
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(sorts));
         Specification<Orders> ordersSpecification = search(keyword, longKeyword, category);
         return adminOrderRepository.findAll(ordersSpecification, pageable);
 
