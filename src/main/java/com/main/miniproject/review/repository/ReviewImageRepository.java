@@ -3,6 +3,7 @@ package com.main.miniproject.review.repository;
 import com.main.miniproject.review.entity.Review;
 import com.main.miniproject.review.entity.ReviewImage;
 
+import com.main.miniproject.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

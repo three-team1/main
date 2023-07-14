@@ -1,17 +1,15 @@
 package com.main.miniproject.board.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -36,5 +34,8 @@ public class BoardImage {
 	
 	@Column(name = "board_img_ori_name")
 	private String originName;
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+	private List<BoardImage> images = new ArrayList<>();
 	
 }

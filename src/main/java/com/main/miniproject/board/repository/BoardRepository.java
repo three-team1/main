@@ -1,5 +1,6 @@
 package com.main.miniproject.board.repository;
 
+import com.main.miniproject.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 	Page<Board> findByUserUsernameContaining(String username, Pageable pageable);
 	
 	Page<Board> findByBoardTitleContainingOrBoardContentContaining(String title, String content, Pageable pageable);
+
+	void deleteByUser(User user);
 }

@@ -67,11 +67,11 @@
       .myInfo-tb {
         border-collapse: collapse;
         min-width: 510px;
-        min-height: 280px;
+        min-height: 100px;
       }
 
       th, td {
-        border: 1px solid pink;
+        border: none;
         padding: 10px 10px;
         text-align: left;
         font-size: 1rem;
@@ -87,12 +87,13 @@
         min-width: 360px;
       }
 
-      .input-noUpdate {
+      .input-pw {
         width: 350px;
         height: 35px;
+        padding-left: 10px;
         font-size: 1rem;
         color: white;
-        background: transparent;
+        background: rgba(255,192,203, 0.4);
         border: none;
         outline: none;
       }
@@ -101,8 +102,9 @@
         text-align: center;
       }
 
-      #btnUpdate, #btnDelete {
-        width: 130px;
+      #btnChk, #btnCancel {
+        display: inline-block;
+        width: 70px;
         height: 35px;
         font-size: 1rem;
         color: white;
@@ -111,10 +113,6 @@
         border-radius: 5px;
         outline: none;
         cursor: pointer;
-      }
-
-      #btnUpdate {
-        margin-right: 30px;
       }
 
       a:link {
@@ -127,47 +125,55 @@
         margin-bottom: 20px;
         color: white;
       }
+
+      #cart-count.notification-badge {
+        box-sizing: content-box;
+      }
     </style>
   </th:block>
   <th:block layout:fragment="script">
     <script th:inline="javascript">
       $(function () {
-        //내 정보 수정
-        $("#btnUpdate").on("click", () => {
+        $(window).on("load", function () {
+          $("#checkPassword").focus();
+        });
+
+        $("#btnChk").on("click", () => {
+          const checkPassword = $("#checkPassword").val();
+
           $.ajax({
-            url: "/mypage/myUpdate",
+            url: "/api/mypage/withdraw",
+            type: "POST",
+            data: { checkPassword: checkPassword },
+            contentType: "application/x-www-form-urlencoded",
+            success: function(response) {
+              if(response.success) {
+                alert("탈퇴했습니다.");
+                window.location.href="/logout";
+              } else {
+                alert("비밀번호가 일치하지 않습니다.");
+                $("#checkPassword").focus();
+              }
+            },
+            error: function(err) {
+              console.error(err);
+            }
+          });
+        });
+
+        $("#btnCancel").on("click", () => {
+          $.ajax({
+            url: "/mypage/myInfo",
             type: "GET",
             success: function () {
-              window.location.href="/mypage/myUpdate";
+              window.location.href="/mypage/myInfo";
             },
             error: function () {
               console.log(err);
             }
           });
         });
-
-        //회원 탈퇴
-        $("#btnDelete").on("click", function () {
-          let result = confirm("정말로 탈퇴하겠습니까? 탈퇴하면 '포션이었다...'의 서비스를 더이상 이용할 수 없습니다.");
-
-          if(result) {
-            $.ajax({
-              url: "/api/mypage/withdrawSocial",
-              type: "POST",
-              success: function(response) {
-                if(response.success) {
-                  alert("탈퇴했습니다.");
-                  window.location.href="/logout";
-                }
-              },
-              error: function(err) {
-                console.error(err);
-              }
-            });
-          }
-        });
       });
-
     </script>
   </th:block>
 </head>
@@ -191,51 +197,20 @@
       </div>
     </div>
     <div class="section">
-      <h2>마이페이지</h2>
-      <form id="infoForm" action="/mypage/myInfoOAuth" method="get">
-        <input type="hidden" id="userId" name="userId" th:value="${#authentication.principal.user.id}">
+      <h2>탈퇴하려면 비밀번호를 입력하세요.</h2>
+      <form id="pwChkForm" action="/api/mypage/myInfo" method="delete">
         <table class="myInfo-tb">
           <tr class="myInfo-tr">
-            <th class="myInfo-th">아이디</th>
+            <th class="myInfo-th">현재 비밀번호</th>
             <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="username" name="username" th:value="${#authentication.principal.username}" readonly>
-            </td>
-          </tr>
-          <tr class="myInfo-tr">
-            <th class="myInfo-th">이메일</th>
-            <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="email" name="email" th:value="${#authentication.principal.user.email}" readonly>
-            </td>
-          </tr>
-          <tr class="myInfo-tr">
-            <th class="myInfo-th">연락처</th>
-            <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="tel"name="tel" th:value="${#authentication.principal.user.tel}" readonly>
-            </td>
-          </tr>
-          <tr class="myInfo-tr">
-            <th class="myInfo-th">우편번호</th>
-            <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="my_postcode" name="my_postcode" th:value="${#authentication.principal.user.my_postcode}" readonly>
-            </td>
-          </tr>
-          <tr class="myInfo-tr">
-            <th class="myInfo-th">주소</th>
-            <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="my_address" name="my_address" th:value="${#authentication.principal.user.my_address}" readonly>
-            </td>
-          </tr>
-          <tr class="myInfo-tr">
-            <th class="myInfo-th">상세주소</th>
-            <td class="myInfo-td">
-              <input type="text" class="input-noUpdate" id="my_detailAddress" name="my_detailAddress" th:value="${#authentication.principal.user.my_detailAddress}" readonly>
+              <input type="password" class="input-pw" id="checkPassword" name="checkPassword" autocomplete="off" placeholder="현재 비밀번호를 입력하세요.">
             </td>
           </tr>
         </table>
         <br>
         <div class="buttons">
-          <button type="button" id="btnUpdate">내 정보 수정</button>
-          <button type="button" id="btnDelete">회원 탈퇴</button>
+          <button type="button" id="btnChk">확인</button>
+          <button type="button" id="btnCancel">취소</button>
         </div>
       </form>
     </div>

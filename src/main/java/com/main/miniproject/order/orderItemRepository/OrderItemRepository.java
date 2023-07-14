@@ -2,13 +2,11 @@ package com.main.miniproject.order.orderItemRepository;
 
 import java.util.List;
 
-import com.main.miniproject.product.entity.Product;
-import com.main.miniproject.product.entity.ProductImage;
+import com.main.miniproject.order.entity.Orders;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import com.main.miniproject.order.entity.OrderItem;
@@ -41,5 +39,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
 	@Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :orderId")
 	List<OrderItem> findOrderItemsByOrderId(@Param("orderId")Long orderId);
 
+	void deleteByOrder(Orders order);
 
+	List<OrderItem> findByOrder(Orders order);
 }

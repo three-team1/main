@@ -1,6 +1,8 @@
 package com.main.miniproject.review.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -43,6 +45,9 @@ public class Review {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_item_id")
 	private OrderItem orderItem;
+
+	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+	private List<ReviewImage> images = new ArrayList<>();
 
 	public void setUser(User user) {
 		this.user = user;
