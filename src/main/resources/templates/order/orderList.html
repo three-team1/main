@@ -42,9 +42,9 @@
                 max-height: 100%;
             }
 
-			body{
-				font-family: 'Nanum Gothic Coding', monospace;
-			}
+            body{
+                font-family: 'Nanum Gothic Coding', monospace;
+            }
 
         </style>
     </th:block>
@@ -115,12 +115,12 @@
 
                 // 페이지 로드 후 일정 시간(예: 1.5초) 후에 GIF가 사라지도록 설정
             });
-                window.addEventListener('load', function() {
-                    var gif = document.querySelector('.gif-container-full');
-                    setTimeout(function() {
-                        gif.style.display = 'none';
-                    }, 1500); // 1500밀리초(1.5초) 후에 GIF를 숨김
-                });
+            // window.addEventListener('load', function() {
+            //     var gif = document.querySelector('.gif-container-full');
+            //     setTimeout(function() {
+            //         gif.style.display = 'none';
+            //     }, 1500); // 1500밀리초(1.5초) 후에 GIF를 숨김
+            // });
 
         </script>
     </th:block>
@@ -128,40 +128,40 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="gif-container-full">
-        <img src="/images/디멘터.gif" alt="GIF" />
-    </div>
+<!--    <div class="gif-container-full">-->
+<!--        <img src="/images/디멘터.gif" alt="GIF" />-->
+<!--    </div>-->
     <div class="main-content">
         <h1>ORDER LIST</h1>
         <div class="total-div">
             <table class="table">
                 <thead>
-                    <tr>
-                        <td>주문 번호</td>
-                        <td>주문자 아이디</td>
-                        <td>주문 날짜</td>
-                        <td>주문 가격</td>
-                        <td>주문 주소</td>
-                        <td>연락처</td>
-                        <td>결제방식</td>
-                        <td>상세 조회</td>
-                    </tr>
+                <tr>
+                    <td>주문 번호</td>
+                    <td>주문자 아이디</td>
+                    <td>주문 날짜</td>
+                    <td>주문 가격</td>
+                    <td>주문 주소</td>
+                    <td>연락처</td>
+                    <td>결제방식</td>
+                    <td>상세 조회</td>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr class="orderlist" th:each="orders, status: ${ordersPage}">
-                        <td th:text="${orders.id}"></td>
-                        <td th:text="${orders.user.username}"></td>
-                        <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${#numbers.formatInteger(orders.orderTotalPrice, 3, 'COMMA')}"></td>
-                        <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
-                        <td th:text="${orders.orderTel}"></td>       
-                        <td th:text="${orders.payment.paymentPlan}"></td>
-                        <td>
-                            <a th:href="@{'/admin/orderDetail/' + ${orders.id}}">
-                                <button class="detail-btn" type="button">선택</button>
-                            </a>
-                        </td>
-                    </tr>
+                <tr class="orderlist" th:each="orders, status: ${ordersPage}">
+                    <td th:text="${orders.id}"></td>
+                    <td th:text="${orders.user.username}"></td>
+                    <td th:text="${#temporals.format(orders.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#numbers.formatInteger(orders.orderTotalPrice, 3, 'COMMA')}"></td>
+                    <td	th:text="${orders.orderPostCode} + ', ' + ${orders.orderAddress} + ', ' + ${orders.orderDetailAddress} "></td>
+                    <td th:text="${orders.orderTel}"></td>
+                    <td th:text="${orders.payment.paymentPlan}"></td>
+                    <td>
+                        <a th:href="@{'/admin/orderDetail/' + ${orders.id}}">
+                            <button class="detail-btn" type="button">선택</button>
+                        </a>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -172,9 +172,9 @@
         <form th:action="@{'/admin/orders/'}" method="get" >
             <div class="search-box">
                 <select id="searchCategory" name="category" class="search-category" style="width:auto;">
-                    <option value="" th:selected="${searchCondition == 'all' ||
-            searchCondition == '' || searchCondition == null}">전체</option>
-                    <option value="id" th:selected="${category == 'id'}">아이디</option>
+<!--                    <option value="" th:selected="${searchCondition == 'all' ||-->
+<!--            searchCondition == '' || searchCondition == null}">전체</option>-->
+<!--                    <option value="id" th:selected="${category == 'id'}">아이디</option>-->
                     <option value="orderTel" th:selected="${category == 'orderTel'}">연락처</option>
                 </select>
                 <input type="text" id="searchKeyword" class="search-keyword"  th:field="*{keyword}" placeholder="검색어를 입력해주세요" th:value="${keyword}">
@@ -226,8 +226,8 @@
 
 
 
-</div>
     </div>
+</div>
 
 </body>
 </html>
