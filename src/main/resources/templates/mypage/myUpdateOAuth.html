@@ -127,13 +127,13 @@
         padding-left: 10px;
         font-size: 1rem;
         color: white;
-        background: rgba(255,192,203, 0.4);
+        background: rgb(131,108,113);
         border: none;
         outline: none;
       }
 
       .emailAddress-etc {
-        margin-left: 247px;
+        margin-left: 245px;
       }
 
       #tel-1, #tel-2, #tel-3 {
@@ -143,7 +143,7 @@
         padding-left: 10px;
         font-size: 1rem;
         color: white;
-        background: rgba(255,192,203, 0.4);
+        background: rgb(131,108,113);
         border: none;
         outline: none;
       }
@@ -196,6 +196,10 @@
         margin-top: 100px;
         margin-bottom: 20px;
         color: white;
+      }
+
+      #cart-count.notification-badge {
+        box-sizing: content-box;
       }
     </style>
   </th:block>
@@ -348,7 +352,7 @@
             <td class="myInfo-td">
               <input id="email1" name="email1" value type="text" maxlength="64">
               @
-              <span class="emailAddress">
+              <span class="emailAddress"></span>
                             <select id="email2">
                                 <option value selected="selected"> - 이메일 선택 - </option>
                                 <option value="naver.com">naver.com</option>

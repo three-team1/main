@@ -97,7 +97,11 @@
                 outline: none;
             }
 
-            #btnPwChange, #btnUpdate {
+            .buttons {
+                text-align: center;
+            }
+
+            #btnPwChange, #btnUpdate, #btnDelete {
                 width: 130px;
                 height: 35px;
                 font-size: 1rem;
@@ -107,6 +111,10 @@
                 border-radius: 5px;
                 outline: none;
                 cursor: pointer;
+            }
+
+            #btnUpdate {
+                margin-right: 30px;
             }
 
             a:link {
@@ -142,6 +150,7 @@
                     });
                 });
 
+                //내 정보 수정
                 $("#btnUpdate").on("click", () => {
                     $.ajax({
                         url: "/mypage/pwChk",
@@ -153,6 +162,14 @@
                             console.log(err);
                         }
                     });
+                });
+
+                //회원 탈퇴
+                $("#btnDelete").on("click", function() {
+                    let result = confirm("정말로 탈퇴하겠습니까? 탈퇴하면 '포션이었다...'의 서비스를 더이상 이용할 수 없습니다.");
+                    if(result) {
+                        window.location.href="/mypage/withdrawChk";
+                    }
                 });
             });
 
@@ -174,7 +191,7 @@
 
             $(document).ready(function() {
                 updateCartCount();
-            })
+            });
         </script>
     </th:block>
 </head>
@@ -246,7 +263,10 @@
                     </tr>
                 </table>
                 <br>
-                <button type="button" id="btnUpdate">내 정보 수정</button>
+                <div class="buttons">
+                    <button type="button" id="btnUpdate">내 정보 수정</button>
+                    <button type="button" id="btnDelete">회원 탈퇴</button>
+                </div>
             </form>
         </div>
     </div>

@@ -1,7 +1,9 @@
 package com.main.miniproject.review.repository;
 
+import com.main.miniproject.order.entity.OrderItem;
 import com.main.miniproject.review.entity.Review;
 
+import com.main.miniproject.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +24,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r WHERE r.user.username = :username AND (r.orderItem.product.productTitle LIKE %:keyword% OR r.reviewTitle LIKE %:keyword% OR r.reviewContent LIKE %:keyword%)")
     Page<Review> findByUserUsernameAndKeyword(Pageable pageable, @Param("username") String username, @Param("keyword") String keyword);
 
+    //리뷰 삭제
+    void deleteByUser(User user);
 
+    void deleteByOrderItem(OrderItem orderItem);
 }
