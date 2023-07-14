@@ -227,6 +227,12 @@
                     });
                 });
             });
+
+            $(document).ready(function() {
+                $.get("/api/cart/count", function(data) {
+                    $('#cart-count').text(data);
+                });
+            });
         </script>
     </th:block>
 </head>

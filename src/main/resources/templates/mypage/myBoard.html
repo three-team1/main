@@ -62,7 +62,7 @@
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                overflow: auto;
+                overflow-y: scroll;
             }
 
 
@@ -120,8 +120,6 @@
 
 
             .table {
-                width: 750px;
-                /*margin: auto;*/
                 text-align: center;
                 border-collapse: collapse;
             }
@@ -191,10 +189,6 @@
 
             }
 
-            /*.selected {*/
-            /*    color: gray !important;*/
-            /*}*/
-
 
             .btn-write {
                 text-align: center;
@@ -208,49 +202,6 @@
                 cursor : pointer;
                 color: black;
                 font-weight: bold;
-            }
-
-            #tab1 > div > div.table-responsive > table > tbody > tr .board-title{
-                color: #FFFFFF;
-            }
-
-            .tabmenu{
-                max-width:600px;
-                margin: 0 auto;
-                position:relative;
-            }
-            .tabmenu ul li{
-                display: inline-block;
-                float:left;
-                text-align:center;
-                background :#f9f9f9;
-            }
-            .tabmenu ul li a{
-                display:block;
-                line-height:40px;
-                height:40px;
-                text-decoration:none;
-                color: #000;
-            }
-            .tabCon{
-                display:none;
-                text-align:left;
-                padding: 20px;
-                position:absolute;
-                left:0; top:40px;
-                box-sizing: border-box;
-            }
-            .btnCon:target  {
-                background : #ccc;
-            }
-            .btnCon:target .tabCon{
-                display: block;
-            }
-
-            .btn-a {
-                width: 250px;
-                font-weight: bold;
-                margin: auto;
             }
 
             .comment-list-box {
@@ -271,19 +222,55 @@
                 font-weight: bold;
             }
 
-            .delete-comment-btn {
-                margin-top: 30px;
-            }
 
             #cart-count.notification-badge {
                 box-sizing: content-box;
+            }
+
+            .container {
+                /*width: 500px;*/
+                margin: 20px auto;
+            }
+
+
+            .tab_title li {
+                list-style: none;
+                float: left;
+                width: 100px;
+                padding: 10px 15px;
+                cursor: pointer;
+                text-align: center;
+                border: 1px solid #bebebe;
+            }
+
+            .tab_title li.on {
+                font-weight: bold;
+             }
+
+            .tab_cont {
+                clear: both;
+            }
+
+            .tab_cont div.off {
+                display: none;
+                text-align: center;
+            }
+
+            .tab_cont div.on {
+                display: block;
+            }
+
+
+            input[type=text] {
+                color: black;
             }
 
         </style>
     </th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            location.href = "#tab1";
+
+
 
             function updateCartCount() {
 
@@ -303,7 +290,16 @@
 
             $(document).ready(function() {
                 updateCartCount();
+                $(".tab_title li").click(function () {
+                    var idx = $(this).index();
+                    $(".tab_title li").removeClass("on");
+                    $(".tab_title li").eq(idx).addClass("on");
+                    $(".tab_cont > div").removeClass("on").addClass("off");
+                    $(".tab_cont > div").eq(idx).removeClass("off").addClass("on");
+                })
             })
+
+
         </script>
     </th:block>
 
@@ -331,109 +327,104 @@
         </div>
 
         <div class="section">
-            <div class="tabmenu">
-                <ul>
-                    <li id="tab1" class="btnCon"><a class="btn-a" href="#tab1">나의 글</a>
-                        <div class="tabCon" >
-                            <div class="container">
-                                <div class="table-header">
-                                    <h1>내 글 목록</h1>
-                                </div>
-
-                                <div class="table-search">
-                                    <form th:action="@{/board/list}" method="get">
-                                        <input type="text" name="keyword" placeholder="Search">
-                                        <button type="submit">검색</button>
-                                    </form>
-                                </div>
-
-
-
-                            </div>
-
-
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th class="id">번호</th>
-                                        <th class="title">제목</th>
-                                        <th class="writer">작성자</th>
-                                        <th class="date">작성일</th>
-                                        <th class="count">조회수</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="board : ${boards}">
-                                        <td class="noBorder" th:text="${board.id}"></td>
-
-                                        <td class="noBorder"><a class="board-title"
-                                                                th:href="@{'/board/detail/' + ${board.id}}"
-                                                                th:text="${board.boardTitle}"></a></td>
-
-                                        <td class="noBorder board-writer" th:text="${board.user.username}"></td>
-                                        <td class="noBorder"
-                                            th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
-                                        <td class="noBorder" th:text="${board.boardView}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="btn-write">
-                                <a href="/board/write">
-                                    <button type="submit">등록</button>
-                                </a>
-                            </div>
-
-                            <div class="pagination1">
-                                <th:block th:if="${page.totalPages > 0}">
-                                    <!-- 이전 페이지로 가는 링크 추가 -->
-                                    <a th:href="@{/mypage/myBoard(page=0, keyword=${keyword}, searchType=${searchType})}"><<</a>
-
-                                    <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
-                                        <a th:href="@{/mypage/myBoard(page=${i}, keyword=${keyword}, searchType=${searchType})}" th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}">1</a>
-                                    </th:block>
-
-                                    <!-- 다음 페이지로 가는 링크 추가 -->
-                                    <a th:href="@{/mypage/myBoard(page=${page.totalPages - 1}, keyword=${keyword}, searchType=${searchType})}">>></a>
-                                </th:block>
-                            </div>
-
-                        </div>
-
-                    </li>
-                    <li id="tab2" class="btnCon"><a class="btn-a" href="#tab2">나의 댓글</a>
-                        <div class="tabCon" >
-                            <div class="container">
-                                <div class="table-header">
-                                    <h1>내 댓글 목록</h1>
-                                </div>
-
-                                <div class="table-search">
-                                    <form th:action="@{/board/list}" method="get">
-                                        <input type="text" name="keyword" placeholder="Search">
-                                        <button type="submit">검색</button>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <!-- 댓글 목록 -->
-                            <div class="comment-section">
-                                <h3>댓글</h3>
-
-                                <div class="comment-list-box">
-                                    <div class="comment-list" th:each="comment : ${comments}">
-                                        <div class="comment-author" th:text="${comment.user.username}"></div>
-                                        <div class="comment-content" th:text="${comment.commentContent}"></div>
-                                        <button class="delete-comment-btn" th:data-id="${comment.id}">삭제</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </li>
+            <div class="container">
+                <ul class="tab_title">
+                    <li class="on">나의 글</li>
+                    <li>나의 댓글</li>
                 </ul>
+                <div class="tab_cont">
+                    <div class="on">
+                        <!--첫번째-->
+                        <div class="table-header">
+                            <h1>내 글 목록</h1>
+                        </div>
+
+                        <div class="table-search">
+                            <form th:action="@{/board/list}" method="get">
+                                <input type="text" name="keyword" placeholder="Search">
+                                <button type="submit">검색</button>
+                            </form>
+                        </div>
+
+                        <!--테이블-->
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="id">번호</th>
+                                    <th class="title">제목</th>
+                                    <th class="writer">작성자</th>
+                                    <th class="date">작성일</th>
+                                    <th class="count">조회수</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="board : ${boards}">
+                                    <td class="noBorder" th:text="${board.id}"></td>
+
+                                    <td class="noBorder"><a class="board-title"
+                                                            th:href="@{'/board/detail/' + ${board.id}}"
+                                                            th:text="${board.boardTitle}"></a></td>
+
+                                    <td class="noBorder board-writer" th:text="${board.user.username}"></td>
+                                    <td class="noBorder"
+                                        th:text="${#temporals.format(board.createdAt, 'MM-dd HH:mm')}"></td>
+                                    <td class="noBorder" th:text="${board.boardView}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--등록-->
+                        <div class="btn-write">
+                            <a href="/board/write">
+                                <button type="submit">등록</button>
+                            </a>
+                        </div>
+
+                        <div class="pagination1">
+                            <th:block th:if="${page.totalPages > 0}">
+                                <!-- 이전 페이지로 가는 링크 추가 -->
+                                <a th:href="@{/mypage/myBoard(page=0)}"><<</a>
+
+                                <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                                    <a th:href="@{/mypage/myBoard(page=${i})}" th:text="${i + 1}" th:class="${page.number == i ? 'selected' : ''}">1</a>
+                                </th:block>
+
+                                <!-- 다음 페이지로 가는 링크 추가 -->
+                                <a th:href="@{/mypage/myBoard(page=${page.totalPages - 1})}">>></a>
+                            </th:block>
+                        </div>
+                    </div>
+
+
+                <!--두번째-->
+                    <div class="off">
+                        <div class="table-header">
+                            <h1>내 댓글 목록</h1>
+                        </div>
+
+                        <div class="table-search">
+                            <form th:action="@{/board/list}" method="get">
+                                <input type="text" name="keyword" placeholder="Search">
+                                <button type="submit">검색</button>
+                            </form>
+                        </div>
+
+                        <div class="comment-section">
+                            <h3>댓글</h3>
+
+                            <div class="comment-list-box">
+                                <div class="comment-list" th:each="comment : ${comments}">
+                                    <div class="comment-author" th:text="${comment.user.username}"></div>
+                                    <div class="comment-content" th:text="${comment.commentContent}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
             </div>
         </div>
     </div>

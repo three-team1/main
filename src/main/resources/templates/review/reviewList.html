@@ -242,6 +242,10 @@
                 text-decoration: none;
                 color: white;
             }
+
+            #cart-count.notification-badge {
+                box-sizing: content-box;
+            }
         </style>
     </th:block>
     <th:block layout:fragment="script">
@@ -360,6 +364,13 @@
                     }
                 });
             }
+
+            $(document).ready(function() {
+                $.get("/api/cart/count", function(data) {
+                    $('#cart-count').text(data);
+                });
+            });
+
         </script>
     </th:block>
 </head>

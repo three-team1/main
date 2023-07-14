@@ -378,7 +378,7 @@
 
 			<div class="nav-logo">
 				<a href="/"> <img
-					src="icon/Black n White Luxury  Rent Car Logo.png">
+					src="/icon/Black n White Luxury  Rent Car Logo.png">
 				</a>
 
 
@@ -402,8 +402,14 @@
 						Q&A
 					</a>
 				</div>
-
+				
 				<div class="nav-bar-item">
+					<a href="/review/list"> <span></span> <span></span> <span></span> <span></span>
+						리뷰			
+					</a>
+				</div>
+
+				<div class="nav-bar-item nav-bar-item-cart">
 					<a href="/cart"> <span></span> <span></span> <span></span> <span></span>
 						장바구니
 						<span sec:authorize="isAuthenticated()" id="cart-count" class="notification-badge"></span>
@@ -422,7 +428,7 @@
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<a href="/admin/orders">관리자페이지</a>
+				<a href="/admin/orders">관리자</a>
 			</div>
 
 			<div class="nav-bar-login" sec:authorize="isAuthenticated()">
