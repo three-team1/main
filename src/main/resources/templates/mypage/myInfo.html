@@ -12,7 +12,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 grid-gap: 10px;
-                min-height: 620px;
+                min-height: 730px;
             }
 
             .main-container > div {
@@ -39,7 +39,7 @@
             .menu {
                 position: relative;
                 color: white;
-                margin-top: 130px;
+                margin-top: 200px;
             }
 
             .menu-title {
@@ -97,7 +97,11 @@
                 outline: none;
             }
 
-            #btnPwChange, #btnUpdate {
+            .buttons {
+                text-align: center;
+            }
+
+            #btnPwChange, #btnUpdate, #btnDelete {
                 width: 130px;
                 height: 35px;
                 font-size: 1rem;
@@ -109,13 +113,17 @@
                 cursor: pointer;
             }
 
+            #btnUpdate {
+                margin-right: 30px;
+            }
+
             a:link {
                 color: white;
                 text-decoration: none;
             }
 
             h2 {
-                margin-top: 70px;
+                margin-top: 100px;
                 margin-bottom: 20px;
                 color: white;
             }
@@ -142,6 +150,7 @@
                     });
                 });
 
+                //내 정보 수정
                 $("#btnUpdate").on("click", () => {
                     $.ajax({
                         url: "/mypage/pwChk",
@@ -153,6 +162,14 @@
                             console.log(err);
                         }
                     });
+                });
+
+                //회원 탈퇴
+                $("#btnDelete").on("click", function() {
+                    let result = confirm("정말로 탈퇴하겠습니까? 탈퇴하면 '포션이었다...'의 서비스를 더이상 이용할 수 없습니다.");
+                    if(result) {
+                        window.location.href="/mypage/withdrawChk";
+                    }
                 });
             });
 
@@ -174,7 +191,7 @@
 
             $(document).ready(function() {
                 updateCartCount();
-            })
+            });
         </script>
     </th:block>
 </head>
@@ -246,7 +263,10 @@
                     </tr>
                 </table>
                 <br>
-                <button type="button" id="btnUpdate">내 정보 수정</button>
+                <div class="buttons">
+                    <button type="button" id="btnUpdate">내 정보 수정</button>
+                    <button type="button" id="btnDelete">회원 탈퇴</button>
+                </div>
             </form>
         </div>
     </div>

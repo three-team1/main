@@ -12,7 +12,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 grid-gap: 10px;
-                min-height: 620px;
+                min-height: 730px;
             }
 
             .main-container > div {
@@ -39,7 +39,7 @@
             .menu {
                 position: relative;
                 color: white;
-                margin-top: 130px;
+                margin-top: 200px;
             }
 
             .menu-title {
@@ -121,7 +121,7 @@
             }
 
             h2 {
-                margin-top: 70px;
+                margin-top: 100px;
                 margin-bottom: 20px;
                 color: white;
             }
@@ -143,7 +143,7 @@
 
                     $.ajax({
                         url: "/api/mypage/pwCheck",
-                        type: "GET",
+                        type: "POST",
                         data: {"checkPassword": checkPassword},
                         success: function (res) {
                             console.log(res);

@@ -31,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -124,7 +125,7 @@ public class MypageViewController {
     public ModelAndView pwChkView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChk.html");
+        mv.setViewName("/mypage/pwChk");
 
         return mv;
     }
@@ -151,7 +152,7 @@ public class MypageViewController {
     public ModelAndView pwChangeView() {
         ModelAndView mv = new ModelAndView();
 
-        mv.setViewName("/mypage/pwChange.html");
+        mv.setViewName("/mypage/pwChange");
 
         return mv;
     }
@@ -237,6 +238,15 @@ public class MypageViewController {
         return mv;
     }
 
+    //회원 탈퇴 비밀번호 확인 페이지
+    @GetMapping("/withdrawChk")
+    public ModelAndView withdrawChkView() {
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("/mypage/withdrawChk");
+
+        return mv;
+    }
 
 }
 
