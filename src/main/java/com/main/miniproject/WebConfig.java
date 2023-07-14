@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer{
 	String reviewImgPath;
 
 
-	@Value("${user.dir}/src/main/resources/static/images/")
+	@Value("${user.dir}/product/images/")
 	String itemImgPath;
 
 	@Value("${reviewResizedLocation}")
@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer{
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-		registry.addResourceHandler("/src/main/resources/static/images/**").addResourceLocations("file:" + itemImgPath);
+		registry.addResourceHandler("/product/images/**").addResourceLocations("file:" + itemImgPath);
 		registry.addResourceHandler("/board/images/**").addResourceLocations("file:" + boardImgPath + "/");
 		registry.addResourceHandler("/review/images/**").addResourceLocations("file:" + reviewImgPath);
 		registry.addResourceHandler("/review/resized/**").addResourceLocations("file:" + reviewResizedPath);

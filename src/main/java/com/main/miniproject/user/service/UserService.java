@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService{
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc("role"));
         sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(sorts));
         Specification<User> userSpecification = search(keyword, category);
 
 

@@ -23,6 +23,9 @@ public class FileService {
 	@Value("${itemImgLocation}")
 	String itemImgPath;
 
+	@Value("${user.dir}")
+	String splitStr;
+
 	//파일을 만드는 동작
 		public List<ProductImage> saveFiles(Product product, MultipartFile[] files) {
 			List<ProductImage> productImages = new ArrayList<>();
@@ -54,10 +57,12 @@ public class FileService {
 					try {
 
 						file.transferTo(new File(filePath));
+						System.out.println("splitSTR = " + splitStr.toString());
 
-						filePath = filePath.split("static")[1];
-						System.out.println(filePath);
+						filePath = filePath.split("product")[1];
+						filePath = "\\product" + filePath;
 
+						System.out.println("filePath = " + filePath);
 
 						ProductImage productImage = ProductImage.builder()
 								.product(product)
