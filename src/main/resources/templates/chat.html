@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <title>Simple Chat</title>
+    <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
+
+	<style>
+	
+		.chat-rooms-container{
+			display:flex;
+			justify-content: center;
+		}
+	
+		.chat-rooms-box {
+			width:400px;
+			height:100px;
+			border:3px solid black;
+			text-align:center;
+			display: flex;
+		    justify-content: center;
+		    align-items: center;
+			border-radius:3px;
+		}
+		
+		.chat-rooms-box a {
+			text-decoration: none;
+		}
+		
+		.userCount {
+			color:pink;
+			margin-left:50px;	
+			font-weight:bold;
+		}
+		
+	</style>
+
+</head>
+
+<!-- 비밀번호가 없는 채팅방일경우 아래의 url로 -->
+<!--th:href="@{/chatRoom/{chatRoomId}(chatRoomId=${chatRoom.id})}"  -->
+
+  <div class="chat-rooms-container">
+	<div class="chat-rooms-box" th:each="chatRoom : ${chatRooms}">
+    <a href="#" th:attr="chatroom-id=${chatRoom.id}" th:onclick="'enterChatRoom(\'' + ${chatRoom.id} + '\')'" th:text="${chatRoom.name}"></a>
+
+      <div class="userCount" th:id="'userCount' + ${chatRoom.id}">Loading...</div>
+	</div>
+	
+</div>
+<!-- 비밀번호 일치할때 입장가능기능.
+	 채팅방 안에 들어가있는 connect된 사용자 수에따라 사용자수 표시기능. -->
+	 <script>
+
+/* 		   $(document).ready(function() {
+		        setInterval(function() {
+		            $(".chat-rooms-box").each(function(index, element) {
+		                let chatRoomId = $(this).find('a').attr('href').split('/')[2];
+		                $.get("/connected-users/" + chatRoomId, function(data) {
+		                    $("#userCount" + chatRoomId).text(data + "명");
+		                });
+		            });
+		        }, 1000); // 1000ms = 1초
+		    }); */
+		    
+		    $(document).ready(function() {
+		        setInterval(function() {
+		            $("a[chatroom-id]").each(function(index, element) {
+		                let chatRoomId = $(this).attr('chatroom-id');
+		                $.get("/connected-users/" + chatRoomId, function(data) {
+		                    $("#userCount" + chatRoomId).text(data + "명");
+		                });
+		            });
+		        }, 1000); // 1000ms = 1초
+		    });
+
+		
+		function enterChatRoom(roomId) {
+		    var password = prompt("비밀번호를 입력해주세요.");
+		    $.ajax({
+		        url: "/chatRoom/" + roomId + "/enter",
+		        method: "POST",
+		        data: { password: password },
+		        success: function(data) {
+		            // 비밀번호가 일치하는 경우 페이지를 리디렉션합니다.
+		            window.location.href = "/chatRoom/" + roomId;
+		        },
+		        error: function(xhr, status, error) {
+		            // 서버에서 error 메시지가 반환된 경우
+		            var err = JSON.parse(xhr.responseText);
+		            alert(err.error);
+		        }
+		    });
+		}
+		
+	 </script>
+</body>
+</html>
